@@ -275,13 +275,14 @@ namespace Assets.Scripts.Quiz.Mono
         /// </summary>
         void LoadQuestions()
         {
-            Object[] objs = Resources.LoadAll("Questions", typeof(Question));
-            _questions = new Question[objs.Length];
-            for (int i = 0; i < objs.Length; i++)
+			Object[] objs = Resources.LoadAll("Questions", typeof(Question));
+			_questions = new Question[20];
+			for (int i = 0; i < 20; i++)
             {
                 _questions[i] = (Question)objs[i];
             }
         }
+			
 
         /// <summary>
         /// Function that is called restart the game.
@@ -315,7 +316,7 @@ namespace Assets.Scripts.Quiz.Mono
                 isPaused = true;
             }
         }
-
+			
 
 
 
@@ -356,7 +357,7 @@ namespace Assets.Scripts.Quiz.Mono
         int GetRandomQuestionIndex()
         {
             var random = 0;
-            if (FinishedQuestions.Count < Questions.Length)
+			if (FinishedQuestions.Count < Questions.Length)
             {
                 do
                 {
