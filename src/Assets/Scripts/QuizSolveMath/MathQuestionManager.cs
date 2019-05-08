@@ -21,6 +21,7 @@ namespace Assets.Scripts.QuizSolveMath
         private int _randomKey;
         private int _currentNumber;
         private int _score;
+        private int _inputLim;
 
         private void Start() 
         {
@@ -118,6 +119,15 @@ namespace Assets.Scripts.QuizSolveMath
 
         public void GetButtonContent() 
         {
+            _inputLim++;
+
+            if (_inputLim > 3) 
+            {
+                ClearInput();
+
+                _inputLim = 0;
+            }
+
             string btnContent = EventSystem.current.currentSelectedGameObject.transform.GetChild(0)
                 .GetComponent<TextMeshProUGUI>().text;
 
