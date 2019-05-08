@@ -10,17 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
-  m_Name: New Question 3
+  m_Name: New Question 21
   m_EditorClassIdentifier: 
-  _info: Sorry, she can't come to the phone. She _______ a bath!
+  _info: It is not easy for many civil servants to _______ on their salaries as the
+    inflation rate is extremely high.
   _answers:
-  - _info: having
-    _isCorrect: 0
-  - _info: is having
+  - _info: get by
     _isCorrect: 1
-  - _info: has
+  - _info: turn up
     _isCorrect: 0
-  - _info: have
+  - _info: wear out
+    _isCorrect: 0
+  - _info: run over
+    _isCorrect: 0
+  - _info: take away
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

@@ -12,9 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 8
   m_EditorClassIdentifier: 
-  _info: 
-  _answers: []
-  _useTimer: 0
-  _timer: 0
-  _answerType: 0
+  _info: "Jane: \"What _______ in the evenings?\"\r\nMary: \"Usually I watch TV or
+    read a book.\""
+  _answers:
+  - _info: you doing
+    _isCorrect: 0
+  - _info: you do
+    _isCorrect: 0
+  - _info: are you doing
+    _isCorrect: 0
+  - _info: do you do
+    _isCorrect: 1
+  _useTimer: 1
+  _timer: 10
+  _answerType: 1
   _addScore: 10

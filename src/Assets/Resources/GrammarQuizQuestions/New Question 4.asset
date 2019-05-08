@@ -12,9 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 4
   m_EditorClassIdentifier: 
-  _info: 
-  _answers: []
-  _useTimer: 0
-  _timer: 0
-  _answerType: 0
+  _info: _______ many times every winter in Frankfurt.
+  _answers:
+  - _info: It is snowing
+    _isCorrect: 0
+  - _info: It snows
+    _isCorrect: 1
+  - _info: It is snow
+    _isCorrect: 0
+  - _info: It snowed
+    _isCorrect: 0
+  _useTimer: 1
+  _timer: 10
+  _answerType: 1
   _addScore: 10

@@ -12,9 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 2
   m_EditorClassIdentifier: 
-  _info: 
-  _answers: []
-  _useTimer: 0
-  _timer: 0
-  _answerType: 0
+  _info: Jun-Sik _______ his teeth before breakfast every morning.
+  _answers:
+  - _info: will cleaned
+    _isCorrect: 0
+  - _info: is cleaning
+    _isCorrect: 0
+  - _info: cleans
+    _isCorrect: 1
+  - _info: clean
+    _isCorrect: 0
+  _useTimer: 1
+  _timer: 10
+  _answerType: 1
   _addScore: 10

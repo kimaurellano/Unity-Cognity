@@ -12,9 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 1
   m_EditorClassIdentifier: 
-  _info: 
-  _answers: []
-  _useTimer: 0
-  _timer: 0
-  _answerType: 0
+  _info: Don't make so much noise. Noriko _______ to study for her ESL test!
+  _answers:
+  - _info: is trying
+    _isCorrect: 0
+  - _info: tries
+    _isCorrect: 0
+  - _info: try
+    _isCorrect: 1
+  - _info: tried
+    _isCorrect: 0
+  _useTimer: 1
+  _timer: 10
+  _answerType: 1
   _addScore: 10

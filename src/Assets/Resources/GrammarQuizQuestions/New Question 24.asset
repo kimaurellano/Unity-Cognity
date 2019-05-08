@@ -10,17 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
-  m_Name: New Question 3
+  m_Name: New Question 24
   m_EditorClassIdentifier: 
-  _info: Sorry, she can't come to the phone. She _______ a bath!
+  _info: There is an easy way to _______ four species of wild cats living in this
+    region by their tail patterns.
   _answers:
-  - _info: having
-    _isCorrect: 0
-  - _info: is having
+  - _info: tell apart
     _isCorrect: 1
-  - _info: has
+  - _info: see to
     _isCorrect: 0
-  - _info: have
+  - _info: clear up
+    _isCorrect: 0
+  - _info: back up
+    _isCorrect: 0
+  - _info: call for
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

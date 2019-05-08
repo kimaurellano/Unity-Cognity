@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
-  m_Name: New Question 3
+  m_Name: New Question 29
   m_EditorClassIdentifier: 
-  _info: Sorry, she can't come to the phone. She _______ a bath!
+  _info: 'My friend has got two kids; ____ names are Lea and Daniel. '
   _answers:
-  - _info: having
+  - _info: they
     _isCorrect: 0
-  - _info: is having
+  - _info: them
+    _isCorrect: 0
+  - _info: their
     _isCorrect: 1
-  - _info: has
-    _isCorrect: 0
-  - _info: have
-    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1
