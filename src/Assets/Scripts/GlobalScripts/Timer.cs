@@ -8,42 +8,48 @@ namespace Assets.Scripts.GlobalScripts
     /// </summary>
     public class Timer : MonoBehaviour
     {
-
-        [SerializeField] private TextMeshProUGUI _timerText;
-
-        // Delta time
         private float _t;
 
-        // Should start the timer ?
         private bool _startTimer;
 
-        // Well it is self explanatory
+        ///<summary>
+        /// The seconds
+        ///</summary>
         public float Sec { get; set; }
 
-        // Well it is self explanatory
+        ///<summary>
+        /// The minutes
+        ///</summary>
         public int Min { get; set; }
 
-        // Well it is self explanatory
-        public bool TimerUp { get => Min < 0; }
+        ///<summary>
+        /// Ups timer upon t minutes less than 0
+        ///</summary>
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        public bool TimerUp => Min < 0 && Sec == 0;
 
-        // Text where the timer is parsed into a string format
-        public TextMeshProUGUI TimerText { get => _timerText; set => _timerText = value; }
-        public bool StartTimer { get => _startTimer; set => _startTimer = value; }
+        ///<summary>
+        /// Sets/Gets the textmeshpro text
+        ///</summary>
+        [field: SerializeField] public TextMeshProUGUI TimerText { get; set; }
 
         private void Update()
         {
-            if (StartTimer)
+            if (_startTimer)
             {
                 Tick();
             }
 
-            if (TimerUp || !StartTimer)
+            if (TimerUp)
             {
                 TimerText.SetText("Timer: 00:00");
-                StartTimer = false;
+                _startTimer = false;
             }
         }
 
+        ///<summary>
+        /// Handles ticking of timer
+        ///</summary>
         private void Tick()
         {
             _t -= Time.deltaTime;
@@ -56,27 +62,26 @@ namespace Assets.Scripts.GlobalScripts
                 Min--;
             }
 
-            TimerText.SetText(string.Format("Time: {0:00}:{1:00}", Min, Sec));
+            TimerText.SetText($"Time: {Min:00}:{Sec:00}");
         }
 
+        ///<summary>
+        /// Starts immediately timer at certain point in time
+        ///</summary>
         public void StartTimerAt(int min, float sec)
         {
-            StartTimer = true;
+            _startTimer = true;
 
             _t = sec;
             Min = min;
         }
 
-        public void ChangeTimerState()
+        ///<summary>
+        /// Pauses/Unpauses timer
+        ///</summary>
+        public void ChangeTimerState() 
         {
-            if (StartTimer)
-            {
-                StartTimer = false;
-            }
-            else
-            {
-                StartTimer = true;
-            }
+            _startTimer = !_startTimer;
         }
     }
 }

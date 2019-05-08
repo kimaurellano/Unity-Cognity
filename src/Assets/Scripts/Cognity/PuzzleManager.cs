@@ -52,7 +52,6 @@ namespace Assets.Scripts.Cognity
         private Timer _timer;
 
         // If the piece touched is rotating
-        private bool _rotating;
 
         // Is game done ?
         public bool GameDone { get; private set; }
@@ -60,7 +59,7 @@ namespace Assets.Scripts.Cognity
         // The piece user had touched
         public Transform TouchedPiece { get; set; }
 
-        public bool Rotating { get => _rotating; set => _rotating = value; }
+        public bool Rotating { get; set; }
 
         private void Start()
         {

@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using TMPro;
 
 namespace Assets.Scripts.GlobalScripts
 {
