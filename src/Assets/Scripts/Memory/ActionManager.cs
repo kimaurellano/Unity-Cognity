@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Memory
@@ -10,11 +7,6 @@ namespace Assets.Scripts.Memory
     {
         public void GoTo(string sceneName)
         {
-            if (sceneName == "BaseMenu")
-            {
-                Destroy(GameObject.Find("AudioManager").gameObject);
-            }
-
             SceneManager.LoadScene(sceneName);
         }
 

@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Button
+  - Card
+  - ColliderPoint
+  - SpawnPoints
+  - PuzzlePiece
+  - PuzzleOutline
+  - ButtonInput
   layers:
   - Default
   - TransparentFX
