@@ -7,7 +7,17 @@ namespace Assets.Scripts.Memory
     {
         public void GoTo(string sceneName)
         {
+            if (sceneName == "BaseMenu") 
+            {
+                Destroy(GameObject.Find("AudioManager").gameObject);
+            }
+
             SceneManager.LoadScene(sceneName);
+        }
+
+        public void GoToBaseMenu() 
+        {
+            SceneManager.LoadScene("BaseMenu");
         }
 
         public void Quit()
