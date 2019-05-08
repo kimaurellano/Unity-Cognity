@@ -276,8 +276,8 @@ namespace Assets.Scripts.Quiz.Mono
         void LoadQuestions()
         {
 			Object[] objs = Resources.LoadAll("QuizQuestions", typeof(Question));
-			_questions = new Question[20];
-			for (int i = 0; i < 20; i++)
+			_questions = new Question[15];
+			for (int i = 0; i < 15; i++)
             {
 				_questions[i] = (Question)objs[i];
             }
