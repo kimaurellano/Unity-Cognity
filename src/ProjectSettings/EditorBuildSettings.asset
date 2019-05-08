@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/QuizSolveMath/GameQuizSolveMath.unity
     guid: b3e1f8533cbcfba4d827b9f62fad3a2b
+  - enabled: 1
+    path: Assets/Scenes/Grammar/GameQuizGrammar.unity
+    guid: 836439e8ad4e6234c8712f0472d038e3
   m_configObjects: {}
