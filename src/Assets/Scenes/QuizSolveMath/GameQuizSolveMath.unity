@@ -2649,7 +2649,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 483, y: -333.99973}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 297.6, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &668286534
 MonoBehaviour:
@@ -2700,10 +2700,10 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 82
+  m_fontSize: 72
   m_fontSizeBase: 82
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -2738,7 +2738,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -0.00006003721, w: 0}
   m_textInfo:
     textComponent: {fileID: 668286534}
     characterCount: 0
@@ -6502,8 +6502,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 189, y: -334}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 40.4, y: -334}
+  m_SizeDelta: {x: 348.6, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1572289537
 MonoBehaviour:
@@ -6554,10 +6554,10 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 82
+  m_fontSize: 72
   m_fontSizeBase: 82
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -6869,8 +6869,18 @@ MonoBehaviour:
     Answer: 36
   - Problem: 46-20+12=
     Answer: 38
-  - Problem: 21+32-12
-    Answer: 41
+  - Problem: '|-26|'
+    Answer: 26
+  - Problem: "3+2 \u2022 (8\u20133)  "
+    Answer: 13
+  - Problem: "65\u201343="
+    Answer: 22
+  - Problem: 52/4
+    Answer: 13
+  - Problem: 87+56=
+    Answer: 143
+  - Problem: (7)9=
+    Answer: 63
 --- !u!4 &1582375059
 Transform:
   m_ObjectHideFlags: 0
