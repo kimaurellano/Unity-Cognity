@@ -10,9 +10,15 @@ namespace Assets.Scripts.Memory
     {
         [SerializeField] private Transform _firstPick;
         private int _lockCount;
+        private ScoreManager _scoreManager;
 
         public Transform FirstPick { get => _firstPick; set => _firstPick = value; }
         public int LockCount { get => _lockCount; set => _lockCount = value; }
+
+        private void Start() 
+        {
+            _scoreManager = new ScoreManager();
+        }
 
         private void Update()
         {
@@ -24,6 +30,9 @@ namespace Assets.Scripts.Memory
                     .Panel
                     .gameObject
                     .SetActive(true);
+
+                // Add score 
+                _scoreManager.SaveUserScore(GameObject.Find("CardSpawn").GetComponent<SpawnManager>().Sec);
             }
         }
 

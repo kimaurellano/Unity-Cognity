@@ -1,17 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Quiz.Mono;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Assets.Scripts.Quiz.Mono
+namespace Assets.Scripts.GrammarQuiz.Mono
 {
     public class GrammarGameManager : MonoBehaviour
     {
-
 		#region Variables
 
+        private ScoreManager _scoreManager;
 		private Question[] _questions = null;
 		public Question[] Questions { get { return _questions; } }
 
@@ -32,15 +33,9 @@ namespace Assets.Scripts.Quiz.Mono
 		private IEnumerator IE_WaitTillNextRound = null;
 		private IEnumerator IE_StartTimer = null;
 
-		private bool IsFinished
-		{
-			get
-			{
-				return (FinishedQuestions.Count < Questions.Length) ? false : true;
-			}
-		}
+		private bool IsFinished => (FinishedQuestions.Count >= Questions.Length);
 
-		#endregion
+        #endregion
 
 		#region Default Unity methods
 
@@ -71,6 +66,8 @@ namespace Assets.Scripts.Quiz.Mono
 		/// </summary>
 		void Start()
 		{
+            _scoreManager = new ScoreManager();
+
 			events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
 			timerDefaultColor = timerText.color;
@@ -167,12 +164,9 @@ namespace Assets.Scripts.Quiz.Mono
 				: (isCorrect) ? UIManager.ResolutionScreenType.Correct
 				: UIManager.ResolutionScreenType.Incorrect;
 
-			if (events.DisplayResolutionScreen != null)
-			{
-				events.DisplayResolutionScreen(type, Questions[currentQuestion].AddScore);
-			}
+            events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
-			AudioManager.Instance.PlaySound((isCorrect) ? "CorrectSFX" : "IncorrectSFX");
+            AudioManager.Instance.PlaySound((isCorrect) ? "CorrectSFX" : "IncorrectSFX");
 
 			if (type != UIManager.ResolutionScreenType.Finish)
 			{
@@ -329,7 +323,7 @@ namespace Assets.Scripts.Quiz.Mono
 			var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 			if (highscore < events.CurrentFinalScore)
 			{
-				PlayerPrefs.SetInt(GameUtility.SavePrefKey, events.CurrentFinalScore);
+                _scoreManager.SaveUserScore(events.CurrentFinalScore);
 			}
 		}
 		/// <summary>
@@ -339,11 +333,8 @@ namespace Assets.Scripts.Quiz.Mono
 		{
 			events.CurrentFinalScore += add;
 
-			if (events.ScoreUpdated != null)
-			{
-				events.ScoreUpdated();
-			}
-		}
+            events.ScoreUpdated?.Invoke();
+        }
 
 		#region Getters
 

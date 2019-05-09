@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,8 +14,9 @@ namespace Assets.Scripts.Memory
         [SerializeField] private Transform[] _spawnPoints;
         [SerializeField] private GameObject[] _cardPrefabs;
         private List<int> _spawnKeys;
-        private float _sec = 5f;
-        private bool _gameStart = false;
+        private bool _gameStart;
+
+        public float Sec { get; private set; } = 5f;
 
         private void Start()
         {
@@ -41,18 +41,18 @@ namespace Assets.Scripts.Memory
         {
             if (!_gameStart)
             {
-                _sec -= Time.deltaTime;
+                Sec -= Time.deltaTime;
 
-                _timerText.SetText(_sec.ToString("F0"));
+                _timerText.SetText(Sec.ToString("F0"));
             }
             else
             {
-                _sec -= Time.deltaTime;
+                Sec -= Time.deltaTime;
 
-                _timerText.SetText(_sec.ToString("F0"));
+                _timerText.SetText(Sec.ToString("F0"));
             }
 
-            if (_sec < 0.01f && !_gameStart)
+            if (Sec < 0.01f && !_gameStart)
             {
                 _gameStart = true;
 
@@ -63,7 +63,7 @@ namespace Assets.Scripts.Memory
                     item.GetComponent<Card>().Locked = false;
                 }
 
-                _sec = 45f;
+                Sec = 45f;
 
                 Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "button pause")
                     .Button
@@ -73,7 +73,7 @@ namespace Assets.Scripts.Memory
 
                 _timerText.SetText("");
             }
-            else if (_sec < 0.01f && _gameStart)
+            else if (Sec < 0.01f && _gameStart)
             {
                 Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "failed panel")
                     .Panel
@@ -110,4 +110,6 @@ namespace Assets.Scripts.Memory
             }
         }
     }
+
+
 }

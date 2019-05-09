@@ -1,10 +1,10 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using Assets.Scripts.Database.Model;
 using SQLite4Unity3d;
 using UnityEngine;
-using Assets.Scripts.Cognity.Database.Model;
-using System.Collections.Generic;
 
-namespace Assets.Scripts.Cognity.Database
+namespace Assets.Scripts.Database
 {
     public class DataAccess
     {
@@ -16,7 +16,7 @@ namespace Assets.Scripts.Cognity.Database
         {
 #if UNITY_EDITOR
             // Set database path to StreamingAssets folder
-            var filepath = string.Format(@"Assets/StreamingAssets/{0}", _databaseName);
+            var filepath = $@"Assets/StreamingAssets/{_databaseName}";
 #else
             // Set database path to persistentDataPath within the android device
             var filepath = string.Format("{0}/{1}", Application.persistentDataPath, _databaseName);
@@ -42,16 +42,6 @@ namespace Assets.Scripts.Cognity.Database
 
         public void Insert(UserScore score)
         {
-            // Check and update the username if it does exist
-            foreach (var item in SelectAll())
-            {
-                if (item.Username == score.Username)
-                {
-                    _connection.Update(score);
-
-                    return;
-                }
-            }
             _connection.Insert(score);
         }
     }

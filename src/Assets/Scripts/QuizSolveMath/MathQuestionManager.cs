@@ -14,6 +14,7 @@ namespace Assets.Scripts.QuizSolveMath
     {
         [SerializeField] private MathBank[] _mathBanks;
 
+        private ScoreManager _scoreManager;
         private Timer _timer;
         private List<int> _keys;
 
@@ -25,6 +26,8 @@ namespace Assets.Scripts.QuizSolveMath
 
         private void Start() 
         {
+            _scoreManager = new ScoreManager();
+
             _keys = new List<int>();
 
             _timer = GetComponent<Timer>();
@@ -64,6 +67,8 @@ namespace Assets.Scripts.QuizSolveMath
                     .transform
                     .gameObject
                     .SetActive(true);
+
+                _scoreManager.SaveUserScore(_score);
             }
         }
 
@@ -142,5 +147,7 @@ namespace Assets.Scripts.QuizSolveMath
                 .textMesh
                 .SetText(string.Empty);
         }
+
+
     }
 }

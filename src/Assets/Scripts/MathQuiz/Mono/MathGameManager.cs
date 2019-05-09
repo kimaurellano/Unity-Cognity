@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.GrammarQuiz.Mono;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ScoreManager = Assets.Scripts.MathQuiz.Mono.ScoreManager;
 
 namespace Assets.Scripts.Quiz.Mono
 {
     public class MathGameManager : MonoBehaviour
     {
-
 		#region Variables
 
+        private ScoreManager _scoreManager;
 		private Question[] _questions = null;
 		public Question[] Questions { get { return _questions; } }
 
@@ -71,6 +73,8 @@ namespace Assets.Scripts.Quiz.Mono
 		/// </summary>
 		void Start()
 		{
+            _scoreManager = new ScoreManager();
+
 			events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
 			timerDefaultColor = timerText.color;
@@ -329,7 +333,7 @@ namespace Assets.Scripts.Quiz.Mono
 			var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 			if (highscore < events.CurrentFinalScore)
 			{
-				PlayerPrefs.SetInt(GameUtility.SavePrefKey, events.CurrentFinalScore);
+                _scoreManager.SaveUserScore(events.CurrentFinalScore);
 			}
 		}
 		/// <summary>
@@ -339,11 +343,8 @@ namespace Assets.Scripts.Quiz.Mono
 		{
 			events.CurrentFinalScore += add;
 
-			if (events.ScoreUpdated != null)
-			{
-				events.ScoreUpdated();
-			}
-		}
+            events.ScoreUpdated?.Invoke();
+        }
 
 		#region Getters
 

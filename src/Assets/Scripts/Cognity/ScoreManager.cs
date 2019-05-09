@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
-using System;
-using Assets.Scripts.Cognity.Database;
-using Assets.Scripts.Cognity.Database.Model;
 using System.Collections.Generic;
+using Assets.Scripts.Database;
+using Assets.Scripts.Database.Model;
 
 namespace Assets.Scripts.Cognity
 {
     public class ScoreManager
     {
-        private DataAccess _dataAccess;
+        private readonly DataAccess _dataAccess;
 
         // The score as time
         private float _score;
@@ -27,6 +26,10 @@ namespace Assets.Scripts.Cognity
             _score += minToSec + seconds;
         }
 
+        /// <summary>
+        /// Display score as Min:Sec
+        /// </summary>
+        /// <returns></returns>
         public string GetTotalScore()
         {
             float seconds = _score / 60f;
@@ -35,12 +38,12 @@ namespace Assets.Scripts.Cognity
             int minutes = (int)_score / 60;
 
             // After converting seconds to a corresponding minute
-            return string.Format("{0:00}:{1:00}", minutes, seconds);
+            return $"{minutes:00}:{seconds:00}";
         }
 
         public List<KeyValuePair<string, float>> GetUserScoreList()
         {
-            List<KeyValuePair<string, float>> ScoreList = new List<KeyValuePair<string, float>>();
+            List<KeyValuePair<string, float>> scoreList = new List<KeyValuePair<string, float>>();
             int listCount = 1;
             foreach (var score in _dataAccess.SelectAll())
             {
@@ -50,18 +53,23 @@ namespace Assets.Scripts.Cognity
                     break;
                 }
 
-                ScoreList.Add(new KeyValuePair<string, float>(score.Username, score.Score));
+                scoreList.Add(new KeyValuePair<string, float>(score.Username, score.Score));
             }
 
-            return ScoreList;
+            return scoreList;
         }
 
+        /// <summary>
+        /// Save score as Seconds
+        /// </summary>
+        /// <param name="username"></param>
         public void SaveUserScore(string username)
         {
             _dataAccess.Insert(new UserScore
             {
                 Username = username,
-                Score = _score
+                Score = (_score / 1000), // Percentage
+                Category = "Flexibility"
             });
         }
     }

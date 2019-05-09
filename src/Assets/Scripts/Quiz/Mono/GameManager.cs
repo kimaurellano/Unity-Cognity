@@ -12,6 +12,7 @@ namespace Assets.Scripts.Quiz.Mono
 
         #region Variables
 
+        private ScoreManager _scoreManager;
         private Question[] _questions = null;
         public Question[] Questions { get { return _questions; } }
 
@@ -71,6 +72,8 @@ namespace Assets.Scripts.Quiz.Mono
         /// </summary>
         void Start()
         {
+            _scoreManager = new ScoreManager();
+
             events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
             timerDefaultColor = timerText.color;
@@ -329,7 +332,7 @@ namespace Assets.Scripts.Quiz.Mono
             var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
             if (highscore < events.CurrentFinalScore)
             {
-                PlayerPrefs.SetInt(GameUtility.SavePrefKey, events.CurrentFinalScore);
+                _scoreManager.SaveUserScore(events.CurrentFinalScore);
             }
         }
         /// <summary>
