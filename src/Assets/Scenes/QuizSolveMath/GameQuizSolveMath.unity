@@ -3618,7 +3618,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &827550706
@@ -4606,7 +4606,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -19.399994, y: -14}
+  m_AnchoredPosition: {x: -19.400024, y: -14}
   m_SizeDelta: {x: 109.599976, y: 109.5}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &967367114
@@ -6841,6 +6841,36 @@ MonoBehaviour:
     Answer: 7
   - Problem: 2*(30/5)=
     Answer: 12
+  - Problem: '139 + 235 = '
+    Answer: 374
+  - Problem: '235 - 139 =  '
+    Answer: 96
+  - Problem: '5x16=  '
+    Answer: 80
+  - Problem: '45/9=  '
+    Answer: 5
+  - Problem: '15% of 300 =  '
+    Answer: 45
+  - Problem: 2+4+6+7+1 =
+    Answer: 20
+  - Problem: 0+2+12+0 =
+    Answer: 14
+  - Problem: 17-8=
+    Answer: 9
+  - Problem: 8+4-8+6=
+    Answer: 20
+  - Problem: 10+23+5-1=
+    Answer: 37
+  - Problem: 34+15+6-1=
+    Answer: 54
+  - Problem: 23+6-4=
+    Answer: 25
+  - Problem: 12+12+12=
+    Answer: 36
+  - Problem: 46-20+12=
+    Answer: 38
+  - Problem: 21+32-12
+    Answer: 41
 --- !u!4 &1582375059
 Transform:
   m_ObjectHideFlags: 0
