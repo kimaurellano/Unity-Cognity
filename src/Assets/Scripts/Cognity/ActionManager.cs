@@ -14,7 +14,6 @@ namespace Assets.Scripts.Cognity
     /// </summary>    
     public class ActionManager : MonoBehaviour
     {
-
         private void Update()
         {
             if (Input.GetKey(KeyCode.Escape))

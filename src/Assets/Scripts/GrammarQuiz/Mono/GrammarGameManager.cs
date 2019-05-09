@@ -323,6 +323,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono
 			var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 			if (highscore < events.CurrentFinalScore)
 			{
+                PlayerPrefs.SetInt(GameUtility.SavePrefKey, events.CurrentFinalScore);
                 _scoreManager.SaveUserScore(events.CurrentFinalScore);
 			}
 		}

@@ -333,6 +333,7 @@ namespace Assets.Scripts.Quiz.Mono
 			var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 			if (highscore < events.CurrentFinalScore)
 			{
+                PlayerPrefs.SetInt(GameUtility.SavePrefKey, events.CurrentFinalScore);
                 _scoreManager.SaveUserScore(events.CurrentFinalScore);
 			}
 		}
