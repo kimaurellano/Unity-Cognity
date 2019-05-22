@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Database;
+using Assets.Scripts.Database.Component;
 using Assets.Scripts.Database.Model;
 using UnityEngine;
 

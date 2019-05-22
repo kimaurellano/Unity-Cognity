@@ -579,50 +579,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &168419326
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 168419328}
-  - component: {fileID: 168419327}
-  m_Layer: 0
-  m_Name: ColliderPointsObserver
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &168419327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 168419326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd143ded288429488554857ba153c70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &168419328
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 168419326}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &170076733
 GameObject:
@@ -1792,7 +1749,7 @@ Transform:
   - {fileID: 1318072361}
   - {fileID: 967771751}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &436985084
 MonoBehaviour:
@@ -1806,52 +1763,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 089dbd84f1d005e44a3bce6fccbbc1d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scorePrefab: {fileID: 208125594801237701, guid: f17024d549c636d47846b24ff9417222,
-    type: 3}
+  _outlineSpawnPoint: {fileID: 967771751}
+  _puzzleImage: {fileID: 973098742}
   _puzzleImagesPerLevel:
   - {fileID: 6921271666053065134, guid: f700316cfbc220743ac4f3330a9ce81e, type: 3}
   - {fileID: 4222791343462911441, guid: 7ee45c9dc8677f24f866830c9fbfe7c8, type: 3}
   - {fileID: 5568512658475936838, guid: 7c5ba89b12ec4514192a89478b120f22, type: 3}
   - {fileID: 1981512522866924406, guid: 57a2aa5f7a59e9d4b88d663f018f4bbf, type: 3}
-  _puzzleImage: {fileID: 973098742}
   _puzzleLevels:
   - LevelName: Level_1
+    PuzzleOutline: {fileID: 62, guid: e730116a03aa5404cbe3dd3e3c812f28, type: 3}
     PuzzlePiecePrefabs:
     - {fileID: 1018432853151206928, guid: f3e60ab283417874f80767034fc82b9e, type: 3}
     - {fileID: 4981118385296851651, guid: 3fc02a3276bad7b46b77ebb426ba8474, type: 3}
     - {fileID: 2015111397089613696, guid: 5797c7711b2006040abe9f29a719f508, type: 3}
     - {fileID: 850174783414307812, guid: caf56930ae4317a4bb846a70453961fd, type: 3}
-    PuzzleOutline: {fileID: 62, guid: e730116a03aa5404cbe3dd3e3c812f28, type: 3}
   - LevelName: Level_2
+    PuzzleOutline: {fileID: 2757805125425493983, guid: df8b782f844894e4a8083bd685471ed6,
+      type: 3}
     PuzzlePiecePrefabs:
     - {fileID: 8496793670950299980, guid: 3e3f11e9e2116cd45889a4aa21b5db72, type: 3}
     - {fileID: 1924365257289909333, guid: 35082878fa4e7204c8765bde94b6207c, type: 3}
     - {fileID: 3905940222176409712, guid: e49b968533980464394ecdaa44f8a29c, type: 3}
     - {fileID: 7599006391854303881, guid: 1d1cc5d629bca084ca0a1c1632f3b540, type: 3}
-    PuzzleOutline: {fileID: 2757805125425493983, guid: df8b782f844894e4a8083bd685471ed6,
-      type: 3}
   - LevelName: Level_3
+    PuzzleOutline: {fileID: 3360548339950590730, guid: 8ef56ed5af5a62742a537f28ee7c52ae,
+      type: 3}
     PuzzlePiecePrefabs:
     - {fileID: 4329193140379545568, guid: 8e1add6b2acdd1347b19003f71261953, type: 3}
     - {fileID: 3277666029372467042, guid: 5f8835b4dd2b53e4f9d7a4c60b28d837, type: 3}
     - {fileID: 454485394880244896, guid: 15f9053028d9739459f6401142d5a26f, type: 3}
     - {fileID: 714851327437566954, guid: 9117e5d7ef2e69740b12eebbdfa86e1d, type: 3}
-    PuzzleOutline: {fileID: 3360548339950590730, guid: 8ef56ed5af5a62742a537f28ee7c52ae,
-      type: 3}
   - LevelName: Level_4
+    PuzzleOutline: {fileID: 3360548339950590730, guid: 365eb97e937ab4945a6dbc9946932461,
+      type: 3}
     PuzzlePiecePrefabs:
     - {fileID: 2062327764834028071, guid: da0064d326a2f6c42ada409db9d83552, type: 3}
     - {fileID: 7563837975765863502, guid: 1b07d8bb71221d44ea76d0d6d6a430d2, type: 3}
     - {fileID: 1122906469138023070, guid: 7b618ac8d1c01e84286605f3210def32, type: 3}
     - {fileID: 6282761422792085329, guid: 29cfc46fcdb167e4095d24cfc39ceacb, type: 3}
-    PuzzleOutline: {fileID: 3360548339950590730, guid: 365eb97e937ab4945a6dbc9946932461,
-      type: 3}
+  _scorePrefab: {fileID: 208125594801237701, guid: f17024d549c636d47846b24ff9417222,
+    type: 3}
   _spawnPoints:
   - {fileID: 1368426540}
   - {fileID: 308058950}
   - {fileID: 1613920536}
   - {fileID: 1318072360}
-  _outlineSpawnPoint: {fileID: 967771751}
 --- !u!1 &485845743
 GameObject:
   m_ObjectHideFlags: 0
@@ -5504,7 +5461,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1573525146
 GameObject:
@@ -6142,7 +6099,9 @@ MonoBehaviour:
   - Name: quit panel
     Panel: {fileID: 559712529}
   _buttonCollection: []
-  _textCollection: []
+  _textCollection:
+  - textName: level
+    textMesh: {fileID: 949068202}
 --- !u!4 &1833603264
 Transform:
   m_ObjectHideFlags: 0
@@ -6155,7 +6114,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1852735319
 GameObject:
@@ -7194,7 +7153,7 @@ RectTransform:
   - {fileID: 1600710427}
   - {fileID: 559712529}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7440,7 +7399,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2118830751
 GameObject:

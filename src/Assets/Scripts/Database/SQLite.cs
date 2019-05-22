@@ -402,7 +402,7 @@ namespace SQLite4Unity3d
 		/// a schema automatically generated from the specified type. You can
 		/// later access this schema by calling GetMapping.
 		/// </summary>
-		/// <param name="ty">Type to reflect to a database table.</param>
+		/// <param name="ty">GameType to reflect to a database table.</param>
 		/// <param name="createFlags">Optional flags allowing implicit PK and indexes based on naming conventions.</param>  
 		/// <returns>
 		/// The number of entries added to the database schema.
@@ -527,7 +527,7 @@ namespace SQLite4Unity3d
 		/// Creates an index for the specified object property.
 		/// e.g. CreateIndex<Client>(c => c.Name);
 		/// </summary>
-		/// <typeparam name="T">Type to reflect to a database table.</typeparam>
+		/// <typeparam name="T">GameType to reflect to a database table.</typeparam>
 		/// <param name="property">Property to index</param>
 		/// <param name="unique">Whether the index should be unique</param>
 		public void CreateIndex<T>(Expression<Func<T, object>> property, bool unique = false)
@@ -2119,7 +2119,7 @@ namespace SQLite4Unity3d
 		/// This can be overridden in combination with the <see cref="SQLiteConnection.NewCommand"/>
 		/// method to hook into the life-cycle of objects.
 		///
-		/// Type safety is not possible because MonoTouch does not support virtual generic methods.
+		/// GameType safety is not possible because MonoTouch does not support virtual generic methods.
 		/// </remarks>
 		protected virtual void OnInstanceCreated (object obj)
 		{

@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using TMPro;
+using UnityEngine;
 
-namespace Assets.Scripts.GlobalScripts
+namespace Assets.Scripts.GlobalScripts.UITask
 {
     /// <summary>
     /// Provides Timer functionality.

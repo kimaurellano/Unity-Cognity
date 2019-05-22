@@ -1,6 +1,6 @@
 ﻿using TMPro;
 
-namespace Assets.Scripts.GlobalScripts
+namespace Assets.Scripts.GlobalScripts.UIComponents
 {
     [System.Serializable]
     public class TextCollection

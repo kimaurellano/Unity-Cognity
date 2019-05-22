@@ -1,16 +1,11 @@
-﻿
-using Assets.Scripts;
-using Assets.Scripts.GlobalScripts;
+﻿using Assets.Scripts.GlobalScripts.UIComponents;
 using UnityEngine;
 
-namespace Assets.Scripts.GlobalScripts
-{
+namespace Assets.Scripts.GlobalScripts.UITask {
     /// <summary>
-    /// Collection of UI Elements to be modified on runtime.
-    /// </summary>    
-    public class UIManager : MonoBehaviour
-    {
-
+    ///     Collection of UI Elements to be modified on runtime.
+    /// </summary>
+    public class UIManager : MonoBehaviour {
         [SerializeField] private StatsCollection[] _statsCollections;
         [SerializeField] private PanelCollection[] _panelCollection;
         [SerializeField] private ButtonCollection[] _buttonCollection;
@@ -22,5 +17,3 @@ namespace Assets.Scripts.GlobalScripts
         public StatsCollection[] StatsCollections { get => _statsCollections; set => _statsCollections = value; }
     }
 }
-
-

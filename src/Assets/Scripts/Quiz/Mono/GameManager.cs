@@ -343,10 +343,7 @@ namespace Assets.Scripts.Quiz.Mono
         {
             events.CurrentFinalScore += add;
 
-            if (events.ScoreUpdated != null)
-            {
-                events.ScoreUpdated();
-            }
+            events.ScoreUpdated?.Invoke();
         }
 
         #region Getters

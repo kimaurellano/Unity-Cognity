@@ -234,7 +234,7 @@ namespace Assets.Scripts.Quiz.Mono
         /// </summary>
         void UpdateScoreUI()
         {
-            uIElements.ScoreText.text = "Score: " + events.CurrentFinalScore;
+            uIElements.ScoreText.text = "TotalScore: " + events.CurrentFinalScore;
         }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using TMPro;
 using Assets.Scripts.GlobalScripts;
+using Assets.Scripts.GlobalScripts.UITask;
 
 namespace Assets.Scripts.Memory
 {

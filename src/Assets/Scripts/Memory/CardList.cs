@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.GlobalScripts;
+using Assets.Scripts.GlobalScripts.UITask;
 
 namespace Assets.Scripts.Memory
 {

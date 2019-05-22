@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts.GlobalScripts;
+using Assets.Scripts.GlobalScripts.UITask;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;

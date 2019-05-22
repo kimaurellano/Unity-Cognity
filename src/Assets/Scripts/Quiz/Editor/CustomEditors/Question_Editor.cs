@@ -77,7 +77,7 @@ public class Question_Editor : Editor
             }
             GUILayout.Space(2);
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(answerTypeProp, new GUIContent("Answer Type", "Specify this question answer type."));
+            EditorGUILayout.PropertyField(answerTypeProp, new GUIContent("Answer GameType", "Specify this question answer type."));
             if (EditorGUI.EndChangeCheck())
             {
                 if (answerTypeProp.enumValueIndex == (int)Question.AnswerType.Single)
@@ -88,7 +88,7 @@ public class Question_Editor : Editor
                     }
                 }
             }
-            addScoreProp.intValue = EditorGUILayout.IntSlider(new GUIContent("Add Score"), addScoreProp.intValue, 0, 100);
+            addScoreProp.intValue = EditorGUILayout.IntSlider(new GUIContent("Add TotalScore"), addScoreProp.intValue, 0, 100);
         }
         GUILayout.Space(7.5f);
         GUILayout.Label("Answers", EditorStyles.miniLabel);

@@ -1,80 +1,62 @@
 ﻿using System;
-using Assets.Scripts;
+using Assets.Scripts.GlobalScripts.UITask;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
-using System.Collections;
-using Assets.Scripts.GlobalScripts;
+using Random = System.Random;
 
-// This is a test change
-namespace Assets.Scripts.Cognity
-{
+namespace Assets.Scripts.Cognity {
     /// <summary>
-    /// Collection of Button's actions
-    /// </summary>    
-    public class ActionManager : MonoBehaviour
-    {
-        private void Update()
-        {
-            if (Input.GetKey(KeyCode.Escape))
-            {
-                switch (SceneManager.GetActiveScene().buildIndex)
-                {
-                    case 1:
-                        Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "pause panel")
-                            .Panel
-                            .gameObject
-                            .SetActive(true);
-                        break;
-                    case 0:
-                        Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "quit panel")
-                            .Panel
-                            .gameObject
-                            .SetActive(true);
-                        break;
+    ///     Collection of Button's actions
+    /// </summary>
+    public class ActionManager : MonoBehaviour {
+        private void Update() {
+            if (Input.GetKey(KeyCode.Escape)) {
+                if (SceneManager.GetActiveScene().buildIndex == 1) {
+                    Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "pause panel")
+                        .Panel
+                        .gameObject
+                        .SetActive(true);
+                } else if (SceneManager.GetActiveScene().buildIndex == 0) {
+                    Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "quit panel")
+                        .Panel
+                        .gameObject
+                        .SetActive(true);
                 }
             }
         }
 
-        public void Quit()
-        {
+        public void Quit() {
             Application.Quit();
         }
 
-        public void Pause()
-        {
+        public void Pause() {
             Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "pause panel")
                 .Panel
                 .gameObject
                 .SetActive(true);
         }
 
-        public void LoadScene(string sceneName)
-        {
-            if (sceneName == "BaseMenu")
-            {
+        public void LoadScene(string sceneName) {
+            if (sceneName == "BaseMenu") {
                 Destroy(GameObject.Find("AudioManager").gameObject);
             }
 
             SceneManager.LoadScene(sceneName);
         }
 
-        public void Hide(Transform panel)
-        {
+        public void Hide(Transform panel) {
             panel.gameObject.SetActive(false);
         }
 
-        public void Show(Transform panel)
-        {
+        public void Show(Transform panel) {
             panel.gameObject.SetActive(true);
         }
 
-        public void SaveUserPref(TMP_InputField input)
-        {
-            string userInfo = input.text;
-            if (input.text == string.Empty)
-            {
-                System.Random rand = new System.Random();
+        public void SaveUserPref(TMP_InputField input) {
+            var userInfo = input.text;
+            if (input.text == string.Empty) {
+                var rand = new Random();
                 userInfo = "user" + rand.NextDouble();
             }
 
@@ -85,25 +67,22 @@ namespace Assets.Scripts.Cognity
             PlayerPrefs.SetString("user_info", userInfo);
         }
 
-        public void InvokeAnimation(Animator animator)
-        {
+        public void InvokeAnimation(Animator animator) {
             animator.SetTrigger("show");
         }
 
-        public void MuteBackground()
-        {
-            bool mute = Array.Find(FindObjectOfType<AudioManager>().AudioCollection, s => s.Name == "background").AudioSource.mute;
-            Array.Find(FindObjectOfType<AudioManager>().AudioCollection, s => s.Name == "background").AudioSource.mute = !mute;
+        public void MuteBackground() {
+            bool mute = Array.Find(FindObjectOfType<AudioManager>().AudioCollection, s => s.Name == "background")
+                .AudioSource.mute;
+            Array.Find(FindObjectOfType<AudioManager>().AudioCollection, s => s.Name == "background").AudioSource.mute =
+                !mute;
 
-            if (mute)
-            {
-                Transform button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "music").Button;
+            if (mute) {
+                var button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "music").Button;
                 button.GetChild(0).gameObject.SetActive(false);
                 button.GetChild(1).gameObject.SetActive(true);
-            }
-            else
-            {
-                Transform button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "music").Button;
+            } else {
+                var button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "music").Button;
                 button.GetChild(0).gameObject.SetActive(true);
                 button.GetChild(1).gameObject.SetActive(false);
             }
