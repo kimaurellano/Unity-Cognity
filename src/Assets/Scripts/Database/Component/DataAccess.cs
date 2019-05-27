@@ -8,12 +8,12 @@ namespace Assets.Scripts.Database.Component {
     public class DataAccess {
         private static SQLiteConnection _connection;
 
-        private const string DatabaseName = "UserScore.db";
+        private const string DATABASE_NAME = "UserScore.db";
 
         public DataAccess() {
 #if UNITY_EDITOR
             // Set database path to StreamingAssets folder
-            var filepath = $@"Assets/StreamingAssets/{DatabaseName}";
+            var filepath = $@"Assets/StreamingAssets/{DATABASE_NAME}";
 #else
             // Set database path to persistentDataPath within the android device
             var filepath = string.Format("{0}/{1}", Application.persistentDataPath, _databaseName);
@@ -26,7 +26,7 @@ namespace Assets.Scripts.Database.Component {
                     new WWW("jar:file://" +
                             Application.dataPath +
                             "!/assets/" +
-                            DatabaseName); // this is the path to your StreamingAssets in android
+                            DATABASE_NAME); // this is the path to your StreamingAssets in android
                 while (!loadDb.isDone) {
                 }
 

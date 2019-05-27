@@ -206,7 +206,6 @@ namespace Assets.Scripts.Cognity {
 
         public void Rotate() {
             Rotating = !Rotating;
-            Debug.Log(Rotating);
         }
 
         public void FlipHorizontal() {
