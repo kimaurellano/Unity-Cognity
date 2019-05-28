@@ -15,7 +15,9 @@ namespace Assets.Scripts.Cognity {
         public int LockCount { get; set; }
 
         // Where the puzzle pieces should be within an Outline
-        [field: SerializeField] public Transform[] PuzzlePiecesPlace { get; set; }
+        [SerializeField] private Transform[] _puzzlePiecesPlace;
+
+        public Transform[] PuzzlePiecesPlace { get => _puzzlePiecesPlace; set => _puzzlePiecesPlace = value; }
 
         // Current number of collision within the Outline
         public int CurrentCollision { get; set; }
@@ -28,8 +30,6 @@ namespace Assets.Scripts.Cognity {
             }
 
             GetComponent<Collider2D>().enabled = !FindObjectOfType<TouchManager>().IsTouching;
-
-            //Debug.Log("Collision:" + CurrentCollision + "/" + TOTALCOLLISION);
         }
     }
 }
