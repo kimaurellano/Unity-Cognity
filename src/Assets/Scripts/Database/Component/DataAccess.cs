@@ -16,7 +16,7 @@ namespace Assets.Scripts.Database.Component {
             var filepath = $@"Assets/StreamingAssets/{DATABASE_NAME}";
 #else
             // Set database path to persistentDataPath within the android device
-            var filepath = string.Format("{0}/{1}", Application.persistentDataPath, _databaseName);
+            var filepath = string.Format("{0}/{1}", Application.persistentDataPath, DATABASE_NAME);
 #endif
 #if UNITY_ANDROID
             // Check for database file in the persistentDataPath within the android device
