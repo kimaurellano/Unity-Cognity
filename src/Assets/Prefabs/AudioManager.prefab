@@ -44,15 +44,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioCollection:
-  - Name: button
-    AudioClip: {fileID: 8300000, guid: a018f304fbd72404f8bf6462088edcd9, type: 3}
-    Volume: 1
+  - AudioClip: {fileID: 8300000, guid: f1bd0270c3235f64488181cb6745a97d, type: 3}
     AudioSource: {fileID: 0}
-  - Name: background
-    AudioClip: {fileID: 8300000, guid: f1bd0270c3235f64488181cb6745a97d, type: 3}
+    Name: background
     Volume: 1
+  - AudioClip: {fileID: 8300000, guid: 9fd634cf4732bf74888567e2000bd94e, type: 3}
     AudioSource: {fileID: 0}
-  - Name: snap
-    AudioClip: {fileID: 8300000, guid: 949b7d3b220bf7842a2cfaf978c63004, type: 3}
+    Name: button
     Volume: 1
+  - AudioClip: {fileID: 8300000, guid: 949b7d3b220bf7842a2cfaf978c63004, type: 3}
     AudioSource: {fileID: 0}
+    Name: snap
+    Volume: 1
