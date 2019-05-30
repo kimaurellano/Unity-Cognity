@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Database.Enum;
-using Assets.Scripts.Database.Interface;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UITask;
-using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
 #pragma warning disable 649
+
 namespace Assets.Scripts.Cognity {
     /// <summary>
     ///     Main worker of the puzzle game.
-    ///     Manages occuring actions within the puzzle area.
+    ///     Manages occuring actions within th e puzzle area.
     /// </summary>
     public class PuzzleManager : MonoBehaviour {
         // A random rotation after puzzle instantiation
@@ -84,7 +82,7 @@ namespace Assets.Scripts.Cognity {
                 GameDone = true;
 
                 // Stop sound
-                Array.Find(FindObjectOfType<AudioManager>().AudioCollection, i => i.Name == "background")
+                Array.Find(FindObjectOfType<AudioManager>().AudioCollections, i => i.Name == "background")
                     .AudioSource
                     .Stop();
 

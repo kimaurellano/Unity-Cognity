@@ -8,9 +8,11 @@ namespace Assets.Scripts.Cognity {
     public class AudioManager : MonoBehaviour {
         private static AudioManager _audioManager;
 
+        [SerializeField] private AudioCollection[] _audioCollection;
+
         private GameObject[] _buttons;
 
-        [field: SerializeField] public AudioCollection[] AudioCollection { get; set; }
+        public AudioCollection[] AudioCollections { get => _audioCollection; set => _audioCollection = value; }
 
         private void Start() {
             if (_audioManager != null) {
@@ -26,7 +28,7 @@ namespace Assets.Scripts.Cognity {
                 button.GetComponent<Button>().onClick.AddListener(TaskOnClick);
             }
 
-            foreach (AudioCollection audios in AudioCollection) {
+            foreach (AudioCollection audios in _audioCollection) {
                 // We will setup each clip
                 audios.AudioSource = gameObject.AddComponent<AudioSource>();
                 audios.AudioSource.clip = audios.AudioClip;
@@ -36,14 +38,14 @@ namespace Assets.Scripts.Cognity {
 
             SceneManager.activeSceneChanged += ChangedActiveScene;
 
-            AudioSource background = Array.Find(AudioCollection, s => s.Name == "background").AudioSource;
+            AudioSource background = Array.Find(_audioCollection, s => s.Name == "background").AudioSource;
             background.loop = true;
             background.Play();
         }
 
         private void TaskOnClick() {
             // This is where we assign what clip should be played on button click
-            Array.Find(AudioCollection, s => s.Name == "button").AudioSource.Play();
+            Array.Find(_audioCollection, s => s.Name == "button").AudioSource.Play();
         }
 
         private void ChangedActiveScene(Scene current, Scene next) {
@@ -56,12 +58,12 @@ namespace Assets.Scripts.Cognity {
 
         public void PlaySnapSfx() {
             // This is where we assign what clip should be played on button click
-            Array.Find(AudioCollection, s => s.Name == "snap").AudioSource.Play();
+            Array.Find(_audioCollection, s => s.Name == "snap").AudioSource.Play();
         }
 
         public void StopBackground() {
             // This is where we assign what clip should be played on button click
-            Array.Find(AudioCollection, s => s.Name == "background").AudioSource.Stop();
+            Array.Find(_audioCollection, s => s.Name == "background").AudioSource.Stop();
 
             Destroy(gameObject);
         }

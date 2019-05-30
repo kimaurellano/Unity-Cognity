@@ -1,33 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.GlobalScripts.UITask;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using TMPro;
-using Assets.Scripts.GlobalScripts;
-using Assets.Scripts.GlobalScripts.UITask;
+#pragma warning disable 649
 
-namespace Assets.Scripts.Memory
-{
-    public class SpawnManager : MonoBehaviour
-    {
-        [SerializeField] private TextMeshProUGUI _timerText;
-        [SerializeField] private Transform[] _spawnPoints;
+namespace Assets.Scripts.Memory {
+    public class SpawnManager : MonoBehaviour {
         [SerializeField] private GameObject[] _cardPrefabs;
-        private List<int> _spawnKeys;
+
         private bool _gameStart;
+
+        private List<int> _spawnKeys;
+
+        [SerializeField] private Transform[] _spawnPoints;
+
+        [SerializeField] private TextMeshProUGUI _timerText;
 
         public float Sec { get; private set; } = 5f;
 
-        private void Start()
-        {
+        private void Start() {
             _spawnKeys = new List<int>();
 
             Spawn();
 
             // Prevent all card touches
-            foreach (var card in GameObject.FindGameObjectsWithTag("Card"))
-            {
+            foreach (var card in GameObject.FindGameObjectsWithTag("Card")) {
                 card.GetComponent<Card>().Locked = true;
             }
 
@@ -38,27 +38,21 @@ namespace Assets.Scripts.Memory
                 .SetActive(false);
         }
 
-        private void Update()
-        {
-            if (!_gameStart)
-            {
+        private void Update() {
+            if (!_gameStart) {
+                Sec -= Time.deltaTime;
+
+                _timerText.SetText(Sec.ToString("F0"));
+            } else {
                 Sec -= Time.deltaTime;
 
                 _timerText.SetText(Sec.ToString("F0"));
             }
-            else
-            {
-                Sec -= Time.deltaTime;
 
-                _timerText.SetText(Sec.ToString("F0"));
-            }
-
-            if (Sec < 0.01f && !_gameStart)
-            {
+            if (Sec < 0.01f && !_gameStart) {
                 _gameStart = true;
 
-                foreach (var item in GameObject.FindGameObjectsWithTag("Card"))
-                {
+                foreach (var item in GameObject.FindGameObjectsWithTag("Card")) {
                     item.GetComponent<Animator>().SetBool("flip", true);
                     // Enable all card touches
                     item.GetComponent<Card>().Locked = false;
@@ -73,9 +67,7 @@ namespace Assets.Scripts.Memory
                     .SetActive(true);
 
                 _timerText.SetText("");
-            }
-            else if (Sec < 0.01f && _gameStart)
-            {
+            } else if (Sec < 0.01f && _gameStart) {
                 Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "failed panel")
                     .Panel
                     .transform
@@ -86,17 +78,14 @@ namespace Assets.Scripts.Memory
             }
         }
 
-        private void Spawn()
-        {
-            for (int i = 0; i < _spawnPoints.Length; i++)
-            {
+        private void Spawn() {
+            for (int i = 0; i < _spawnPoints.Length; i++) {
                 _spawnKeys.Add(i);
             }
 
-            var cards = _cardPrefabs;
+            GameObject[] cards = _cardPrefabs;
 
-            foreach (var card in cards)
-            {
+            foreach (var card in cards) {
                 // Generate random spawn
                 int randomKey = Random.Range(0, _spawnKeys.Count);
 
@@ -111,6 +100,4 @@ namespace Assets.Scripts.Memory
             }
         }
     }
-
-
 }
