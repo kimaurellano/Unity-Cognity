@@ -26,7 +26,7 @@ namespace Assets.Scripts.Database.Component {
                     new WWW("jar:file://" +
                             Application.dataPath +
                             "!/assets/" +
-                            DATABASE_NAME); // this is the path to your StreamingAssets in android
+                            DATABASE_NAME); // This is the path to your StreamingAssets in android
                 while (!loadDb.isDone) {
                 }
 
@@ -38,13 +38,13 @@ namespace Assets.Scripts.Database.Component {
         }
 
         public IEnumerable<UserScore> SelectAll() {
+            // Yields return value every implicit iteration. For each loop not needed
             return _connection.Table<UserScore>().OrderByDescending(i => i.Score);
         }
         
         public IEnumerable<UserScore> SelectUser(string username) {
-            var userDetails = _connection.Table<UserScore>().Where(i => i.Username.Equals(username));
-
-            return userDetails;
+            // Yields return value every implicit iteration. For each loop not needed
+            return _connection.Table<UserScore>().Where(i => i.Username.Equals(username));
         }
 
         public void Insert(UserScore score) {
@@ -61,7 +61,13 @@ namespace Assets.Scripts.Database.Component {
         }
 
         private static bool Exist(string username) {
-            return _connection.Table<UserScore>().Where(i => i.Username.Equals(username)) != null;
+            UserScore userScore = null;
+            // Needs to get each value for each iteration
+            foreach (var user in _connection.Table<UserScore>().Where(i => i.Username.Equals(username))) {
+                userScore = user;
+            }
+
+            return userScore != null;
         }
 
         private static float GetScore(string username) {
