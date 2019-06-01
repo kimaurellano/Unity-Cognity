@@ -7,6 +7,7 @@ using UnityEngine;
 namespace Assets.Scripts.GlobalScripts.Player {
     public class BaseScoreHandler {
         public void SaveScore(float score, Game.GameType gameType) {
+
             // Up to 2 decimal places
             double value = Math.Truncate(100 * (score / 1000)) / 100;
 

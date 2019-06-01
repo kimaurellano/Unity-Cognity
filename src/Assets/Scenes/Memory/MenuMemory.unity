@@ -171,8 +171,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: Quit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 51536f3631bc3b34ab0d384cdd6e9fc0, type: 2}
-  m_sharedMaterial: {fileID: 21206241558064740, guid: 51536f3631bc3b34ab0d384cdd6e9fc0,
+  m_fontAsset: {fileID: 11400000, guid: 41006728621e30144bf6cb113ec62635, type: 2}
+  m_sharedMaterial: {fileID: 21161268254269248, guid: 41006728621e30144bf6cb113ec62635,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -882,7 +882,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1099601239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81281a4ec12ded04cb483bcdeba946b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 96f96322c99b7a94fb11463810156d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1127075536
@@ -914,11 +914,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d8c3b426329124fa9fba2dbc117a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _panelCollection:
-  - Name: quit panel
-    Panel: {fileID: 740357079}
-  - Name: menu panel
-    Panel: {fileID: 1039883347}
 --- !u!4 &1127075538
 Transform:
   m_ObjectHideFlags: 0
@@ -1134,22 +1129,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1355469747}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d5363c19d07ea24e90f32ef2d87ba0d, type: 3}
+  m_Script: {fileID: 11500000, guid: c12648da3cab5074596cd8e0fefca04b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _audioCollection:
-  - Name: paired
-    AudioClip: {fileID: 8300000, guid: 949b7d3b220bf7842a2cfaf978c63004, type: 3}
-    Volume: 1
+  - AudioClip: {fileID: 8300000, guid: a018f304fbd72404f8bf6462088edcd9, type: 3}
     AudioSource: {fileID: 0}
-  - Name: click
-    AudioClip: {fileID: 8300000, guid: a018f304fbd72404f8bf6462088edcd9, type: 3}
+    Name: click
     Volume: 1
+  - AudioClip: {fileID: 8300000, guid: 949b7d3b220bf7842a2cfaf978c63004, type: 3}
     AudioSource: {fileID: 0}
-  - Name: background
-    AudioClip: {fileID: 8300000, guid: f1bd0270c3235f64488181cb6745a97d, type: 3}
+    Name: paired
     Volume: 1
+  - AudioClip: {fileID: 8300000, guid: f1bd0270c3235f64488181cb6745a97d, type: 3}
     AudioSource: {fileID: 0}
+    Name: background
+    Volume: 1
 --- !u!1 &1382917127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1370,8 +1365,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: Start
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 51536f3631bc3b34ab0d384cdd6e9fc0, type: 2}
-  m_sharedMaterial: {fileID: 21206241558064740, guid: 51536f3631bc3b34ab0d384cdd6e9fc0,
+  m_fontAsset: {fileID: 11400000, guid: 41006728621e30144bf6cb113ec62635, type: 2}
+  m_sharedMaterial: {fileID: 21161268254269248, guid: 41006728621e30144bf6cb113ec62635,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1706,7 +1701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.83137256, b: 0.27058825, a: 1}
+  m_Color: {r: 0.011213934, g: 0.46512106, b: 0.7924528, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2092,16 +2087,16 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: Memory game
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 51536f3631bc3b34ab0d384cdd6e9fc0, type: 2}
-  m_sharedMaterial: {fileID: 21206241558064740, guid: 51536f3631bc3b34ab0d384cdd6e9fc0,
+  m_fontAsset: {fileID: 11400000, guid: 41006728621e30144bf6cb113ec62635, type: 2}
+  m_sharedMaterial: {fileID: 21161268254269248, guid: 41006728621e30144bf6cb113ec62635,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282766591
-  m_fontColor: {r: 1, g: 0.83137256, b: 0.27058825, a: 1}
+    rgba: 4291458562
+  m_fontColor: {r: 0.011213934, g: 0.46512106, b: 0.7924528, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2299,7 +2294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.83137256, b: 0.27058825, a: 1}
+  m_Color: {r: 0.011213934, g: 0.46512106, b: 0.7924528, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
