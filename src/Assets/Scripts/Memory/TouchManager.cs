@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace Assets.Scripts.Memory {
     public class TouchManager : MonoBehaviour {
-        [SerializeField] private CardList _cardList;
+        [SerializeField] private CardManager _cardManager;
 
         private Touch _touch;
 
         private void Start() {
-            _cardList = GameObject.Find("CardManager").GetComponent<CardList>();
+            _cardManager = GameObject.Find("CardManager").GetComponent<CardManager>();
         }
 
         private void Update() {
-            if (Input.touchCount == 1) {
+            if (Input.touchCount == 1 && !_cardManager.OnFlip) {
                 _touch = Input.GetTouch(0);
 
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(_touch.position);
@@ -20,8 +20,11 @@ namespace Assets.Scripts.Memory {
                 switch (_touch.phase) {
                     case TouchPhase.Began:
                         if (GetComponent<Collider2D>().Equals(Physics2D.OverlapPoint(touchPos))) {
+
+                            _cardManager.TouchCount++;
+
                             // Get the transform of the touched card
-                            var touchCard = Physics2D.OverlapPoint(touchPos).transform;
+                            Transform touchCard = Physics2D.OverlapPoint(touchPos).transform;
 
                             if (touchCard.GetComponent<Card>().Locked) {
                                 return;
@@ -30,40 +33,39 @@ namespace Assets.Scripts.Memory {
                             // Animate the touched card to flip up
                             touchCard.GetComponent<Animator>().SetBool("flip", false);
 
-                            // Two same card picked
-                            if (_cardList.FirstPick != null &&
-                                touchCard.name == _cardList.FirstPick.name) {
-                                // Tell when to display success panel
-                                FindObjectOfType<CardList>().AddLockedCard();
+                            // Play sfx on card pick
+                            FindObjectOfType<AudioManager>().PlayPairedSfx();
 
-                                FindObjectOfType<AudioManager>().PlayPairedSfx();
+                            if (_cardManager.FirstPick == null) {
+                                _cardManager.FirstPick = touchCard;
+                            } else {
+                                _cardManager.SecondPick = touchCard;
+                            }
 
-                                // Avoid picking the paired cards
-                                touchCard.GetComponent<Card>().Locked = true;
-                                _cardList.FirstPick.GetComponent<Card>().Locked = true;
+                            if (_cardManager.FirstPick != null &&
+                                _cardManager.SecondPick != null &&
+                                _cardManager.FirstPick.name ==
+                                _cardManager.SecondPick.name) {
+                                _cardManager.LockCount++;
+                                Debug.Log(_cardManager.LockCount);
 
-                                // Reset picking
-                                _cardList.FirstPick = null;
-                                touchCard = null;
-                            } else if (_cardList.FirstPick != null && touchCard.name != _cardList.FirstPick.name) {
-                                touchCard.GetComponent<Animator>().SetBool("flip", true);
-                                _cardList.FirstPick.GetComponent<Animator>().SetBool("flip", true);
+                                // Prevent from picking the already paired cards
+                                _cardManager.FirstPick.GetComponent<Card>().Locked = true;
+                                _cardManager.SecondPick.GetComponent<Card>().Locked = true;
 
-                                // Remove the first picked
-                                _cardList.FirstPick = null;
-                            } else if (_cardList.FirstPick == null) {
-                                // Remember last picked
-                                _cardList.FirstPick = touchCard;
+                                _cardManager.FirstPick = null;
+                                _cardManager.SecondPick = null;
+                            } else if (_cardManager.FirstPick != null &&
+                                       _cardManager.SecondPick != null &&
+                                       _cardManager.FirstPick.name !=
+                                       _cardManager.SecondPick.name) {
+                                StartCoroutine(_cardManager.WaitForFlip());
                             }
                         }
 
                         break;
                 }
             }
-        }
-
-        private string CompareName(string first, string second) {
-            return null;
         }
     }
 }
