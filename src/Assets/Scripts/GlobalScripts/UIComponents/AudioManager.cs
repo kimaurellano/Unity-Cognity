@@ -6,7 +6,12 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
     public class AudioManager : MonoBehaviour {
         private static AudioManager _audioManager;
 
-        [field: SerializeField] public AudioCollection[] AudioCollection { get; set; }
+        [SerializeField] private AudioCollection[] _audioCollection;
+
+        public AudioCollection[] AudioCollection {
+            get => _audioCollection;
+            set => _audioCollection = value;
+        }
 
         private void Start() {
             // Singleton
@@ -18,12 +23,12 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
 
             DontDestroyOnLoad(gameObject);
 
-            foreach (var audio in AudioCollection) {
+            foreach (var collection in AudioCollection) {
                 // We will setup each clip
-                audio.AudioSource = gameObject.AddComponent<AudioSource>();
-                audio.AudioSource.clip = audio.AudioClip;
-                audio.AudioSource.clip.name = audio.AudioClip.name;
-                audio.AudioSource.volume = audio.Volume;
+                collection.AudioSource = gameObject.AddComponent<AudioSource>();
+                collection.AudioSource.clip = collection.AudioClip;
+                collection.AudioSource.clip.name = collection.AudioClip.name;
+                collection.AudioSource.volume = collection.Volume;
             }
 
             foreach (var button in GameObject.FindGameObjectsWithTag("Button")) {
