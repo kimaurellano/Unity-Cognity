@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Assets.Scripts.Database.Component;
 using Assets.Scripts.GlobalScripts.UITask;
 using UnityEngine;
@@ -21,12 +20,12 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
             EvaluateStatScore("ProblemSolving");
         }
 
-        private void EvaluateStatScore(string category) {
-            var total = _dataAccess.SelectAll().Where(i => i.Category.Equals(category)).Sum(catScore => catScore.Score);
+        private static void EvaluateStatScore(string category) {
+            var summary = PlayerPrefs.GetFloat(category);
 
             Array.Find(FindObjectOfType<UIManager>().StatsCollections, i => i.StatName.Equals(category))
                 .Gauge
-                .value = total;
+                .value = summary;
         }
     }
 }
