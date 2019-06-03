@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Scripts.GlobalScripts.UITask;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 #pragma warning disable 649
 
@@ -12,6 +13,8 @@ namespace Assets.Scripts.Memory {
         [SerializeField] private GameObject[] _cardPrefabs;
 
         private bool _gameStart;
+
+        private bool _paused;
 
         private List<int> _spawnKeys;
 
@@ -68,13 +71,7 @@ namespace Assets.Scripts.Memory {
 
                 _timerText.SetText("");
             } else if (Sec < 0.01f && _gameStart) {
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "failed panel")
-                    .Panel
-                    .transform
-                    .gameObject
-                    .SetActive(true);
-
-                _timerText.SetText("");
+                SceneManager.LoadScene("GameOverMemory");
             }
         }
 

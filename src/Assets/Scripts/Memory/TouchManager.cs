@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace Assets.Scripts.Memory {
     public class TouchManager : MonoBehaviour {
-        [SerializeField] private CardManager _cardManager;
+        [SerializeField] private GameManager _gameManager;
 
         private Touch _touch;
 
         private void Start() {
-            _cardManager = GameObject.Find("CardManager").GetComponent<CardManager>();
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
 
         private void Update() {
-            if (Input.touchCount == 1 && !_cardManager.OnFlip) {
+            if (Input.touchCount == 1 && !_gameManager.OnFlip) {
                 _touch = Input.GetTouch(0);
 
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(_touch.position);
@@ -21,7 +21,7 @@ namespace Assets.Scripts.Memory {
                     case TouchPhase.Began:
                         if (GetComponent<Collider2D>().Equals(Physics2D.OverlapPoint(touchPos))) {
 
-                            _cardManager.TouchCount++;
+                            _gameManager.TouchCount++;
 
                             // Get the transform of the touched card
                             Transform touchCard = Physics2D.OverlapPoint(touchPos).transform;
@@ -36,30 +36,30 @@ namespace Assets.Scripts.Memory {
                             // Play sfx on card pick
                             FindObjectOfType<AudioManager>().PlayPairedSfx();
 
-                            if (_cardManager.FirstPick == null) {
-                                _cardManager.FirstPick = touchCard;
+                            if (_gameManager.FirstPick == null) {
+                                _gameManager.FirstPick = touchCard;
                             } else {
-                                _cardManager.SecondPick = touchCard;
+                                _gameManager.SecondPick = touchCard;
                             }
 
-                            if (_cardManager.FirstPick != null &&
-                                _cardManager.SecondPick != null &&
-                                _cardManager.FirstPick.name ==
-                                _cardManager.SecondPick.name) {
-                                _cardManager.LockCount++;
-                                Debug.Log(_cardManager.LockCount);
+                            if (_gameManager.FirstPick != null &&
+                                _gameManager.SecondPick != null &&
+                                _gameManager.FirstPick.name ==
+                                _gameManager.SecondPick.name) {
+                                _gameManager.LockCount++;
+                                Debug.Log(_gameManager.LockCount);
 
                                 // Prevent from picking the already paired cards
-                                _cardManager.FirstPick.GetComponent<Card>().Locked = true;
-                                _cardManager.SecondPick.GetComponent<Card>().Locked = true;
+                                _gameManager.FirstPick.GetComponent<Card>().Locked = true;
+                                _gameManager.SecondPick.GetComponent<Card>().Locked = true;
 
-                                _cardManager.FirstPick = null;
-                                _cardManager.SecondPick = null;
-                            } else if (_cardManager.FirstPick != null &&
-                                       _cardManager.SecondPick != null &&
-                                       _cardManager.FirstPick.name !=
-                                       _cardManager.SecondPick.name) {
-                                StartCoroutine(_cardManager.WaitForFlip());
+                                _gameManager.FirstPick = null;
+                                _gameManager.SecondPick = null;
+                            } else if (_gameManager.FirstPick != null &&
+                                       _gameManager.SecondPick != null &&
+                                       _gameManager.FirstPick.name !=
+                                       _gameManager.SecondPick.name) {
+                                StartCoroutine(_gameManager.WaitForFlip());
                             }
                         }
 
