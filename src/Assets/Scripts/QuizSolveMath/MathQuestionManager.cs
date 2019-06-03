@@ -76,7 +76,7 @@ namespace Assets.Scripts.QuizSolveMath {
                     .SetActive(true);
 
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.SaveScore(_score, Game.GameType.ProblemSolving);
+                baseScoreHandler.AddScore(_score, Game.GameType.ProblemSolving);
             }
         }
 

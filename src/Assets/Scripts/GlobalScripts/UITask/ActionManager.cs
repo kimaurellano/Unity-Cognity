@@ -11,6 +11,9 @@ namespace Assets.Scripts.GlobalScripts.UITask {
     /// </summary>
     public class ActionManager : MonoBehaviour {
         private void Start() {
+
+            //PlayerPrefs.DeleteAll();
+
             // Not first time use and avoid null exception
             if (PlayerPrefs.GetString("user_info") == string.Empty || SceneManager.GetActiveScene().buildIndex != 0) {
                 return;

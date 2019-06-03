@@ -100,7 +100,7 @@ namespace Assets.Scripts.Cognity {
 
                 // Save the total score
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.SaveScore(_scoreManager.TotalScore, Game.GameType.Flexibility);
+                baseScoreHandler.AddScore(_scoreManager.TotalScore, Game.GameType.Flexibility);
             }
 
             if (_proceedToNextLevel && !GameDone) {

@@ -1,78 +1,248 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Database.Enum;
+using Assets.Scripts.GlobalScripts.Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Assets.Scripts.Quiz.Mono
-{
-    public class GameManager : MonoBehaviour
-    {
+namespace Assets.Scripts.Quiz.Mono {
+    public class GameManager : MonoBehaviour {
+        private bool isPaused;
+
+        /// <summary>
+        ///     Function that is called to update new selected answer.
+        /// </summary>
+        public void UpdateAnswers(AnswerData newAnswer) {
+            if (Questions[currentQuestion].GetAnswerType == Question.AnswerType.Single) {
+                foreach (var answer in PickedAnswers) {
+                    if (answer != newAnswer) {
+                        answer.Reset();
+                    }
+                }
+
+                PickedAnswers.Clear();
+                PickedAnswers.Add(newAnswer);
+            } else {
+                bool alreadyPicked = PickedAnswers.Exists(x => x == newAnswer);
+                if (alreadyPicked) {
+                    PickedAnswers.Remove(newAnswer);
+                } else {
+                    PickedAnswers.Add(newAnswer);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Function that is called to clear PickedAnswers list.
+        /// </summary>
+        public void EraseAnswers() {
+            PickedAnswers = new List<AnswerData>();
+        }
+
+        /// <summary>
+        ///     Function that is called to display new question.
+        /// </summary>
+        private void Display() {
+            EraseAnswers();
+            var question = GetRandomQuestion();
+
+            if (events.UpdateQuestionUI != null) {
+                events.UpdateQuestionUI(question);
+            } else {
+                Debug.LogWarning(
+                    "Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
+            }
+
+            if (question.UseTimer) {
+                UpdateTimer(question.UseTimer);
+            }
+        }
+
+        /// <summary>
+        ///     Function that is called to accept picked answers and check/display the result.
+        /// </summary>
+        public void Accept() {
+            UpdateTimer(false);
+            bool isCorrect = CheckAnswers();
+            FinishedQuestions.Add(currentQuestion);
+
+            UpdateScore(isCorrect ? Questions[currentQuestion].AddScore : -Questions[currentQuestion].AddScore);
+
+            if (IsFinished) {
+                SetHighScore();
+            }
+
+            var type
+                = IsFinished
+                    ? UIManager.ResolutionScreenType.Finish
+                    : isCorrect
+                        ? UIManager.ResolutionScreenType.Correct
+                        : UIManager.ResolutionScreenType.Incorrect;
+
+            if (events.DisplayResolutionScreen != null) {
+                events.DisplayResolutionScreen(type, Questions[currentQuestion].AddScore);
+            }
+
+            AudioManager.Instance.PlaySound(isCorrect ? "CorrectSFX" : "IncorrectSFX");
+
+            if (type != UIManager.ResolutionScreenType.Finish) {
+                if (IE_WaitTillNextRound != null) {
+                    StopCoroutine(IE_WaitTillNextRound);
+                }
+
+                IE_WaitTillNextRound = WaitTillNextRound();
+                StartCoroutine(IE_WaitTillNextRound);
+            }
+        }
+
+        /// <summary>
+        ///     Function that is called to check currently picked answers and return the result.
+        /// </summary>
+        private bool CheckAnswers() {
+            if (!CompareAnswers()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Function that is called to compare picked answers with question correct answers.
+        /// </summary>
+        private bool CompareAnswers() {
+            if (PickedAnswers.Count > 0) {
+                List<int> c = Questions[currentQuestion].GetCorrectAnswers();
+                List<int> p = PickedAnswers.Select(x => x.AnswerIndex).ToList();
+
+                List<int> f = c.Except(p).ToList();
+                List<int> s = p.Except(c).ToList();
+
+                return !f.Any() && !s.Any();
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Function that is called to load all questions from the Resource folder.
+        /// </summary>
+        private void LoadQuestions() {
+            Object[] objs = Resources.LoadAll("QuizQuestions", typeof(Question));
+            Questions = new Question[15];
+            for (int i = 0; i < 15; i++) {
+                Questions[i] = (Question) objs[i];
+            }
+        }
+
+
+        /// <summary>
+        ///     Function that is called restart the game.
+        /// </summary>
+        public void RestartGame() {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        /// <summary>
+        ///     Function that is called to quit the application.
+        /// </summary>
+        public void MainMenu() {
+            Destroy(GameObject.Find("AudioManager").gameObject);
+
+            SceneManager.LoadScene("BaseMenu");
+        }
+
+        public void PauseGame() {
+            if (isPaused) {
+                Time.timeScale = 1;
+                isPaused = false;
+            } else {
+                Time.timeScale = 0;
+                isPaused = true;
+            }
+        }
+
+
+        /// <summary>
+        ///     Function that is called to set new highscore if game score is higher.
+        /// </summary>
+        private static void SetHighScore() {
+            var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
+
+            BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
+            baseScoreHandler.AddScore(highscore, Game.GameType.ProblemSolving);
+        }
+
+        /// <summary>
+        ///     Function that is called update the score and update the UI.
+        /// </summary>
+        private void UpdateScore(int add) {
+            events.CurrentFinalScore += add;
+
+            events.ScoreUpdated?.Invoke();
+        }
 
         #region Variables
 
-        private ScoreManager _scoreManager;
-        private Question[] _questions = null;
-        public Question[] Questions { get { return _questions; } }
+        public Question[] Questions { get; private set; }
 
-        [SerializeField] GameEvents events = null;
+        [SerializeField] private readonly GameEvents events = null;
 
-        [SerializeField] Animator timerAnimtor = null;
-        [SerializeField] TextMeshProUGUI timerText = null;
-        [SerializeField] Color timerHalfWayOutColor = Color.yellow;
-        [SerializeField] Color timerAlmostOutColor = Color.red;
+        [SerializeField] private readonly Animator timerAnimtor = null;
+
+        [SerializeField] private readonly TextMeshProUGUI timerText = null;
+
+        [SerializeField] private readonly Color timerHalfWayOutColor = Color.yellow;
+
+        [SerializeField] private readonly Color timerAlmostOutColor = Color.red;
+
         private Color timerDefaultColor = Color.white;
 
         private List<AnswerData> PickedAnswers = new List<AnswerData>();
-        private List<int> FinishedQuestions = new List<int>();
-        private int currentQuestion = 0;
 
-        private int timerStateParaHash = 0;
+        private readonly List<int> FinishedQuestions = new List<int>();
 
-        private IEnumerator IE_WaitTillNextRound = null;
-        private IEnumerator IE_StartTimer = null;
+        private int currentQuestion;
 
-        private bool IsFinished
-        {
-            get
-            {
-                return (FinishedQuestions.Count < Questions.Length) ? false : true;
-            }
-        }
+        private int timerStateParaHash;
+
+        private IEnumerator IE_WaitTillNextRound;
+
+        private IEnumerator IE_StartTimer;
+
+        private bool IsFinished => FinishedQuestions.Count < Questions.Length ? false : true;
 
         #endregion
 
         #region Default Unity methods
 
         /// <summary>
-        /// Function that is called when the object becomes enabled and active
+        ///     Function that is called when the object becomes enabled and active
         /// </summary>
-        void OnEnable()
-        {
+        private void OnEnable() {
             events.UpdateQuestionAnswer += UpdateAnswers;
         }
+
         /// <summary>
-        /// Function that is called when the behaviour becomes disabled
+        ///     Function that is called when the behaviour becomes disabled
         /// </summary>
-        void OnDisable()
-        {
+        private void OnDisable() {
             events.UpdateQuestionAnswer -= UpdateAnswers;
         }
 
         /// <summary>
-        /// Function that is called on the frame when a script is enabled just before any of the Update methods are called the first time.
+        ///     Function that is called on the frame when a script is enabled just before any of the Update methods are called the
+        ///     first time.
         /// </summary>
-        void Awake()
-        {
+        private void Awake() {
             events.CurrentFinalScore = 0;
         }
+
         /// <summary>
-        /// Function that is called when the script instance is being loaded.
+        ///     Function that is called when the script instance is being loaded.
         /// </summary>
-        void Start()
-        {
-            _scoreManager = new ScoreManager();
+        private void Start() {
 
             events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
@@ -81,119 +251,18 @@ namespace Assets.Scripts.Quiz.Mono
 
             timerStateParaHash = Animator.StringToHash("TimerState");
 
-            var seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-            UnityEngine.Random.InitState(seed);
+            var seed = Random.Range(int.MinValue, int.MaxValue);
+            Random.InitState(seed);
 
             Display();
         }
 
         #endregion
 
-        /// <summary>
-        /// Function that is called to update new selected answer.
-        /// </summary>
-        public void UpdateAnswers(AnswerData newAnswer)
-        {
-            if (Questions[currentQuestion].GetAnswerType == Question.AnswerType.Single)
-            {
-                foreach (var answer in PickedAnswers)
-                {
-                    if (answer != newAnswer)
-                    {
-                        answer.Reset();
-                    }
-                }
-                PickedAnswers.Clear();
-                PickedAnswers.Add(newAnswer);
-            }
-            else
-            {
-                bool alreadyPicked = PickedAnswers.Exists(x => x == newAnswer);
-                if (alreadyPicked)
-                {
-                    PickedAnswers.Remove(newAnswer);
-                }
-                else
-                {
-                    PickedAnswers.Add(newAnswer);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Function that is called to clear PickedAnswers list.
-        /// </summary>
-        public void EraseAnswers()
-        {
-            PickedAnswers = new List<AnswerData>();
-        }
-
-        /// <summary>
-        /// Function that is called to display new question.
-        /// </summary>
-        void Display()
-        {
-            EraseAnswers();
-            var question = GetRandomQuestion();
-
-            if (events.UpdateQuestionUI != null)
-            {
-                events.UpdateQuestionUI(question);
-            }
-            else { Debug.LogWarning("Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method."); }
-
-            if (question.UseTimer)
-            {
-                UpdateTimer(question.UseTimer);
-            }
-        }
-
-        /// <summary>
-        /// Function that is called to accept picked answers and check/display the result.
-        /// </summary>
-        public void Accept()
-        {
-            UpdateTimer(false);
-            bool isCorrect = CheckAnswers();
-            FinishedQuestions.Add(currentQuestion);
-
-            UpdateScore((isCorrect) ? Questions[currentQuestion].AddScore : -Questions[currentQuestion].AddScore);
-
-            if (IsFinished)
-            {
-                SetHighscore();
-            }
-
-            var type
-                = (IsFinished)
-                ? UIManager.ResolutionScreenType.Finish
-                : (isCorrect) ? UIManager.ResolutionScreenType.Correct
-                : UIManager.ResolutionScreenType.Incorrect;
-
-            if (events.DisplayResolutionScreen != null)
-            {
-                events.DisplayResolutionScreen(type, Questions[currentQuestion].AddScore);
-            }
-
-            AudioManager.Instance.PlaySound((isCorrect) ? "CorrectSFX" : "IncorrectSFX");
-
-            if (type != UIManager.ResolutionScreenType.Finish)
-            {
-                if (IE_WaitTillNextRound != null)
-                {
-                    StopCoroutine(IE_WaitTillNextRound);
-                }
-                IE_WaitTillNextRound = WaitTillNextRound();
-                StartCoroutine(IE_WaitTillNextRound);
-            }
-        }
-
         #region Timer Methods
 
-        void UpdateTimer(bool state)
-        {
-            switch (state)
-            {
+        private void UpdateTimer(bool state) {
+            switch (state) {
                 case true:
                     IE_StartTimer = StartTimer();
                     StartCoroutine(IE_StartTimer);
@@ -201,8 +270,7 @@ namespace Assets.Scripts.Quiz.Mono
                     timerAnimtor.SetInteger(timerStateParaHash, 2);
                     break;
                 case false:
-                    if (IE_StartTimer != null)
-                    {
+                    if (IE_StartTimer != null) {
                         StopCoroutine(IE_StartTimer);
                     }
 
@@ -210,161 +278,56 @@ namespace Assets.Scripts.Quiz.Mono
                     break;
             }
         }
-        IEnumerator StartTimer()
-        {
+
+        private IEnumerator StartTimer() {
             var totalTime = Questions[currentQuestion].Timer;
             var timeLeft = totalTime;
 
             timerText.color = timerDefaultColor;
-            while (timeLeft > 0)
-            {
+            while (timeLeft > 0) {
                 timeLeft--;
 
                 AudioManager.Instance.PlaySound("CountdownSFX");
 
-                if (timeLeft < totalTime / 2 && timeLeft > totalTime / 4)
-                {
+                if (timeLeft < totalTime / 2 && timeLeft > totalTime / 4) {
                     timerText.color = timerHalfWayOutColor;
                 }
-                if (timeLeft < totalTime / 4)
-                {
+
+                if (timeLeft < totalTime / 4) {
                     timerText.color = timerAlmostOutColor;
                 }
 
                 timerText.text = timeLeft.ToString();
                 yield return new WaitForSeconds(1.0f);
             }
+
             Accept();
         }
-        IEnumerator WaitTillNextRound()
-        {
+
+        private IEnumerator WaitTillNextRound() {
             yield return new WaitForSeconds(GameUtility.ResolutionDelayTime);
             Display();
         }
 
         #endregion
 
-        /// <summary>
-        /// Function that is called to check currently picked answers and return the result.
-        /// </summary>
-        bool CheckAnswers()
-        {
-            if (!CompareAnswers())
-            {
-                return false;
-            }
-            return true;
-        }
-        /// <summary>
-        /// Function that is called to compare picked answers with question correct answers.
-        /// </summary>
-        bool CompareAnswers()
-        {
-            if (PickedAnswers.Count > 0)
-            {
-                List<int> c = Questions[currentQuestion].GetCorrectAnswers();
-                List<int> p = PickedAnswers.Select(x => x.AnswerIndex).ToList();
-
-                var f = c.Except(p).ToList();
-                var s = p.Except(c).ToList();
-
-                return !f.Any() && !s.Any();
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Function that is called to load all questions from the Resource folder.
-        /// </summary>
-        void LoadQuestions()
-        {
-			Object[] objs = Resources.LoadAll("QuizQuestions", typeof(Question));
-			_questions = new Question[15];
-			for (int i = 0; i < 15; i++)
-            {
-				_questions[i] = (Question)objs[i];
-            }
-        }
-			
-
-        /// <summary>
-        /// Function that is called restart the game.
-        /// </summary>
-        public void RestartGame()
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-        /// <summary>
-        /// Function that is called to quit the application.
-        /// </summary>
-        public void MainMenu()
-        {
-            Destroy(GameObject.Find("AudioManager").gameObject);
-
-            SceneManager.LoadScene("BaseMenu");
-        }
-
-        bool isPaused = false;
-
-        public void PauseGame()
-        {
-            if (isPaused)
-            {
-                Time.timeScale = 1;
-                isPaused = false;
-            }
-            else
-            {
-                Time.timeScale = 0;
-                isPaused = true;
-            }
-        }
-			
-
-
-
-
-        /// <summary>
-        /// Function that is called to set new highscore if game score is higher.
-        /// </summary>
-        private void SetHighscore()
-        {
-            var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
-            if (highscore < events.CurrentFinalScore)
-            {
-                PlayerPrefs.SetInt(GameUtility.SavePrefKey, events.CurrentFinalScore);
-                _scoreManager.SaveUserScore(events.CurrentFinalScore);
-            }
-        }
-        /// <summary>
-        /// Function that is called update the score and update the UI.
-        /// </summary>
-        private void UpdateScore(int add)
-        {
-            events.CurrentFinalScore += add;
-
-            events.ScoreUpdated?.Invoke();
-        }
-
         #region Getters
 
-        Question GetRandomQuestion()
-        {
+        private Question GetRandomQuestion() {
             var randomIndex = GetRandomQuestionIndex();
             currentQuestion = randomIndex;
 
-			return Questions[currentQuestion];
+            return Questions[currentQuestion];
         }
-        int GetRandomQuestionIndex()
-        {
+
+        private int GetRandomQuestionIndex() {
             var random = 0;
-			if (FinishedQuestions.Count < Questions.Length)
-            {
-                do
-                {
-                    random = UnityEngine.Random.Range(0, Questions.Length);
+            if (FinishedQuestions.Count < Questions.Length) {
+                do {
+                    random = Random.Range(0, Questions.Length);
                 } while (FinishedQuestions.Contains(random) || random == currentQuestion);
             }
+
             return random;
         }
 
