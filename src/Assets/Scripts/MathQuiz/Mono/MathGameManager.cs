@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
+using Assets.Scripts.Quiz.Mono;
+using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Assets.Scripts.Quiz.Mono {
+namespace Assets.Scripts.MathQuiz.Mono {
     public class MathGameManager : MonoBehaviour {
-        private bool isPaused;
+        private bool _isPaused;
 
         /// <summary>
         ///     Function that is called to update new selected answer.
@@ -114,8 +116,8 @@ namespace Assets.Scripts.Quiz.Mono {
                 List<int> c = Questions[currentQuestion].GetCorrectAnswers();
                 List<int> p = PickedAnswers.Select(x => x.AnswerIndex).ToList();
 
-                var f = c.Except(p).ToList();
-                var s = p.Except(c).ToList();
+                List<int> f = c.Except(p).ToList();
+                List<int> s = p.Except(c).ToList();
 
                 return !f.Any() && !s.Any();
             }
@@ -152,15 +154,14 @@ namespace Assets.Scripts.Quiz.Mono {
         }
 
         public void PauseGame() {
-            if (isPaused) {
+            if (_isPaused) {
                 Time.timeScale = 1;
-                isPaused = false;
+                _isPaused = false;
             } else {
                 Time.timeScale = 0;
-                isPaused = true;
+                _isPaused = true;
             }
         }
-
 
         /// <summary>
         ///     Function that is called to set new highscore if game score is higher.
@@ -185,15 +186,15 @@ namespace Assets.Scripts.Quiz.Mono {
 
         public Question[] Questions { get; private set; }
 
-        [SerializeField] private readonly GameEvents events = null;
+        [SerializeField] private GameEvents events = null;
 
-        [SerializeField] private readonly Animator timerAnimtor = null;
+        [SerializeField] private Animator timerAnimtor = null;
 
-        [SerializeField] private readonly TextMeshProUGUI timerText = null;
+        [SerializeField] private TextMeshProUGUI timerText = null;
 
-        [SerializeField] private readonly Color timerHalfWayOutColor = Color.yellow;
+        [SerializeField] private Color timerHalfWayOutColor = Color.yellow;
 
-        [SerializeField] private readonly Color timerAlmostOutColor = Color.red;
+        [SerializeField] private Color timerAlmostOutColor = Color.red;
 
         private Color timerDefaultColor = Color.white;
 
@@ -241,7 +242,6 @@ namespace Assets.Scripts.Quiz.Mono {
         ///     Function that is called when the script instance is being loaded.
         /// </summary>
         private void Start() {
-
             events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
             timerDefaultColor = timerText.color;
