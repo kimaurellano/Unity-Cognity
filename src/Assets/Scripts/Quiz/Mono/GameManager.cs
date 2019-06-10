@@ -81,9 +81,7 @@ namespace Assets.Scripts.Quiz.Mono {
                         ? UIManager.ResolutionScreenType.Correct
                         : UIManager.ResolutionScreenType.Incorrect;
 
-            if (events.DisplayResolutionScreen != null) {
-                events.DisplayResolutionScreen(type, Questions[currentQuestion].AddScore);
-            }
+            events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
             AudioManager.Instance.PlaySound(isCorrect ? "CorrectSFX" : "IncorrectSFX");
 
@@ -101,11 +99,7 @@ namespace Assets.Scripts.Quiz.Mono {
         ///     Function that is called to check currently picked answers and return the result.
         /// </summary>
         private bool CheckAnswers() {
-            if (!CompareAnswers()) {
-                return false;
-            }
-
-            return true;
+            return CompareAnswers();
         }
 
         /// <summary>
@@ -187,15 +181,15 @@ namespace Assets.Scripts.Quiz.Mono {
 
         public Question[] Questions { get; private set; }
 
-        [SerializeField] private readonly GameEvents events = null;
+        [SerializeField] private GameEvents events = null;
 
-        [SerializeField] private readonly Animator timerAnimtor = null;
+        [SerializeField] private Animator timerAnimtor = null;
 
-        [SerializeField] private readonly TextMeshProUGUI timerText = null;
+        [SerializeField] private TextMeshProUGUI timerText = null;
 
-        [SerializeField] private readonly Color timerHalfWayOutColor = Color.yellow;
+        [SerializeField] private Color timerHalfWayOutColor = Color.yellow;
 
-        [SerializeField] private readonly Color timerAlmostOutColor = Color.red;
+        [SerializeField] private Color timerAlmostOutColor = Color.red;
 
         private Color timerDefaultColor = Color.white;
 
@@ -211,7 +205,7 @@ namespace Assets.Scripts.Quiz.Mono {
 
         private IEnumerator IE_StartTimer;
 
-        private bool IsFinished => FinishedQuestions.Count < Questions.Length ? false : true;
+        private bool IsFinished => FinishedQuestions.Count >= Questions.Length;
 
         #endregion
 

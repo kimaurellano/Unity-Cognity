@@ -115,8 +115,8 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 List<int> c = Questions[currentQuestion].GetCorrectAnswers();
                 List<int> p = PickedAnswers.Select(x => x.AnswerIndex).ToList();
 
-                var f = c.Except(p).ToList();
-                var s = p.Except(c).ToList();
+                List<int> f = c.Except(p).ToList();
+                List<int> s = p.Except(c).ToList();
 
                 return !f.Any() && !s.Any();
             }
@@ -186,15 +186,15 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
 
         public Question[] Questions { get; private set; }
 
-        [SerializeField] private readonly GameEvents events = null;
+        [SerializeField] private GameEvents events = null;
 
-        [SerializeField] private readonly Animator timerAnimtor = null;
+        [SerializeField] private Animator timerAnimtor = null;
 
-        [SerializeField] private readonly TextMeshProUGUI timerText = null;
+        [SerializeField] private TextMeshProUGUI timerText = null;
 
-        [SerializeField] private readonly Color timerHalfWayOutColor = Color.yellow;
+        [SerializeField] private Color timerHalfWayOutColor = Color.yellow;
 
-        [SerializeField] private readonly Color timerAlmostOutColor = Color.red;
+        [SerializeField] private Color timerAlmostOutColor = Color.red;
 
         private Color timerDefaultColor = Color.white;
 
