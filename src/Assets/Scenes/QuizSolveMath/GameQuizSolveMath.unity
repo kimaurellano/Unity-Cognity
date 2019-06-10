@@ -2503,7 +2503,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 564383686}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81281a4ec12ded04cb483bcdeba946b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 96f96322c99b7a94fb11463810156d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &588364240
@@ -6109,6 +6109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d614044c974001843a4340b2f17cfb5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _statsCollections: []
   _panelCollection:
   - Name: panel buttons
     Panel: {fileID: 53636408}
@@ -6821,66 +6822,66 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mathBanks:
-  - Problem: 1+10=
-    Answer: 11
-  - Problem: 5^2-5=
-    Answer: 20
-  - Problem: 2*1=
-    Answer: 2
-  - Problem: 2(5)*2=
-    Answer: 20
-  - Problem: 5(30/6)=
-    Answer: 25
-  - Problem: (1*2)+16=
-    Answer: 18
-  - Problem: (2+0)^1=
-    Answer: 2
-  - Problem: (100/5)+(1^3)=
-    Answer: 21
-  - Problem: 1+(9*2)/3=
-    Answer: 7
-  - Problem: 2*(30/5)=
-    Answer: 12
-  - Problem: '139 + 235 = '
-    Answer: 374
-  - Problem: '235 - 139 =  '
-    Answer: 96
-  - Problem: '5x16=  '
-    Answer: 80
-  - Problem: '45/9=  '
-    Answer: 5
-  - Problem: '15% of 300 =  '
-    Answer: 45
-  - Problem: 2+4+6+7+1 =
-    Answer: 20
-  - Problem: 0+2+12+0 =
-    Answer: 14
-  - Problem: 17-8=
-    Answer: 9
-  - Problem: 8+4-8+6=
-    Answer: 20
-  - Problem: 10+23+5-1=
-    Answer: 37
-  - Problem: 34+15+6-1=
-    Answer: 54
-  - Problem: 23+6-4=
-    Answer: 25
-  - Problem: 12+12+12=
-    Answer: 36
-  - Problem: 46-20+12=
-    Answer: 38
-  - Problem: '|-26|'
-    Answer: 26
-  - Problem: "3+2 \u2022 (8\u20133)  "
-    Answer: 13
-  - Problem: "65\u201343="
-    Answer: 22
-  - Problem: 52/4
-    Answer: 13
-  - Problem: 87+56=
-    Answer: 143
-  - Problem: (7)9=
-    Answer: 63
+  - Answer: 11
+    Problem: 1+10=
+  - Answer: 20
+    Problem: 5^2-5=
+  - Answer: 2
+    Problem: 2*1=
+  - Answer: 20
+    Problem: 2(5)*2=
+  - Answer: 25
+    Problem: 5(30/6)=
+  - Answer: 18
+    Problem: (1*2)+16=
+  - Answer: 2
+    Problem: (2+0)^1=
+  - Answer: 21
+    Problem: (100/5)+(1^3)=
+  - Answer: 7
+    Problem: 1+(9*2)/3=
+  - Answer: 12
+    Problem: 2*(30/5)=
+  - Answer: 374
+    Problem: '139 + 235 = '
+  - Answer: 96
+    Problem: '235 - 139 =  '
+  - Answer: 80
+    Problem: '5x16=  '
+  - Answer: 5
+    Problem: '45/9=  '
+  - Answer: 45
+    Problem: '15% of 300 =  '
+  - Answer: 20
+    Problem: 2+4+6+7+1 =
+  - Answer: 14
+    Problem: 0+2+12+0 =
+  - Answer: 9
+    Problem: 17-8=
+  - Answer: 20
+    Problem: 8+4-8+6=
+  - Answer: 37
+    Problem: 10+23+5-1=
+  - Answer: 54
+    Problem: 34+15+6-1=
+  - Answer: 25
+    Problem: 23+6-4=
+  - Answer: 36
+    Problem: 12+12+12=
+  - Answer: 38
+    Problem: 46-20+12=
+  - Answer: 26
+    Problem: '|-26|'
+  - Answer: 13
+    Problem: "3+2 \u2022 (8\u20133)  "
+  - Answer: 22
+    Problem: "65\u201343="
+  - Answer: 13
+    Problem: 52/4
+  - Answer: 143
+    Problem: 87+56=
+  - Answer: 63
+    Problem: (7)9=
 --- !u!4 &1582375059
 Transform:
   m_ObjectHideFlags: 0
