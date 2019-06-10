@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.Quiz.Mono;
+using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -100,11 +101,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         ///     Function that is called to check currently picked answers and return the result.
         /// </summary>
         private bool CheckAnswers() {
-            if (!CompareAnswers()) {
-                return false;
-            }
-
-            return true;
+            return CompareAnswers();
         }
 
         /// <summary>
@@ -115,8 +112,8 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 List<int> c = Questions[currentQuestion].GetCorrectAnswers();
                 List<int> p = PickedAnswers.Select(x => x.AnswerIndex).ToList();
 
-                var f = c.Except(p).ToList();
-                var s = p.Except(c).ToList();
+                List<int> f = c.Except(p).ToList();
+                List<int> s = p.Except(c).ToList();
 
                 return !f.Any() && !s.Any();
             }
@@ -161,7 +158,6 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 _isPaused = true;
             }
         }
-
 
         /// <summary>
         ///     Function that is called to set new highscore if game score is higher.
@@ -242,7 +238,6 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         ///     Function that is called when the script instance is being loaded.
         /// </summary>
         private void Start() {
-
             events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
             timerDefaultColor = timerText.color;

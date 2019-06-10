@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
+using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Quiz.Mono {
     public class GameManager : MonoBehaviour {
-        private bool isPaused;
+        private bool _isPaused;
 
         /// <summary>
         ///     Function that is called to update new selected answer.
@@ -81,9 +82,7 @@ namespace Assets.Scripts.Quiz.Mono {
                         ? UIManager.ResolutionScreenType.Correct
                         : UIManager.ResolutionScreenType.Incorrect;
 
-            if (events.DisplayResolutionScreen != null) {
-                events.DisplayResolutionScreen(type, Questions[currentQuestion].AddScore);
-            }
+            events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
             AudioManager.Instance.PlaySound(isCorrect ? "CorrectSFX" : "IncorrectSFX");
 
@@ -154,15 +153,14 @@ namespace Assets.Scripts.Quiz.Mono {
         }
 
         public void PauseGame() {
-            if (isPaused) {
+            if (_isPaused) {
                 Time.timeScale = 1;
-                isPaused = false;
+                _isPaused = false;
             } else {
                 Time.timeScale = 0;
-                isPaused = true;
+                _isPaused = true;
             }
         }
-
 
         /// <summary>
         ///     Function that is called to set new highscore if game score is higher.
