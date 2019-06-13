@@ -1,15 +1,11 @@
 ﻿using System;
-using Assets.Scripts.Database.Component;
 using Assets.Scripts.GlobalScripts.UITask;
 using UnityEngine;
 
 namespace Assets.Scripts.GlobalScripts.UIComponents {
     public class StatsManager : MonoBehaviour {
-        private DataAccess _dataAccess;
 
         private void Start() {
-            _dataAccess = new DataAccess();
-
             Refresh();
         }
 
@@ -18,6 +14,10 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
             EvaluateStatScore("Memory");
             EvaluateStatScore("Language");
             EvaluateStatScore("ProblemSolving");
+        }
+
+        public void Refresh(string category) {
+            EvaluateStatScore(category);
         }
 
         private static void EvaluateStatScore(string category) {
