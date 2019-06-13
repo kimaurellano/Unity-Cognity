@@ -1,63 +1,53 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Assets.Scripts.GlobalScripts.UITask
-{
+namespace Assets.Scripts.GlobalScripts.UITask {
     /// <summary>
-    /// Provides Timer functionality.
+    ///     Provides Timer functionality.
     /// </summary>
-    public class Timer : MonoBehaviour
-    {
+    public class Timer : MonoBehaviour {
+        private bool _startTimer;
         private float _t;
 
-        private bool _startTimer;
-
-        ///<summary>
-        /// The seconds
-        ///</summary>
+        /// <summary>
+        ///     The seconds
+        /// </summary>
         public float Sec { get; set; }
 
-        ///<summary>
-        /// The minutes
-        ///</summary>
+        /// <summary>
+        ///     The minutes
+        /// </summary>
         public int Min { get; set; }
 
-        ///<summary>
-        /// Ups timer upon t minutes less than 0
-        ///</summary>
+        /// <summary>
+        ///     Ups timer upon t minutes less than 0
+        /// </summary>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         public bool TimerUp => Min < 0 && Sec == 0;
 
-        ///<summary>
-        /// Sets/Gets the textmeshpro text
-        ///</summary>
-        [field: SerializeField] public TextMeshProUGUI TimerText { get; set; }
+        /// <summary>
+        ///     Sets/Gets the textmeshpro text
+        /// </summary>
+        public TextMeshProUGUI TimerText;
 
-        private void Update()
-        {
-            if (_startTimer)
-            {
-                Tick();
-            }
+        private void Update() {
+            if (_startTimer) Tick();
 
-            if (TimerUp)
-            {
+            if (TimerUp) {
                 TimerText.SetText("Timer: 00:00");
                 _startTimer = false;
             }
         }
 
-        ///<summary>
-        /// Handles ticking of timer
-        ///</summary>
-        private void Tick()
-        {
+        /// <summary>
+        ///     Handles ticking of timer
+        /// </summary>
+        private void Tick() {
             _t -= Time.deltaTime;
 
-            Sec = (int)(_t % 60);
+            Sec = (int) (_t % 60);
 
-            if (_t % 60 < 0)
-            {
+            if (_t % 60 < 0) {
                 _t = 60f;
                 Min--;
             }
@@ -65,22 +55,20 @@ namespace Assets.Scripts.GlobalScripts.UITask
             TimerText.SetText($"Time: {Min:00}:{Sec:00}");
         }
 
-        ///<summary>
-        /// Starts immediately timer at certain point in time
-        ///</summary>
-        public void StartTimerAt(int min, float sec)
-        {
+        /// <summary>
+        ///     Starts immediately timer at certain point in time
+        /// </summary>
+        public void StartTimerAt(int min, float sec) {
             _startTimer = true;
 
             _t = sec;
             Min = min;
         }
 
-        ///<summary>
-        /// Pauses/Unpauses timer
-        ///</summary>
-        public void ChangeTimerState() 
-        {
+        /// <summary>
+        ///     Pauses/Unpauses timer
+        /// </summary>
+        public void ChangeTimerState() {
             _startTimer = !_startTimer;
         }
     }
