@@ -3,47 +3,66 @@ using Assets.Scripts.Cognity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = System.Random;
 
 namespace Assets.Scripts.GlobalScripts.UITask {
     /// <summary>
     ///     Handles specific button events.
     /// </summary>
     public class ActionManager : MonoBehaviour {
+
         private void Start() {
 
-            //PlayerPrefs.DeleteAll();
-
-            // Not first time use and avoid null exception
-            if (PlayerPrefs.GetString("user_info") == string.Empty || SceneManager.GetActiveScene().buildIndex != 0) {
+            // avoid null exception
+            if (SceneManager.GetActiveScene().buildIndex != 0) {
                 return;
             }
 
-            Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name.Equals("panel home"))
-                .Panel
-                .transform
-                .gameObject
-                .SetActive(true);
+            // Not first time use
+            if (PlayerPrefs.GetString("user_info") != string.Empty) {
+                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel userinfo")
+                    .Panel
+                    .gameObject
+                    .SetActive(false);
 
-            Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name.Equals("panel userinfo"))
-                .Panel
-                .transform
+                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel welcome")
+                    .Panel
+                    .gameObject
+                    .SetActive(true);
+
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "label welcome user")
+                    .textMesh
+                    .SetText(PlayerPrefs.GetString("user_info"));
+            }
+
+            if (PlayerPrefs.GetString("game_state") == "set_to_running") {
+                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel userinfo")
+                    .Panel
+                    .gameObject
+                    .SetActive(false);
+
+                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel home")
+                    .Panel
+                    .gameObject
+                    .SetActive(true);
+            }
+        }
+
+        public void CheckInput(TMP_InputField input) {
+            Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "button save")
+                .Button
                 .gameObject
-                .SetActive(false);
+                .SetActive(input.text != string.Empty);
         }
 
         public void SaveUserPref(TMP_InputField input) {
-            string userInfo = input.text;
-            if (input.text == string.Empty) {
-                Random rand = new Random();
-                userInfo = "user" + rand.NextDouble();
-            }
-
             // Cache user name
-            PlayerPrefs.SetString("user_info", userInfo);
+            PlayerPrefs.SetString("user_info", input.text);
         }
 
         public void GoTo(string sceneName) {
+            // Signifies that every GoToBaseMenu is preceeded by a game mode
+            PlayerPrefs.SetString("game_state", "set_to_running");
+
             // Avoid per game category audio duplication(not stopping)
             if (sceneName == "BaseMenu") {
                 Destroy(GameObject.Find("AudioManager").gameObject);
@@ -57,10 +76,16 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void Quit() {
+            PlayerPrefs.SetString("game_state", "set_to_first_run");
+
             Application.Quit();
         }
 
         public void Show(Transform transform) {
+            if (transform.name == "User_Panel") {
+                transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText("Hi! " + PlayerPrefs.GetString("user_info"));
+            }
+
             transform.gameObject.SetActive(true);
         }
 
