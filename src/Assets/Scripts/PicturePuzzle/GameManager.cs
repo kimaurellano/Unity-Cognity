@@ -13,7 +13,6 @@ namespace Assets.Scripts.PicturePuzzle {
     public class GameManager : MonoBehaviour {
 
         private GameManager _gameManager;
-        private TextMeshProUGUI _gameResult;
 
         [SerializeField] private Timer _timer;
         [SerializeField] private TextMeshProUGUI _inputField;
@@ -79,6 +78,9 @@ namespace Assets.Scripts.PicturePuzzle {
 
             Instantiate(Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Image, _puzzlePictureContainer.transform);
 
+            // Add up the time left for each answered puzzle 
+            _score += (int) _timer.Sec;
+
             // Reset back timer every new puzzle
             _timer.StartTimerAt(0, 45f);
         }
@@ -89,10 +91,14 @@ namespace Assets.Scripts.PicturePuzzle {
 
         private void ChangedActiveScene(Scene current, Scene next) {
             if (next.name.Equals("GameOverPicturePuzzle")) {
-                // Update meter bar
+                // Prevent null exception on game exit
+                StopCoroutine(WaitForTimer());
+
                 FindObjectOfType<StatsManager>().Refresh("ProblemSolving");
 
-                _gameResult.SetText(!_timer.TimerUp ? "SUCCESS!" : "FAILED");
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "game result")
+                    .textMesh
+                    .SetText(!_timer.TimerUp ? "SUCCESS!" : "FAILED");
             }
         }
 
