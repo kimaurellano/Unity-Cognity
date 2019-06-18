@@ -5,10 +5,6 @@ using UnityEngine;
 namespace Assets.Scripts.GlobalScripts.UIComponents {
     public class StatsManager : MonoBehaviour {
 
-        private void Start() {
-            Refresh();
-        }
-
         public void Refresh() {
             EvaluateStatScore("Flexibility");
             EvaluateStatScore("Memory");
@@ -23,7 +19,11 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
         private static void EvaluateStatScore(string category) {
             var summary = PlayerPrefs.GetFloat(category);
 
-            Array.Find(FindObjectOfType<UIManager>().StatsCollections, i => i.StatName.Equals(category))
+            Debug.Log("Score for stats:" + category + " -> " + summary);
+
+            StatsCollection[] stats = FindObjectOfType<UIManager>().StatsCollections;
+
+            Array.Find(stats, i => i.StatName.Equals(category))
                 .Gauge
                 .value = summary;
         }
