@@ -19,7 +19,7 @@ namespace Assets.Scripts.GlobalScripts.UITask {
                 return;
             }
 
-            if (PlayerPrefs.GetString("game_state") == "set_to_running") {
+            if (PlayerPrefs.GetString("user_info") != string.Empty) {
                 Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel userinfo")
                     .Panel
                     .gameObject
@@ -45,9 +45,6 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void GoTo(string sceneName) {
-            // Signifies that every GoToBaseMenu is preceeded by a game mode
-            PlayerPrefs.SetString("game_state", "set_to_running");
-
             // Avoid per game category audio duplication(not stopping)
             if (sceneName == "BaseMenu") {
                 Destroy(GameObject.Find("AudioManager").gameObject);
@@ -65,14 +62,19 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void Quit() {
-            PlayerPrefs.SetString("game_state", "set_to_first_run");
-
             Application.Quit();
         }
 
         public void Show(Transform transform) {
             if (transform.name == "User_Panel") {
-                transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText("Hi! " + PlayerPrefs.GetString("user_info"));
+                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel user")
+                    .Panel
+                    .gameObject
+                    .SetActive(true);
+
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "label username")
+                    .textMesh
+                    .SetText(PlayerPrefs.GetString("user_info"));
             }
 
             transform.gameObject.SetActive(true);
