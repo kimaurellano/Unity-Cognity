@@ -119,7 +119,7 @@ namespace Assets.Scripts.QuizSolveMath {
             // Set text with new score
             Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("score text"))
                 .textMesh
-                .SetText("TotalScore:" + _score);
+                .SetText("Score:" + _score);
 
             ClearInput();
 

@@ -60,8 +60,6 @@ namespace Assets.Scripts.Cognity {
         public bool Rotating { get; set; }
 
         private void Start() {
-            _scoreManager = new ScoreManager();
-
             _timer = FindObjectOfType<Timer>();
 
             Populate();

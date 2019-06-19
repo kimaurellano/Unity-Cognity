@@ -11,27 +11,12 @@ namespace Assets.Scripts.GlobalScripts.UITask {
     public class ActionManager : MonoBehaviour {
 
         private void Start() {
+            // Make sure games not paused after quitting any game modes
+            Time.timeScale = 1f;
 
-            // avoid null exception
+            // Avoid null exception
             if (SceneManager.GetActiveScene().buildIndex != 0) {
                 return;
-            }
-
-            // Not first time use
-            if (PlayerPrefs.GetString("user_info") != string.Empty) {
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel userinfo")
-                    .Panel
-                    .gameObject
-                    .SetActive(false);
-
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel welcome")
-                    .Panel
-                    .gameObject
-                    .SetActive(true);
-
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "label welcome user")
-                    .textMesh
-                    .SetText(PlayerPrefs.GetString("user_info"));
             }
 
             if (PlayerPrefs.GetString("game_state") == "set_to_running") {
@@ -71,7 +56,11 @@ namespace Assets.Scripts.GlobalScripts.UITask {
             SceneManager.LoadScene(sceneName);
         }
 
+        [Obsolete("Use GoTo(string) function instead")]
         public void GoToBaseMenu() {
+            // Avoid per game category audio duplication(not stopping)
+            Destroy(GameObject.Find("AudioManager").gameObject);
+
             SceneManager.LoadScene("BaseMenu");
         }
 
@@ -116,6 +105,10 @@ namespace Assets.Scripts.GlobalScripts.UITask {
                 button.GetChild(0).gameObject.SetActive(true);
                 button.GetChild(1).gameObject.SetActive(false);
             }
+        }
+
+        public void DestroyObject(string name) {
+            Destroy(GameObject.Find(name));
         }
     }
 }
