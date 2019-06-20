@@ -26,7 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Memory/GameOverMemory.unity
     guid: 5e714406196dec040b4ebcf31fd18178
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Quiz/GameQuiz.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
