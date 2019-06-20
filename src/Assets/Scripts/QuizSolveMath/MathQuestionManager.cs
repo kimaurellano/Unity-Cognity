@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Database.Enum;
-using Assets.Scripts.GlobalScripts;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UITask;
 using TMPro;
@@ -13,29 +12,21 @@ using Random = UnityEngine.Random;
 namespace Assets.Scripts.QuizSolveMath {
 #pragma warning disable 649
     public class MathQuestionManager : MonoBehaviour {
-        private int _currentNumber;
-
-        private int _inputLim;
-
-        private List<int> _keys;
 
         [SerializeField] private MathBank[] _mathBanks;
 
-        private int _randomKey;
+        private Timer _timer;
+        private List<int> _keys;
 
+        private int _currentNumber;
+        private int _inputLim;
+        private int _useKey;
+        private bool _gameDone;
+        private bool _paused;
+        private int _randomKey;
         private int _score;
 
-        private ScoreManager _scoreManager;
-
-        private Timer _timer;
-
-        private int _useKey;
-
-        private bool _gameDone;
-
         private void Start() {
-            _scoreManager = new ScoreManager();
-
             _keys = new List<int>();
 
             _timer = GetComponent<Timer>();
@@ -93,7 +84,7 @@ namespace Assets.Scripts.QuizSolveMath {
             // Set random spawn point
             _useKey = _keys.ElementAt(_randomKey);
 
-            // Set random question      
+            // Set random question cached at TextCollection for later comparison with the user answer
             Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("question text"))
                 .textMesh
                 .SetText(_mathBanks[_useKey].Problem);
@@ -103,16 +94,20 @@ namespace Assets.Scripts.QuizSolveMath {
         }
 
         public void IsAnswerCorrect() {
-            var userAnswer = Array.Find(FindObjectOfType<UIManager>().TextCollection,
-                    i => i.textName.Equals("answer text"))
+            string userAnswer = Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("answer text"))
                 .textMesh
                 .text;
 
-            var correctAnswer = _mathBanks[_useKey].Answer;
+            string correctAnswer = _mathBanks[_useKey].Answer;
 
             if (userAnswer.Equals(correctAnswer)) {
                 _score += 10;
-            } else if (_score > 0) {
+            } else {
+                // Avoid negative results
+                if (_score <= 0) {
+                    return;
+                }
+
                 _score -= 10;
             }
 
@@ -147,6 +142,12 @@ namespace Assets.Scripts.QuizSolveMath {
             Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("answer text"))
                 .textMesh
                 .SetText(string.Empty);
+        }
+
+        public void Pause() {
+            _paused = !_paused;
+
+            Time.timeScale = _paused ? 0f : 1f;
         }
     }
 }

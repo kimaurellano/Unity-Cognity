@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
+using Assets.Scripts.GlobalScripts.UIComponents;
 using Assets.Scripts.GlobalScripts.UITask;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -80,7 +81,7 @@ namespace Assets.Scripts.Cognity {
                 GameDone = true;
 
                 // Stop sound
-                Array.Find(FindObjectOfType<AudioManager>().AudioCollections, i => i.Name == "background")
+                Array.Find(FindObjectOfType<AudioManager>().AudioCollection, i => i.Name == "background")
                     .AudioSource
                     .Stop();
 

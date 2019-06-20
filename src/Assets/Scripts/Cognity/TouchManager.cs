@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Scripts.GlobalScripts.UIComponents;
 using UnityEngine;
 
 namespace Assets.Scripts.Cognity {
@@ -69,7 +70,7 @@ namespace Assets.Scripts.Cognity {
                         FindObjectOfType<PuzzleOutlineCollider>().LockCount++;
 
                         // Play sfx
-                        FindObjectOfType<AudioManager>().PlaySnapSfx();
+                        FindObjectOfType<AudioManager>().PlayPairedSfx();
                     }
                     break;
                 }
