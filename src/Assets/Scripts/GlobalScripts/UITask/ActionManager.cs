@@ -1,5 +1,5 @@
 ﻿using System;
-using Assets.Scripts.Cognity;
+using Assets.Scripts.GlobalScripts.UIComponents;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -93,19 +93,29 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void MuteBackground() {
-            bool mute = Array.Find(FindObjectOfType<AudioManager>().AudioCollections, s => s.Name == "background")
-                .AudioSource.mute;
-            Array.Find(FindObjectOfType<AudioManager>().AudioCollections, s => s.Name == "background").AudioSource.mute =
-                !mute;
-            
-            if (mute) {
-                Transform button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "music").Button;
-                button.GetChild(0).gameObject.SetActive(false);
-                button.GetChild(1).gameObject.SetActive(true);
+            Transform button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "volume").Button;
+
+            // Since GameQuizGrammar has different AudioManager namespace
+            if (SceneManager.GetActiveScene().name == "GameQuizGrammar" || SceneManager.GetActiveScene().name == "GameQuizMath") {
+                AudioSource audioSource = Array
+                    .Find(FindObjectOfType<Quiz.Mono.AudioManager>().Sounds, i => i.Name == "GameMusic")
+                    .Source;
+
+                audioSource.mute = !audioSource.mute;
+
+                
+                button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
+                button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
+
+                return;
+            }
+
+            if (FindObjectOfType<AudioManager>().MuteBackground()) {
+                button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
+                button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
             } else {
-                Transform button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "music").Button;
-                button.GetChild(0).gameObject.SetActive(true);
-                button.GetChild(1).gameObject.SetActive(false);
+                button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
+                button.GetChild(1).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
             }
         }
 
