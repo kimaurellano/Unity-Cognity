@@ -57,5 +57,13 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
 
             Destroy(gameObject);
         }
+
+        public bool MuteBackground() {
+            // Get current audio state
+            AudioSource backgroundAudio = Array.Find(AudioCollection, i => i.Name == "background").AudioSource;
+
+            // Invert the current state
+            return backgroundAudio.mute = !backgroundAudio.mute;
+        }
     }
 }
