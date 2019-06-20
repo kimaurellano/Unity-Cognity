@@ -38,6 +38,7 @@ namespace Assets.Scripts.Cognity {
 
             SceneManager.activeSceneChanged += ChangedActiveScene;
 
+            // Play the background sound on start
             AudioSource background = Array.Find(_audioCollection, s => s.Name == "background").AudioSource;
             background.loop = true;
             background.Play();

@@ -97,7 +97,7 @@ namespace Assets.Scripts.GlobalScripts.UITask {
                 .AudioSource.mute;
             Array.Find(FindObjectOfType<AudioManager>().AudioCollections, s => s.Name == "background").AudioSource.mute =
                 !mute;
-
+            
             if (mute) {
                 Transform button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "music").Button;
                 button.GetChild(0).gameObject.SetActive(false);

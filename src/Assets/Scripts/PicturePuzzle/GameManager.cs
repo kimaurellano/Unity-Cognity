@@ -21,6 +21,7 @@ namespace Assets.Scripts.PicturePuzzle {
         [SerializeField] private GameObject _puzzlePictureContainer;
         [SerializeField] private PicturePuzzleCollection[] _picturePuzzleCollections;
 
+        private bool _paused;
         private int _currentNumber = 1;
         private int _score;
 
@@ -87,6 +88,12 @@ namespace Assets.Scripts.PicturePuzzle {
 
         public void ClearField() {
             _placeHolder.text = string.Empty;
+        }
+
+        public void Pause() {
+            _paused = !_paused;
+
+            Time.timeScale = _paused ? 0f : 1f;
         }
 
         private void ChangedActiveScene(Scene current, Scene next) {
