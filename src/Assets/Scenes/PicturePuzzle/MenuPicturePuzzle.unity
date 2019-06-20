@@ -701,7 +701,8 @@ PrefabInstance:
       propertyPath: _audioCollection.Array.data[0].AudioClip
       value: 
       objectReference: {fileID: 8300000, guid: f1bd0270c3235f64488181cb6745a97d, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: c870ef2a5bf7d18439be4d59734180d5, type: 3}
 --- !u!1 &833299168
 GameObject:
@@ -844,28 +845,23 @@ GameObject:
 --- !u!114 &891808136
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 4802415391197530177, guid: c870ef2a5bf7d18439be4d59734180d5,
-    type: 3}
-  m_PrefabInstance: {fileID: 665227733}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891808135}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1982cf8a6fd9e3049b3cd7cbbfc00c37, type: 3}
+  m_Script: {fileID: 11500000, guid: c12648da3cab5074596cd8e0fefca04b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _audioCollection:
-  - AudioClip: {fileID: 8300000, guid: f1bd0270c3235f64488181cb6745a97d, type: 3}
+  - AudioClip: {fileID: 8300000, guid: a7f842bd56f9ecd4d80b2c13be8e0dd0, type: 3}
     AudioSource: {fileID: 0}
     Name: background
     Volume: 1
-  - AudioClip: {fileID: 8300000, guid: 9fd634cf4732bf74888567e2000bd94e, type: 3}
+  - AudioClip: {fileID: 8300000, guid: a018f304fbd72404f8bf6462088edcd9, type: 3}
     AudioSource: {fileID: 0}
-    Name: button
-    Volume: 1
-  - AudioClip: {fileID: 8300000, guid: 949b7d3b220bf7842a2cfaf978c63004, type: 3}
-    AudioSource: {fileID: 0}
-    Name: snap
+    Name: click
     Volume: 1
 --- !u!4 &891808137
 Transform:

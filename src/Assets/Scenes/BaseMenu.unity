@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 42424266}
   m_Layer: 5
   m_Name: ButtonBack
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -631,7 +631,7 @@ GameObject:
   - component: {fileID: 76706984}
   m_Layer: 5
   m_Name: ButtonStart
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2487,7 +2487,7 @@ GameObject:
   - component: {fileID: 543083552}
   m_Layer: 5
   m_Name: ButtonQuizSolveMath
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2764,7 +2764,7 @@ GameObject:
   - component: {fileID: 649037181}
   m_Layer: 5
   m_Name: ButtonPicturePuzzle
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2893,7 +2893,7 @@ GameObject:
   - component: {fileID: 670470308}
   m_Layer: 5
   m_Name: ButtonGrammar
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3096,7 +3096,7 @@ GameObject:
   - component: {fileID: 745752746}
   m_Layer: 5
   m_Name: ButtonProblemSolving
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3430,7 +3430,7 @@ GameObject:
   - component: {fileID: 793284826}
   m_Layer: 5
   m_Name: ButtonCognity
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4056,7 +4056,7 @@ GameObject:
   - component: {fileID: 883267076}
   m_Layer: 5
   m_Name: ButtonQuit
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4429,7 +4429,7 @@ GameObject:
   - component: {fileID: 950462211}
   m_Layer: 5
   m_Name: ButtonMemory
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5101,7 +5101,7 @@ GameObject:
   - component: {fileID: 1103019550}
   m_Layer: 5
   m_Name: ButtonSave
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5953,7 +5953,7 @@ GameObject:
   - component: {fileID: 1261457921}
   m_Layer: 5
   m_Name: ButtonUser
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6568,7 +6568,7 @@ GameObject:
   - component: {fileID: 1482742089}
   m_Layer: 5
   m_Name: ButtonLanguage
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6708,7 +6708,7 @@ GameObject:
   - component: {fileID: 1521198649}
   m_Layer: 5
   m_Name: ButtonBack
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7006,7 +7006,7 @@ GameObject:
   - component: {fileID: 1583163087}
   m_Layer: 5
   m_Name: ButtonQuizMath
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8982,7 +8982,7 @@ GameObject:
   - component: {fileID: 2043151188}
   m_Layer: 5
   m_Name: ButtonQuit
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9122,7 +9122,7 @@ GameObject:
   - component: {fileID: 2061020512}
   m_Layer: 5
   m_Name: ButtonBack
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
