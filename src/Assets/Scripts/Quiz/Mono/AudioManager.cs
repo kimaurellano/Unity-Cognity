@@ -58,6 +58,8 @@ namespace Assets.Scripts.Quiz.Mono
 
         [SerializeField] String startupTrack = String.Empty;
 
+        public Sound[] Sounds => sounds;
+
         #endregion
 
         #region Default Unity methods
