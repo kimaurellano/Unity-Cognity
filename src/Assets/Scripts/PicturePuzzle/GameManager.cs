@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
-using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UIComponents;
 using Assets.Scripts.GlobalScripts.UITask;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Type = Assets.Scripts.GlobalScripts.Game.Type;
+
 #pragma warning disable 649
 
 namespace Assets.Scripts.PicturePuzzle {
@@ -69,7 +70,7 @@ namespace Assets.Scripts.PicturePuzzle {
             if (_currentNumber > _picturePuzzleCollections.Length) {
                 // Save score
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_score, Game.GameType.ProblemSolving);
+                baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
 
                 // Load game over 
                 SceneManager.LoadScene("GameOverPicturePuzzle");

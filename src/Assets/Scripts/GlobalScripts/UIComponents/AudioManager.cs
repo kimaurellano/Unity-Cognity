@@ -31,10 +31,7 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
                 collection.AudioSource.volume = collection.Volume;
             }
 
-            foreach (var button in GameObject.FindGameObjectsWithTag("Button")) {
-                // Ready buttons to listen for clicks
-                button.GetComponent<Button>().onClick.AddListener(TaskOnClick);
-            }
+            SetButtonEffect();
 
             var background = Array.Find(AudioCollection, s => s.Name == "background").AudioSource;
             background.loop = true;
@@ -64,6 +61,13 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
 
             // Invert the current state
             return backgroundAudio.mute = !backgroundAudio.mute;
+        }
+
+        public void SetButtonEffect() {
+            foreach (var button in GameObject.FindGameObjectsWithTag("Button")) {
+                // Ready buttons to listen for clicks
+                button.GetComponent<Button>().onClick.AddListener(TaskOnClick);
+            }
         }
     }
 }

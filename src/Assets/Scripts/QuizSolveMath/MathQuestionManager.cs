@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UITask;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
+using Type = Assets.Scripts.GlobalScripts.Game.Type;
 
 namespace Assets.Scripts.QuizSolveMath {
 #pragma warning disable 649
@@ -67,7 +67,7 @@ namespace Assets.Scripts.QuizSolveMath {
                     .SetActive(true);
 
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_score, Game.GameType.ProblemSolving);
+                baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
             }
         }
 
