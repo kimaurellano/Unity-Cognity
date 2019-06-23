@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UIComponents;
 using Assets.Scripts.GlobalScripts.UITask;
+using UnityEditorInternal;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Type = Assets.Scripts.GlobalScripts.Game.Type;
+
 #pragma warning disable 649
 
 namespace Assets.Scripts.Cognity {
@@ -15,6 +18,11 @@ namespace Assets.Scripts.Cognity {
     ///     Manages occuring actions within th e puzzle area.
     /// </summary>
     public class PuzzleManager : MonoBehaviour {
+        [SerializeField] private RuntimeAnimatorController _shapeSelAnimatorController;
+
+        // Whether the touched piece is in rotating or drag state
+        [SerializeField] private GameObject _pieceStatus;
+
         // A random rotation after puzzle instantiation
         private readonly int[] _randomRotation = {0, 90};
 
@@ -50,17 +58,20 @@ namespace Assets.Scripts.Cognity {
         // Handle when to start
         private Timer _timer;
 
-        // If the piece touched is rotating
-
         // Is game done ?
         public bool GameDone { get; private set; }
 
         // The piece user had touched
         public Transform TouchedPiece { get; set; }
 
+        public GameObject PieceStatus => _pieceStatus;
+
         public bool Rotating { get; set; }
 
         private void Start() {
+            // Score manager of cognity namespace
+            _scoreManager = new ScoreManager();
+
             _timer = FindObjectOfType<Timer>();
 
             Populate();
@@ -99,7 +110,7 @@ namespace Assets.Scripts.Cognity {
 
                 // Save the total score
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_scoreManager.TotalScore, Game.GameType.Flexibility);
+                baseScoreHandler.AddScore(_scoreManager.TotalScore, Type.GameType.Flexibility);
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -142,6 +153,56 @@ namespace Assets.Scripts.Cognity {
             }
         }
 
+        /// <summary>
+        ///     Animates the selected puzzle piece.
+        /// </summary>
+        /// <param name="transform">Transform to animate</param>
+        /// <param name="animate">Start or Stop animation</param>
+        public void Animate(Transform transform, bool animate) {
+            if (transform.gameObject.GetComponent<Animation>() != null && !animate) {
+                Vector3 origScale = new Vector3(0.15f, 0.15f);
+
+                // Reset to original scale upon animation stop
+                transform.localScale = origScale;
+
+                Destroy(transform.gameObject.GetComponent<Animation>());
+
+                return;
+            }
+
+            // Avoid duplicate instance of Animator component of puzzle piece
+            if (transform.GetComponent<Animation>() == null) {
+                transform.gameObject.AddComponent<Animation>();
+            }
+
+            Animation anim = transform.gameObject.GetComponent<Animation>();
+
+            // Create new animation clip
+            AnimationClip animationClip = new AnimationClip {legacy = true};
+
+            // Create a curve to scale the x axis of the GameObject
+            Keyframe[] scaleXKey = new Keyframe[3];
+            scaleXKey[0] = new Keyframe(0.0f, transform.localScale.x);
+            scaleXKey[1] = new Keyframe(0.5f, transform.localScale.x + 0.01f);
+            scaleXKey[2] = new Keyframe(1.0f, transform.localScale.x);
+            AnimationCurve curve = new AnimationCurve(scaleXKey);
+            // and assign to the clip
+            animationClip.SetCurve("", typeof(Transform), "localScale.x", curve);
+
+            Keyframe[] scaleYKey = new Keyframe[3];
+            scaleYKey[0] = new Keyframe(0.0f, transform.localScale.y);
+            scaleYKey[1] = new Keyframe(0.5f, transform.localScale.y + 0.01f);
+            scaleYKey[2] = new Keyframe(1.0f, transform.localScale.y);
+            curve = new AnimationCurve(scaleYKey);
+            // and assign to the clip
+            animationClip.SetCurve("", typeof(Transform), "localScale.y", curve);
+
+            // Play the animation
+            anim.AddClip(animationClip, animationClip.name);
+            anim.Play(animationClip.name);
+            anim.wrapMode = WrapMode.Loop;
+        }
+
         // Use these for starting the game and going to next level
         public void Populate() {
             // Remove the current outline
@@ -172,7 +233,7 @@ namespace Assets.Scripts.Cognity {
                 // Set the random spawn point 
                 int spawnPoint = _spawnKeys.ElementAt(randomKey);
 
-                Instantiate(
+                GameObject t = Instantiate(
                     piece,
                     _spawnPoints[spawnPoint].transform.position,
                     // Generate random rotation at z axis
@@ -191,6 +252,17 @@ namespace Assets.Scripts.Cognity {
                 _outlineSpawnPoint.transform.position,
                 Quaternion.identity
             );
+        }
+
+        public void SetPieceStatus(string state) {
+            if (state == "drag") {
+                TouchedPiece.GetChild(0).gameObject.SetActive(true);
+                TouchedPiece.GetChild(1).gameObject.SetActive(false);
+            }
+            else {
+                TouchedPiece.GetChild(0).gameObject.SetActive(false);
+                TouchedPiece.GetChild(1).gameObject.SetActive(true);
+            }
         }
 
         public void NextLevel() {
