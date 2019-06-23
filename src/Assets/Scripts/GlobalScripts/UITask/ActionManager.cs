@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Assets.Scripts.GlobalScripts.UIComponents;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace Assets.Scripts.GlobalScripts.UITask {
     /// </summary>
     public class ActionManager : MonoBehaviour {
 
+        private static Transform _targetPanel;
+        private static Transform _currentPanel;
+
         private void Start() {
             // Make sure games not paused after quitting any game modes
             Time.timeScale = 1f;
@@ -17,6 +21,10 @@ namespace Assets.Scripts.GlobalScripts.UITask {
             // Avoid null exception
             if (SceneManager.GetActiveScene().buildIndex != 0) {
                 return;
+            }
+
+            if (SceneManager.GetActiveScene().buildIndex == 0) {
+                
             }
 
             if (PlayerPrefs.GetString("user_info") != string.Empty) {
@@ -66,6 +74,41 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void Show(Transform transform) {
+            transform.gameObject.SetActive(true);
+        }
+
+        public void Hide(Transform transform) {
+            transform.gameObject.SetActive(false);
+        }
+
+        public void TransitionFrom(Transform currentPanel) {
+            _currentPanel = currentPanel;
+
+            // Start panel transition to transition from
+            StartCoroutine(BeginTransition(currentPanel));
+        }
+
+        public void TransitionTo(Transform targetPanel) {
+            // The panel to transition to
+            _targetPanel = targetPanel;
+        }
+
+        public void SwitchPanel() {
+            _currentPanel.gameObject.SetActive(false);
+            _targetPanel.gameObject.SetActive(true);
+        }
+
+        private static IEnumerator BeginTransition(Transform transform) {
+            Animator animator = Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel transition")
+                .Panel
+                .GetComponent<Animator>();
+
+            // Trigger transition
+            animator.SetTrigger("transition");
+
+            // Animation has ended
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("PanelTransitionIdle"));
+
             if (transform.name == "User_Panel") {
                 Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel user")
                     .Panel
@@ -76,20 +119,6 @@ namespace Assets.Scripts.GlobalScripts.UITask {
                     .textMesh
                     .SetText(PlayerPrefs.GetString("user_info"));
             }
-
-            transform.gameObject.SetActive(true);
-        }
-
-        public void Hide(Transform transform) {
-            transform.gameObject.SetActive(false);
-        }
-
-        /// <summary>
-        ///     The transition after username input. Shall never be used with other animators unless it has the
-        ///     same behaviour
-        /// </summary>
-        public void InvokeAnimation(Animator animator) {
-            animator.SetTrigger("show");
         }
 
         public void MuteBackground() {
@@ -103,7 +132,6 @@ namespace Assets.Scripts.GlobalScripts.UITask {
 
                 audioSource.mute = !audioSource.mute;
 
-                
                 button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
                 button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
 
