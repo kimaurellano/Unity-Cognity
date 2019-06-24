@@ -1,12 +1,11 @@
 ﻿using System;
-using Assets.Scripts.Database.Enum;
 using UnityEngine;
+using Type = Assets.Scripts.GlobalScripts.Game.Type;
 
 namespace Assets.Scripts.GlobalScripts.Player {
     public class BaseScoreHandler : MonoBehaviour {
-        public void AddScore(float score, Game.GameType gameType) {
-
-            string category = Enum.GetName(typeof(Game.GameType), gameType);
+        public void AddScore(float score, Type.GameType gameType) {
+            string category = Enum.GetName(typeof(Type.GameType), gameType);
 
             // Up to 2 decimal places
             double newScore = Math.Truncate(100 * (score / 1000)) / 100;

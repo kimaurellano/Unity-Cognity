@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UIComponents;
 using Assets.Scripts.GlobalScripts.UITask;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Type = Assets.Scripts.GlobalScripts.Game.Type;
+
 #pragma warning disable 649
 
 namespace Assets.Scripts.Cognity {
@@ -15,6 +16,11 @@ namespace Assets.Scripts.Cognity {
     ///     Manages occuring actions within th e puzzle area.
     /// </summary>
     public class PuzzleManager : MonoBehaviour {
+        //
+        private Dictionary<string, Vector3> _originalPieceLocation;
+
+        private List<string> _lockedPiece;
+
         // A random rotation after puzzle instantiation
         private readonly int[] _randomRotation = {0, 90};
 
@@ -50,17 +56,22 @@ namespace Assets.Scripts.Cognity {
         // Handle when to start
         private Timer _timer;
 
-        // If the piece touched is rotating
-
         // Is game done ?
         public bool GameDone { get; private set; }
 
         // The piece user had touched
-        public Transform TouchedPiece { get; set; }
+        public Transform LastTouchedPiece { get; set; }
 
         public bool Rotating { get; set; }
 
         private void Start() {
+            // Score manager of cognity namespace
+            _scoreManager = new ScoreManager();
+
+            _originalPieceLocation = new Dictionary<string, Vector3>();
+
+            _lockedPiece = new List<string>();
+
             _timer = FindObjectOfType<Timer>();
 
             Populate();
@@ -76,6 +87,15 @@ namespace Assets.Scripts.Cognity {
         }
 
         private void Update() {
+            // Forcefully destroys the Animation component to prevent "select" animation to still occur when locked
+            if (GameObject.FindGameObjectsWithTag("PuzzlePiece") != null) {
+                foreach (GameObject piece in GameObject.FindGameObjectsWithTag("PuzzlePiece")) {
+                    if (piece.GetComponent<TouchManager>().Locked && piece.GetComponent<Animation>() != null) {
+                        Destroy(piece.GetComponent<Animation>());
+                    }
+                }
+            }
+
             // There is only 4 levels any more increment should result game completion
             if (_currentLevel > 4 && !GameDone) {
                 GameDone = true;
@@ -99,7 +119,7 @@ namespace Assets.Scripts.Cognity {
 
                 // Save the total score
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_scoreManager.TotalScore, Game.GameType.Flexibility);
+                baseScoreHandler.AddScore(_scoreManager.TotalScore, Type.GameType.Flexibility);
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -115,7 +135,8 @@ namespace Assets.Scripts.Cognity {
                 _scoreManager.AddScore(_timer.Min, _timer.Sec);
 
                 Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "level")
-                    .textMesh.SetText("Level: " + _currentLevel);
+                    .textMesh
+                    .SetText("Level: " + _currentLevel);
 
                 // For every level load, timer will reset and start at specified time
                 switch (_currentLevel) {
@@ -142,10 +163,65 @@ namespace Assets.Scripts.Cognity {
             }
         }
 
-        // Use these for starting the game and going to next level
+        /// <summary>
+        ///     Animates the selected puzzle piece.
+        /// </summary>
+        /// <param name="transform">Transform to animate</param>
+        /// <param name="animate">Start or Stop animation</param>
+        public void Animate(Transform transform, bool animate) {
+            if (transform.gameObject.GetComponent<Animation>() != null && !animate) {
+                Vector3 origScale = new Vector3(0.15f, 0.15f);
+
+                // Reset to original scale upon animation stop
+                transform.localScale = origScale;
+
+                Destroy(transform.gameObject.GetComponent<Animation>());
+
+                return;
+            }
+
+            // Avoid duplicate instance of Animator component of puzzle piece
+            if (transform.GetComponent<Animation>() == null) {
+                transform.gameObject.AddComponent<Animation>();
+            }
+
+            Animation anim = transform.gameObject.GetComponent<Animation>();
+
+            // Create new animation clip
+            AnimationClip animationClip = new AnimationClip {legacy = true};
+
+            // Create a curve to scale the x axis of the GameObject
+            Keyframe[] scaleXKey = new Keyframe[3];
+            scaleXKey[0] = new Keyframe(0.0f, 0.15f);
+            scaleXKey[1] = new Keyframe(0.5f, 0.15f + 0.01f);
+            scaleXKey[2] = new Keyframe(1.0f, 0.15f);
+            AnimationCurve curve = new AnimationCurve(scaleXKey);
+            // and assign to the clip
+            animationClip.SetCurve("", typeof(Transform), "localScale.x", curve);
+
+            Keyframe[] scaleYKey = new Keyframe[3];
+            scaleYKey[0] = new Keyframe(0.0f, 0.15f);
+            scaleYKey[1] = new Keyframe(0.5f, 0.15f + 0.01f);
+            scaleYKey[2] = new Keyframe(1.0f, 0.15f);
+            curve = new AnimationCurve(scaleYKey);
+            // and assign to the clip
+            animationClip.SetCurve("", typeof(Transform), "localScale.y", curve);
+
+            // Play the animation
+            anim.AddClip(animationClip, animationClip.name);
+            anim.Play(animationClip.name);
+            anim.wrapMode = WrapMode.Loop;
+        }
+
+        /// <summary>
+        ///     Use these for starting the game and going to next level
+        /// </summary>
         public void Populate() {
             // Remove the current outline
             Destroy(GameObject.FindGameObjectWithTag("PuzzleOutline"));
+
+            // Avoid duplication
+            _originalPieceLocation.Clear();
 
             // Destroy puzzle pieces when spawning again
             if (!GameObject.FindGameObjectsWithTag("PuzzlePiece").Equals(null)) {
@@ -172,7 +248,7 @@ namespace Assets.Scripts.Cognity {
                 // Set the random spawn point 
                 int spawnPoint = _spawnKeys.ElementAt(randomKey);
 
-                Instantiate(
+                GameObject pieceInstance = Instantiate(
                     piece,
                     _spawnPoints[spawnPoint].transform.position,
                     // Generate random rotation at z axis
@@ -183,6 +259,9 @@ namespace Assets.Scripts.Cognity {
 
                 // Avoid using the same spawn point
                 _spawnKeys.RemoveAt(randomKey);
+
+                // Cache the original location of the piece
+                _originalPieceLocation.Add(pieceInstance.transform.name, pieceInstance.transform.position);
             }
 
             // Display next level puzzle outline
@@ -191,6 +270,30 @@ namespace Assets.Scripts.Cognity {
                 _outlineSpawnPoint.transform.position,
                 Quaternion.identity
             );
+        }
+
+        /// <summary>
+        ///     Add piece to be listed as locked in chronological order
+        /// </summary>
+        /// <param name="toLock">piece to be listed as locked</param>
+        public void AddLockedPiece(Transform toLock) {
+            _lockedPiece.Add(toLock.name);
+        }
+
+        public void UndoPiece() {
+            if (_lockedPiece.Count == 0) {
+                return;
+            }
+
+            string lastLockedPiece = _lockedPiece.ToArray()[_lockedPiece.ToArray().Length - 1];
+            // Remove that piece from list
+            _lockedPiece.Remove(lastLockedPiece);
+            // Get the current state of last locked piece
+            GameObject updatedPieceState = GameObject.Find(lastLockedPiece);
+            // Then reset to its original position
+            updatedPieceState.transform.position = _originalPieceLocation[lastLockedPiece];
+            // Set as movable
+            updatedPieceState.GetComponent<TouchManager>().Locked = false;
         }
 
         public void NextLevel() {
@@ -206,11 +309,11 @@ namespace Assets.Scripts.Cognity {
         }
 
         public void FlipHorizontal() {
-            TouchedPiece.Rotate(0, 180, 0);
+            LastTouchedPiece.Rotate(0, 180, 0);
         }
 
         public void FlipVertical() {
-            TouchedPiece.Rotate(180, 0, 0);
+            LastTouchedPiece.Rotate(180, 0, 0);
         }
     }
 }

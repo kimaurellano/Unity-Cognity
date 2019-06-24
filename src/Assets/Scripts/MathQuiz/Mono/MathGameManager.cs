@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Database.Enum;
+using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.Quiz.Mono;
 using Assets.Scripts.Quiz.ScriptableObject;
@@ -170,7 +170,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
             var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, Game.GameType.ProblemSolving);
+            baseScoreHandler.AddScore(highscore, Type.GameType.ProblemSolving);
         }
 
         /// <summary>

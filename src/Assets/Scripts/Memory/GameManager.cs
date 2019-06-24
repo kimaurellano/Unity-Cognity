@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Database.Enum;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UITask;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Type = Assets.Scripts.GlobalScripts.Game.Type;
 
 namespace Assets.Scripts.Memory {
     public class GameManager : MonoBehaviour {
@@ -80,7 +80,7 @@ namespace Assets.Scripts.Memory {
 
             // Add score 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(_seconds, Game.GameType.Memory);
+            baseScoreHandler.AddScore(_seconds, Type.GameType.Memory);
 
             // Load finished scene
             SceneManager.LoadScene("GameOverMemory");
