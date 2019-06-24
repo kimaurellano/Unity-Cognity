@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UIComponents;
 using Assets.Scripts.GlobalScripts.UITask;
-using UnityEditorInternal;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Type = Assets.Scripts.GlobalScripts.Game.Type;
@@ -18,10 +16,10 @@ namespace Assets.Scripts.Cognity {
     ///     Manages occuring actions within th e puzzle area.
     /// </summary>
     public class PuzzleManager : MonoBehaviour {
-        [SerializeField] private RuntimeAnimatorController _shapeSelAnimatorController;
+        //
+        private Dictionary<string, Vector3> _originalPieceLocation;
 
-        // Whether the touched piece is in rotating or drag state
-        [SerializeField] private GameObject _pieceStatus;
+        private List<string> _lockedPiece;
 
         // A random rotation after puzzle instantiation
         private readonly int[] _randomRotation = {0, 90};
@@ -62,15 +60,17 @@ namespace Assets.Scripts.Cognity {
         public bool GameDone { get; private set; }
 
         // The piece user had touched
-        public Transform TouchedPiece { get; set; }
-
-        public GameObject PieceStatus => _pieceStatus;
+        public Transform LastTouchedPiece { get; set; }
 
         public bool Rotating { get; set; }
 
         private void Start() {
             // Score manager of cognity namespace
             _scoreManager = new ScoreManager();
+
+            _originalPieceLocation = new Dictionary<string, Vector3>();
+
+            _lockedPiece = new List<string>();
 
             _timer = FindObjectOfType<Timer>();
 
@@ -87,6 +87,15 @@ namespace Assets.Scripts.Cognity {
         }
 
         private void Update() {
+            // Forcefully destroys the Animation component to prevent "select" animation to still occur when locked
+            if (GameObject.FindGameObjectsWithTag("PuzzlePiece") != null) {
+                foreach (GameObject piece in GameObject.FindGameObjectsWithTag("PuzzlePiece")) {
+                    if (piece.GetComponent<TouchManager>().Locked && piece.GetComponent<Animation>() != null) {
+                        Destroy(piece.GetComponent<Animation>());
+                    }
+                }
+            }
+
             // There is only 4 levels any more increment should result game completion
             if (_currentLevel > 4 && !GameDone) {
                 GameDone = true;
@@ -126,7 +135,8 @@ namespace Assets.Scripts.Cognity {
                 _scoreManager.AddScore(_timer.Min, _timer.Sec);
 
                 Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "level")
-                    .textMesh.SetText("Level: " + _currentLevel);
+                    .textMesh
+                    .SetText("Level: " + _currentLevel);
 
                 // For every level load, timer will reset and start at specified time
                 switch (_currentLevel) {
@@ -182,17 +192,17 @@ namespace Assets.Scripts.Cognity {
 
             // Create a curve to scale the x axis of the GameObject
             Keyframe[] scaleXKey = new Keyframe[3];
-            scaleXKey[0] = new Keyframe(0.0f, transform.localScale.x);
-            scaleXKey[1] = new Keyframe(0.5f, transform.localScale.x + 0.01f);
-            scaleXKey[2] = new Keyframe(1.0f, transform.localScale.x);
+            scaleXKey[0] = new Keyframe(0.0f, 0.15f);
+            scaleXKey[1] = new Keyframe(0.5f, 0.15f + 0.01f);
+            scaleXKey[2] = new Keyframe(1.0f, 0.15f);
             AnimationCurve curve = new AnimationCurve(scaleXKey);
             // and assign to the clip
             animationClip.SetCurve("", typeof(Transform), "localScale.x", curve);
 
             Keyframe[] scaleYKey = new Keyframe[3];
-            scaleYKey[0] = new Keyframe(0.0f, transform.localScale.y);
-            scaleYKey[1] = new Keyframe(0.5f, transform.localScale.y + 0.01f);
-            scaleYKey[2] = new Keyframe(1.0f, transform.localScale.y);
+            scaleYKey[0] = new Keyframe(0.0f, 0.15f);
+            scaleYKey[1] = new Keyframe(0.5f, 0.15f + 0.01f);
+            scaleYKey[2] = new Keyframe(1.0f, 0.15f);
             curve = new AnimationCurve(scaleYKey);
             // and assign to the clip
             animationClip.SetCurve("", typeof(Transform), "localScale.y", curve);
@@ -203,10 +213,15 @@ namespace Assets.Scripts.Cognity {
             anim.wrapMode = WrapMode.Loop;
         }
 
-        // Use these for starting the game and going to next level
+        /// <summary>
+        ///     Use these for starting the game and going to next level
+        /// </summary>
         public void Populate() {
             // Remove the current outline
             Destroy(GameObject.FindGameObjectWithTag("PuzzleOutline"));
+
+            // Avoid duplication
+            _originalPieceLocation.Clear();
 
             // Destroy puzzle pieces when spawning again
             if (!GameObject.FindGameObjectsWithTag("PuzzlePiece").Equals(null)) {
@@ -233,7 +248,7 @@ namespace Assets.Scripts.Cognity {
                 // Set the random spawn point 
                 int spawnPoint = _spawnKeys.ElementAt(randomKey);
 
-                GameObject t = Instantiate(
+                GameObject pieceInstance = Instantiate(
                     piece,
                     _spawnPoints[spawnPoint].transform.position,
                     // Generate random rotation at z axis
@@ -244,6 +259,9 @@ namespace Assets.Scripts.Cognity {
 
                 // Avoid using the same spawn point
                 _spawnKeys.RemoveAt(randomKey);
+
+                // Cache the original location of the piece
+                _originalPieceLocation.Add(pieceInstance.transform.name, pieceInstance.transform.position);
             }
 
             // Display next level puzzle outline
@@ -254,15 +272,28 @@ namespace Assets.Scripts.Cognity {
             );
         }
 
-        public void SetPieceStatus(string state) {
-            if (state == "drag") {
-                TouchedPiece.GetChild(0).gameObject.SetActive(true);
-                TouchedPiece.GetChild(1).gameObject.SetActive(false);
+        /// <summary>
+        ///     Add piece to be listed as locked in chronological order
+        /// </summary>
+        /// <param name="toLock">piece to be listed as locked</param>
+        public void AddLockedPiece(Transform toLock) {
+            _lockedPiece.Add(toLock.name);
+        }
+
+        public void UndoPiece() {
+            if (_lockedPiece.Count == 0) {
+                return;
             }
-            else {
-                TouchedPiece.GetChild(0).gameObject.SetActive(false);
-                TouchedPiece.GetChild(1).gameObject.SetActive(true);
-            }
+
+            string lastLockedPiece = _lockedPiece.ToArray()[_lockedPiece.ToArray().Length - 1];
+            // Remove that piece from list
+            _lockedPiece.Remove(lastLockedPiece);
+            // Get the current state of last locked piece
+            GameObject updatedPieceState = GameObject.Find(lastLockedPiece);
+            // Then reset to its original position
+            updatedPieceState.transform.position = _originalPieceLocation[lastLockedPiece];
+            // Set as movable
+            updatedPieceState.GetComponent<TouchManager>().Locked = false;
         }
 
         public void NextLevel() {
@@ -278,11 +309,11 @@ namespace Assets.Scripts.Cognity {
         }
 
         public void FlipHorizontal() {
-            TouchedPiece.Rotate(0, 180, 0);
+            LastTouchedPiece.Rotate(0, 180, 0);
         }
 
         public void FlipVertical() {
-            TouchedPiece.Rotate(180, 0, 0);
+            LastTouchedPiece.Rotate(180, 0, 0);
         }
     }
 }
