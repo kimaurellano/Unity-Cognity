@@ -11,6 +11,7 @@ TagManager:
   - PuzzlePiece
   - PuzzleOutline
   - ButtonInput
+  - PieceStatus
   layers:
   - Default
   - TransparentFX
