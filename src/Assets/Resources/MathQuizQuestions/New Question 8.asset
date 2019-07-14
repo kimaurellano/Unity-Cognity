@@ -19,7 +19,7 @@ MonoBehaviour:
   - _info: 18
     _isCorrect: 0
   - _info: 19
-    _isCorrect: 0
+    _isCorrect: 1
   - _info: 20
     _isCorrect: 0
   _useTimer: 1

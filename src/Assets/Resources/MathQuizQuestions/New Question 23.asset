@@ -21,7 +21,7 @@ MonoBehaviour:
   - _info: 1.001 kg
     _isCorrect: 0
   - _info: 1.01 kg
-    _isCorrect: 0
+    _isCorrect: 1
   _useTimer: 1
   _timer: 10
   _answerType: 1
