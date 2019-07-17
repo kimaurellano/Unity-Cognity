@@ -58,9 +58,9 @@ namespace Assets.Scripts.QuizSolveMath {
 
                 _gameDone = !_gameDone;
 
-                Array.Find(
-                        FindObjectOfType<UIManager>().PanelCollection,
-                        i => i.Name.Equals(_score > 0 ? "panel success" : "panel failed"))
+                string panelName = _score > 0 ? "panel success" : "panel failed";
+
+                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name.Equals(panelName))
                     .Panel
                     .transform
                     .gameObject
@@ -103,12 +103,12 @@ namespace Assets.Scripts.QuizSolveMath {
             if (userAnswer.Equals(correctAnswer)) {
                 _score += 10;
             } else {
-                // Avoid negative results
-                if (_score <= 0) {
-                    return;
-                }
-
                 _score -= 10;
+            }
+
+            // Avoid negative result
+            if (_score <= 0) {
+                _score = 0;
             }
 
             // Set text with new score
