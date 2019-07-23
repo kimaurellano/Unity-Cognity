@@ -102,10 +102,10 @@ TextureImporter:
       name: Level_4_0
       rect:
         serializedVersion: 2
-        x: 489
-        y: 36
-        width: 563
-        height: 1567
+        x: 158
+        y: 82
+        width: 926
+        height: 1686
       alignment: 9
       pivot: {x: 0.52777845, y: 0.51397264}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -122,10 +122,10 @@ TextureImporter:
       name: Level_4_1
       rect:
         serializedVersion: 2
-        x: 1145
-        y: 140
-        width: 567
-        height: 1595
+        x: 1512
+        y: 178
+        width: 910
+        height: 1479
       alignment: 9
       pivot: {x: 0.50551665, y: 0.60785705}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,10 +142,10 @@ TextureImporter:
       name: Level_4_2
       rect:
         serializedVersion: 2
-        x: 48
-        y: 506
-        width: 394
-        height: 756
+        x: 2662
+        y: 939
+        width: 508
+        height: 703
       alignment: 9
       pivot: {x: 0.40473548, y: 0.4917253}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -162,10 +162,10 @@ TextureImporter:
       name: Level_4_3
       rect:
         serializedVersion: 2
-        x: 1862
-        y: 762
-        width: 556
-        height: 735
+        x: 3502
+        y: 837
+        width: 576
+        height: 891
       alignment: 9
       pivot: {x: 0.46062046, y: 0.30849874}
       border: {x: 0, y: 0, z: 0, w: 0}
