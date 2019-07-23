@@ -15,7 +15,6 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         private static Transform _currentPanel;
 
         private void Start() {
-
             // Make sure games not paused after quitting any game modes
             Time.timeScale = 1f;
 
@@ -90,6 +89,12 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void TransitionTo(Transform targetPanel) {
+            if (targetPanel.name == "User_Panel") {
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "label username")
+                    .textMesh
+                    .SetText(PlayerPrefs.GetString("user_info"));
+            }
+
             // The panel to transition to
             _targetPanel = targetPanel;
         }

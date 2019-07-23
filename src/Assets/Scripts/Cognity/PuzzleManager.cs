@@ -16,6 +16,13 @@ namespace Assets.Scripts.Cognity {
     ///     Manages occuring actions within th e puzzle area.
     /// </summary>
     public class PuzzleManager : MonoBehaviour {
+
+        private List<KeyValuePair<int, int[]>> _levelRotList;
+
+        private int[] _curRotList;
+
+        private int _curRotIdx;
+
         //
         private Dictionary<string, Vector3> _originalPieceLocation;
 
@@ -62,8 +69,6 @@ namespace Assets.Scripts.Cognity {
         // The piece user had touched
         public Transform LastTouchedPiece { get; set; }
 
-        public bool Rotating { get; set; }
-
         private void Start() {
             // Score manager of cognity namespace
             _scoreManager = new ScoreManager();
@@ -73,6 +78,18 @@ namespace Assets.Scripts.Cognity {
             _lockedPiece = new List<string>();
 
             _timer = FindObjectOfType<Timer>();
+
+            _levelRotList = new List<KeyValuePair<int, int[]>>();
+
+            // Limit of rotation specific to levels
+            _levelRotList.Add(new KeyValuePair<int, int[]>(1, new []{ 0, 90, 180, 270, 360 }));
+            _levelRotList.Add(new KeyValuePair<int, int[]>(2, new []{ 182 }));
+            _levelRotList.Add(new KeyValuePair<int, int[]>(3, new []{ 0, 90, 180, 270, 360 }));
+            _levelRotList.Add(new KeyValuePair<int, int[]>(4, new []{ 334, 18, 22, -874, 0 }));
+
+            _curRotList = _levelRotList[_currentLevel - 1].Value;
+
+            _curRotIdx = 0;
 
             Populate();
 
@@ -252,10 +269,7 @@ namespace Assets.Scripts.Cognity {
                     piece,
                     _spawnPoints[spawnPoint].transform.position,
                     // Generate random rotation at z axis
-                    Quaternion.Euler(
-                        0,
-                        0,
-                        _randomRotation[Random.Range(0, _randomRotation.Length)]));
+                    Quaternion.identity);
 
                 // Avoid using the same spawn point
                 _spawnKeys.RemoveAt(randomKey);
@@ -298,14 +312,27 @@ namespace Assets.Scripts.Cognity {
 
         public void NextLevel() {
             // Increment from current level
-            _currentLevel++;
+            _currentLevel += 1;
 
             // Set flag to proceed
             _proceedToNextLevel = true;
+
+            // Available rotation for the level
+            _curRotList = _levelRotList[_currentLevel - 1].Value;
+
+            _curRotIdx = 0;
         }
 
         public void Rotate() {
-            Rotating = !Rotating;
+            if (_curRotIdx > _curRotList.Length - 1) {
+                _curRotIdx = 0;
+            }
+
+            int rotationAt = _curRotList.ElementAt(_curRotIdx++);
+
+            Debug.Log("rotation:" + rotationAt);
+
+            LastTouchedPiece.Rotate(0, 0, rotationAt);
         }
 
         public void FlipHorizontal() {
