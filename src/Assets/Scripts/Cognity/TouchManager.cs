@@ -53,14 +53,8 @@ namespace Assets.Scripts.Cognity {
                 case TouchPhase.Moved:
                     Collider2D col2D = GetComponent<Collider2D>();
                     if (col2D.Equals(Physics2D.OverlapPoint(touchPos)) && Physics2D.OverlapPoint(touchPos).tag == "PuzzlePiece") {
-                        if (_puzzleManager.Rotating) {
-                            float axisRotY = Input.GetTouch(0).deltaPosition.y * 3f;
-
-                            transform.Rotate(Vector3.forward, axisRotY);
-                        } else {
-                            // Move game object
-                            transform.position = new Vector2(touchPos.x - _deltaX, touchPos.y - _deltaY);
-                        }
+                        // Move game object
+                        transform.position = new Vector2(touchPos.x - _deltaX, touchPos.y - _deltaY);
                     }
 
                     break;
