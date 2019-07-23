@@ -15,6 +15,7 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         private static Transform _currentPanel;
 
         private void Start() {
+
             // Make sure games not paused after quitting any game modes
             Time.timeScale = 1f;
 
