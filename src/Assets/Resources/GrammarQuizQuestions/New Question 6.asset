@@ -20,8 +20,6 @@ MonoBehaviour:
     _isCorrect: 0
   - _info: it snows
     _isCorrect: 0
-  - _info: it snowed
-    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

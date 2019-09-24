@@ -20,8 +20,6 @@ MonoBehaviour:
     _isCorrect: 0
   - _info: cried
     _isCorrect: 0
-  - _info: are crying
-    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

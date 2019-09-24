@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
-  m_Name: New Question 5
+  m_Name: New Question 37
   m_EditorClassIdentifier: 
-  _info: How many students in your class _______ from Korea?
+  _info: I usually ___ fishing at weekends.
   _answers:
-  - _info: comes
+  - _info: goes
     _isCorrect: 0
-  - _info: came
-    _isCorrect: 0
-  - _info: come
+  - _info: go
     _isCorrect: 1
+  - _info: gone
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

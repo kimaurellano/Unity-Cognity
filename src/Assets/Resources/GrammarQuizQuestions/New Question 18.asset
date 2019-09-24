@@ -16,12 +16,10 @@ MonoBehaviour:
   _answers:
   - _info: rings
     _isCorrect: 0
-  - _info: bring
-    _isCorrect: 0
-  - _info: rang
-    _isCorrect: 0
   - _info: is ringing
     _isCorrect: 1
+  - _info: rang
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

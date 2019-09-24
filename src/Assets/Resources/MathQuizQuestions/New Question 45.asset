@@ -22,7 +22,7 @@ MonoBehaviour:
     _isCorrect: 1
   - _info: 30
     _isCorrect: 0
-  _useTimer: 0
-  _timer: 0
+  _useTimer: 1
+  _timer: 10
   _answerType: 1
   _addScore: 10

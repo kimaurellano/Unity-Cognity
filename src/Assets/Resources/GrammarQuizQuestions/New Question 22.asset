@@ -17,14 +17,10 @@ MonoBehaviour:
   _answers:
   - _info: hold up
     _isCorrect: 0
-  - _info: pull through
-    _isCorrect: 0
-  - _info: get through
-    _isCorrect: 0
-  - _info: hang up
-    _isCorrect: 0
   - _info: put out
     _isCorrect: 1
+  - _info: get through
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 14
   m_EditorClassIdentifier: 
-  _info: "At a school dance:\r\n Jane: \" _______ yourself?\"\r\n Mary: \"Yes, I'm
-    having a great time!\""
+  _info: "I like to see Smith ___ at poker because he sure doesn\u2019t like to lose."
   _answers:
-  - _info: You enjoying
+  - _info: score
     _isCorrect: 0
-  - _info: Enjoy you
-    _isCorrect: 0
-  - _info: Do you enjoy
-    _isCorrect: 0
-  - _info: Are you enjoying
+  - _info: win
     _isCorrect: 1
+  - _info: succeed
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

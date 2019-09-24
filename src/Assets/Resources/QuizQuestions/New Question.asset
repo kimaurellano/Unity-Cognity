@@ -20,6 +20,10 @@ MonoBehaviour:
 
 '
     _isCorrect: 1
+  - _info: 'Mars
+
+'
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

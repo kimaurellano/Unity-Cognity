@@ -21,10 +21,6 @@ MonoBehaviour:
     _isCorrect: 0
   - _info: passed away
     _isCorrect: 0
-  - _info: fell back on
-    _isCorrect: 0
-  - _info: cut down
-    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1
