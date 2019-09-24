@@ -56,17 +56,12 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 Debug.LogWarning(
                     "Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
             }
-
-            if (question.UseTimer) {
-                UpdateTimer(question.UseTimer);
-            }
         }
 
         /// <summary>
         ///     Function that is called to accept picked answers and check/display the result.
         /// </summary>
         public void Accept() {
-            UpdateTimer(false);
             bool isCorrect = CheckAnswers();
             FinishedQuestions.Add(currentQuestion);
 
@@ -76,12 +71,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 SetHighscore();
             }
 
-            var type
-                = IsFinished
-                    ? UIManager.ResolutionScreenType.Finish
-                    : isCorrect
-                        ? UIManager.ResolutionScreenType.Correct
-                        : UIManager.ResolutionScreenType.Incorrect;
+            var type = IsFinished ? UIManager.ResolutionScreenType.Finish : isCorrect ? UIManager.ResolutionScreenType.Correct : UIManager.ResolutionScreenType.Incorrect;
 
             events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
@@ -132,7 +122,6 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             }
         }
 
-
         /// <summary>
         ///     Function that is called restart the game.
         /// </summary>
@@ -162,8 +151,8 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         /// <summary>
         ///     Function that is called to set new highscore if game score is higher.
         /// </summary>
-        private static void SetHighscore() {
-            var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
+        private void SetHighscore() {
+            var highscore = events.CurrentFinalScore;
 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
             baseScoreHandler.AddScore(highscore, Type.GameType.ProblemSolving);
@@ -249,32 +238,20 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             Random.InitState(seed);
 
             Display();
+            
+            // Start timer once
+            IE_StartTimer = StartTimer();
+            StartCoroutine(IE_StartTimer);
+
+            timerAnimtor.SetInteger(timerStateParaHash, 2);
         }
 
         #endregion
 
         #region Timer Methods
 
-        private void UpdateTimer(bool state) {
-            switch (state) {
-                case true:
-                    IE_StartTimer = StartTimer();
-                    StartCoroutine(IE_StartTimer);
-
-                    timerAnimtor.SetInteger(timerStateParaHash, 2);
-                    break;
-                case false:
-                    if (IE_StartTimer != null) {
-                        StopCoroutine(IE_StartTimer);
-                    }
-
-                    timerAnimtor.SetInteger(timerStateParaHash, 1);
-                    break;
-            }
-        }
-
         private IEnumerator StartTimer() {
-            var totalTime = Questions[currentQuestion].Timer;
+            var totalTime = 20;
             var timeLeft = totalTime;
 
             timerText.color = timerDefaultColor;
@@ -295,7 +272,21 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 yield return new WaitForSeconds(1.0f);
             }
 
-            Accept();
+            // Finalize scoring and show Finish Display Elements
+            events.ScoreUpdated?.Invoke();
+
+            SetHighscore();
+
+            var type = UIManager.ResolutionScreenType.Finish;
+
+            events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
+
+            GameObject
+                .Find("ResolutionCanvas/ResolutionScreen/State_Info_Text")
+                .GetComponent<TextMeshProUGUI>()
+                .SetText("FINAL SCORE:" + events.CurrentFinalScore.ToString());
+
+            AudioManager.Instance.PlaySound("IncorrectSFX");
         }
 
         private IEnumerator WaitTillNextRound() {
