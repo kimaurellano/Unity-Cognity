@@ -71,7 +71,12 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 SetHighscore();
             }
 
-            var type = IsFinished ? UIManager.ResolutionScreenType.Finish : isCorrect ? UIManager.ResolutionScreenType.Correct : UIManager.ResolutionScreenType.Incorrect;
+            var type
+                = IsFinished
+                    ? UIManager.ResolutionScreenType.Finish
+                    : isCorrect
+                        ? UIManager.ResolutionScreenType.Correct
+                        : UIManager.ResolutionScreenType.Incorrect;
 
             events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
@@ -251,7 +256,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         #region Timer Methods
 
         private IEnumerator StartTimer() {
-            var totalTime = 20;
+            var totalTime = 60;
             var timeLeft = totalTime;
 
             timerText.color = timerDefaultColor;
