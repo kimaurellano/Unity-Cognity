@@ -20,6 +20,8 @@ MonoBehaviour:
     _isCorrect: 0
   - _info: Zero
     _isCorrect: 1
+  - _info: None of the above
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1
