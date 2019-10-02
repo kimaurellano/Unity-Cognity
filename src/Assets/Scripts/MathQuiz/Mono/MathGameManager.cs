@@ -54,7 +54,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
                 events.UpdateQuestionUI(question);
             } else {
                 Debug.LogWarning(
-                    "Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
+                    "Oops! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
             }
         }
 
