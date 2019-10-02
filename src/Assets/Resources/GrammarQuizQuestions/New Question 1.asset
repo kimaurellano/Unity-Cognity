@@ -17,10 +17,8 @@ MonoBehaviour:
   - _info: is trying
     _isCorrect: 0
   - _info: tries
-    _isCorrect: 0
-  - _info: try
     _isCorrect: 1
-  - _info: tried
+  - _info: try
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

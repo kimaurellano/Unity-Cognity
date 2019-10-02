@@ -18,8 +18,6 @@ MonoBehaviour:
     _isCorrect: 0
   - _info: It snows
     _isCorrect: 1
-  - _info: It is snow
-    _isCorrect: 0
   - _info: It snowed
     _isCorrect: 0
   _useTimer: 1

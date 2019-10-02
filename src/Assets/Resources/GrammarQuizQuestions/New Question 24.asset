@@ -21,10 +21,6 @@ MonoBehaviour:
     _isCorrect: 0
   - _info: clear up
     _isCorrect: 0
-  - _info: back up
-    _isCorrect: 0
-  - _info: call for
-    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

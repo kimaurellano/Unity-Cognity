@@ -12,18 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 23
   m_EditorClassIdentifier: 
-  _info: Jane found it hard to get up from the bed after the alarm clock _______ at
-    seven.
+  _info: May found it hard to get up from the bed after the alarm clock _____ at seven.
   _answers:
   - _info: broke in
     _isCorrect: 0
-  - _info: took out
-    _isCorrect: 0
-  - _info: sent out
-    _isCorrect: 0
   - _info: went off
     _isCorrect: 1
-  - _info: threw up
+  - _info: sent out
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

@@ -12,16 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 9
   m_EditorClassIdentifier: 
-  _info: Jane _______ her blue jeans today, but usually she wears a skirt or a dress.
+  _info: May _______ her blue jeans today, but usually she wears a skirt or a dress.
   _answers:
-  - _info: wears
-    _isCorrect: 0
+  - _info: is wearing
+    _isCorrect: 1
   - _info: wearing
     _isCorrect: 0
   - _info: wear
     _isCorrect: 0
-  - _info: is wearing
-    _isCorrect: 1
   _useTimer: 1
   _timer: 10
   _answerType: 1

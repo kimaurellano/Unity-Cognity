@@ -16,12 +16,10 @@ MonoBehaviour:
   _answers:
   - _info: the train leaves?
     _isCorrect: 0
-  - _info: leaves the train?
-    _isCorrect: 0
-  - _info: is the train leaving?
-    _isCorrect: 0
   - _info: does the train leave?
     _isCorrect: 1
+  - _info: is the train leaving?
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

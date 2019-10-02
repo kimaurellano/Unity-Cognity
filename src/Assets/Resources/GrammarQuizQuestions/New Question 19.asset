@@ -17,13 +17,9 @@ MonoBehaviour:
   _answers:
   - _info: run out
     _isCorrect: 0
-  - _info: tried on
-    _isCorrect: 0
-  - _info: crossed out
-    _isCorrect: 0
   - _info: taken out
     _isCorrect: 1
-  - _info: broken off
+  - _info: crossed out
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

@@ -14,14 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _info: I _______ for my pen. Have you seen it?
   _answers:
-  - _info: will look
-    _isCorrect: 0
-  - _info: looking
-    _isCorrect: 0
-  - _info: look
-    _isCorrect: 0
   - _info: am looking
     _isCorrect: 1
+  - _info: looking
+    _isCorrect: 0
+  - _info: am looked
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

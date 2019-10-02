@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 8
   m_EditorClassIdentifier: 
-  _info: "Jane: \"What _______ in the evenings?\"\r\nMary: \"Usually I watch TV or
-    read a book.\""
+  _info: I felt ___ while we were in the theater but my brother said she was cold.
   _answers:
-  - _info: you doing
+  - _info: dry
     _isCorrect: 0
-  - _info: you do
-    _isCorrect: 0
-  - _info: are you doing
-    _isCorrect: 0
-  - _info: do you do
+  - _info: hot
     _isCorrect: 1
+  - _info: warm
+    _isCorrect: 0
   _useTimer: 1
   _timer: 10
   _answerType: 1

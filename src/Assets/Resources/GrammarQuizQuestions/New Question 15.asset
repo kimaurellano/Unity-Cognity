@@ -12,16 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 15
   m_EditorClassIdentifier: 
-  _info: "Jane: \"Are you going to the dance on Friday?\" \r\n Mary: \"No, I'm not.
-    I _______ school dances; they're loud, hot and crowded!\""
+  _info: "It\u2019s strange that May is so short because her mother is very ___.\r"
   _answers:
-  - _info: not enjoy
+  - _info: big
     _isCorrect: 0
-  - _info: don`t enjoy
+  - _info: tall
     _isCorrect: 1
-  - _info: doesn`t enjoy
-    _isCorrect: 0
-  - _info: am not enjoying
+  - _info: high
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

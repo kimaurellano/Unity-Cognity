@@ -17,13 +17,9 @@ MonoBehaviour:
   _answers:
   - _info: fall through
     _isCorrect: 0
-  - _info: call in
-    _isCorrect: 0
-  - _info: do away
-    _isCorrect: 0
   - _info: catch up
     _isCorrect: 1
-  - _info: come up
+  - _info: do away
     _isCorrect: 0
   _useTimer: 1
   _timer: 10
