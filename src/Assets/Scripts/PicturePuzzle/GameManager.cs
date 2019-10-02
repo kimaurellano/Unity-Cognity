@@ -16,7 +16,7 @@ namespace Assets.Scripts.PicturePuzzle {
         private GameManager _gameManager;
 
         [SerializeField] private Timer _timer;
-        [SerializeField] private TextMeshProUGUI _inputField;
+        [SerializeField] private TMP_InputField _inputField;
         [SerializeField] private TextMeshProUGUI _placeHolder;
         [SerializeField] private GameObject _answerState;
         [SerializeField] private GameObject _puzzlePictureContainer;
@@ -56,6 +56,8 @@ namespace Assets.Scripts.PicturePuzzle {
                 Destroy(_puzzlePictureContainer.transform.GetChild(0).gameObject);
 
                 NextPuzzle();
+
+                _inputField.text = string.Empty;
             }
             else {
                 _answerState.GetComponent<TextMeshProUGUI>().SetText("WRONG");

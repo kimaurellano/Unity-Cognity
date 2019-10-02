@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.GlobalScripts.UITask {
     /// <summary>
-    ///     Handles specific button events.
+    ///     Handles specific button events. Initialized at the start of the Game
     /// </summary>
     public class ActionManager : MonoBehaviour {
 
@@ -15,6 +15,9 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         private static Transform _currentPanel;
 
         private void Start() {
+            // For debugging. Uncomment to reset scores and user profile
+            //PlayerPrefs.DeleteAll();
+
             // Make sure games not paused after quitting any game modes
             Time.timeScale = 1f;
 

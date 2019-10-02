@@ -31,7 +31,7 @@ namespace Assets.Scripts.QuizSolveMath {
 
             _timer = GetComponent<Timer>();
 
-            _timer.StartTimerAt(2, 0f);
+            _timer.StartTimerAt(1, 0f);
 
             for (var i = 0; i < _mathBanks.Length; i++) {
                 _keys.Add(i);
@@ -58,6 +58,9 @@ namespace Assets.Scripts.QuizSolveMath {
 
                 _gameDone = !_gameDone;
 
+                BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
+                baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
+
                 string panelName = _score > 0 ? "panel success" : "panel failed";
 
                 Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name.Equals(panelName))
@@ -65,9 +68,6 @@ namespace Assets.Scripts.QuizSolveMath {
                     .transform
                     .gameObject
                     .SetActive(true);
-
-                BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
             }
         }
 
@@ -119,15 +119,15 @@ namespace Assets.Scripts.QuizSolveMath {
             ClearInput();
 
             PrepareQuestion();
+
+            _inputLim = 0;
         }
 
         public void GetButtonContent() {
             _inputLim++;
 
-            if (_inputLim > 3) {
-                ClearInput();
-
-                _inputLim = 0;
+            if (_inputLim > 5) {
+                return;
             }
 
             var btnContent = EventSystem.current.currentSelectedGameObject.transform.GetChild(0)
@@ -142,6 +142,8 @@ namespace Assets.Scripts.QuizSolveMath {
             Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("answer text"))
                 .textMesh
                 .SetText(string.Empty);
+
+            _inputLim = 0;
         }
 
         public void Pause() {
