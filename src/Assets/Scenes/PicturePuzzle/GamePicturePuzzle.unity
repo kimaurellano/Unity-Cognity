@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timer: {fileID: 1720163761}
-  _inputField: {fileID: 1764170630}
+  _inputField: {fileID: 1207688756}
   _placeHolder: {fileID: 899763887}
   _answerState: {fileID: 1995334759}
   _puzzlePictureContainer: {fileID: 770529831}
@@ -585,7 +585,9 @@ MonoBehaviour:
     Button: {fileID: 1831818263}
   - Name: volume
     Button: {fileID: 2145604629}
-  _textCollection: []
+  _textCollection:
+  - textName: answer
+    textMesh: {fileID: 1764170630}
 --- !u!4 &497587127
 Transform:
   m_ObjectHideFlags: 0
@@ -1494,7 +1496,18 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: TMPro.TMP_InputField+SubmitEvent, Unity.TextMeshPro, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_OnSubmit:
