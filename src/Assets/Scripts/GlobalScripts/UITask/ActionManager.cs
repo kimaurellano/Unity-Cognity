@@ -93,7 +93,7 @@ namespace Assets.Scripts.GlobalScripts.UITask {
 
         public void TransitionTo(Transform targetPanel) {
             if (targetPanel.name == "User_Panel") {
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "label username")
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "label username")
                     .textMesh
                     .SetText(PlayerPrefs.GetString("user_info"));
             }
@@ -124,7 +124,7 @@ namespace Assets.Scripts.GlobalScripts.UITask {
                     .gameObject
                     .SetActive(true);
 
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "label username")
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "label username")
                     .textMesh
                     .SetText(PlayerPrefs.GetString("user_info"));
             }

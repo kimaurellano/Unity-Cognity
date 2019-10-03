@@ -61,7 +61,7 @@ namespace Assets.Scripts.Memory {
                     }
                 }
 
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "game result text")
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "game result text")
                     .textMesh
                     .SetText(_seconds > 0f ? "Success" : "Failed");
 

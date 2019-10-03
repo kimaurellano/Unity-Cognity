@@ -98,7 +98,7 @@ namespace Assets.Scripts.Cognity {
             // First level with timer set as 1:15
             _timer.StartTimerAt(1, 15f);
 
-            Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "level")
+            Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "level")
                 .textMesh
                 .SetText("Level: " + _currentLevel);
         }
@@ -151,7 +151,7 @@ namespace Assets.Scripts.Cognity {
                 // Add time as score
                 _scoreManager.AddScore(_timer.Min, _timer.Sec);
 
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "level")
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "level")
                     .textMesh
                     .SetText("Level: " + _currentLevel);
 
