@@ -54,7 +54,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 events.UpdateQuestionUI(question);
             } else {
                 Debug.LogWarning(
-                    "Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
+                    "Oops! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
             }
         }
 
@@ -121,8 +121,8 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         /// </summary>
         private void LoadQuestions() {
             Object[] objs = Resources.LoadAll("GrammarQuizQuestions", typeof(Question));
-            Questions = new Question[15];
-            for (int i = 0; i < 15; i++) {
+            Questions = new Question[48];
+            for (int i = 0; i < 48; i++) {
                 Questions[i] = (Question) objs[i];
             }
         }

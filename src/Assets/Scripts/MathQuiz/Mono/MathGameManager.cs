@@ -54,7 +54,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
                 events.UpdateQuestionUI(question);
             } else {
                 Debug.LogWarning(
-                    "Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
+                    "Oops! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
             }
         }
 
@@ -125,8 +125,8 @@ namespace Assets.Scripts.MathQuiz.Mono {
         /// </summary>
         private void LoadQuestions() {
             Object[] objs = Resources.LoadAll("MathQuizQuestions", typeof(Question));
-            Questions = new Question[15];
-            for (int i = 0; i < 15; i++) {
+            Questions = new Question[47];
+            for (int i = 0; i < 47; i++) {
                 Questions[i] = (Question) objs[i];
             }
         }
