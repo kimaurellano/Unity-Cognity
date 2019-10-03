@@ -38,7 +38,7 @@ namespace Assets.Scripts.PicturePuzzle {
 
             SceneManager.activeSceneChanged += ChangedActiveScene;
 
-            _timer.StartTimerAt(0, 45f);
+            _timer.StartTimerAt(1, 0f);
 
             // Will wait for timer up
             StartCoroutine(WaitForTimer());
@@ -86,7 +86,6 @@ namespace Assets.Scripts.PicturePuzzle {
             _score += (int) _timer.Sec;
 
             // Reset back timer every new puzzle
-            _timer.StartTimerAt(0, 45f);
         }
 
         public void ClearField() {
@@ -106,7 +105,7 @@ namespace Assets.Scripts.PicturePuzzle {
 
                 FindObjectOfType<StatsManager>().Refresh("ProblemSolving");
 
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName == "game result")
+                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "game result")
                     .textMesh
                     .SetText(!_timer.TimerUp ? "SUCCESS!" : "FAILED");
             }
