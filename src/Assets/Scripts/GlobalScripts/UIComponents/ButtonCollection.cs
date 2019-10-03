@@ -6,6 +6,9 @@ namespace Assets.Scripts.GlobalScripts.UIComponents
     public class ButtonCollection
     {
         public string Name;
+
         public Transform Button;
+
+        public Animator Animator;
     }
 }

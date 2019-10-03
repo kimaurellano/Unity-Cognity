@@ -44,12 +44,10 @@ namespace Assets.Scripts.GlobalScripts.UIComponents {
         }
 
         public void PlayPairedSfx() {
-            // This is where we assign what clip should be played on button click
             Array.Find(AudioCollection, s => s.Name == "paired").AudioSource.Play();
         }
 
         public void StopBackground() {
-            // This is where we assign what clip should be played on button click
             Array.Find(AudioCollection, s => s.Name == "background").AudioSource.Stop();
 
             Destroy(gameObject);

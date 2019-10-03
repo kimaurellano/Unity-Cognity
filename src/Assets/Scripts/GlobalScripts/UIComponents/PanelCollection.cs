@@ -8,5 +8,7 @@ namespace Assets.Scripts.GlobalScripts.UIComponents
         public string Name;
 
         public Transform Panel;
+
+        public Animator Animator;
     }
 }
