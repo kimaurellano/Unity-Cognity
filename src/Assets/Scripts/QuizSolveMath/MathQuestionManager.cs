@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GlobalScripts.Player;
+using Assets.Scripts.GlobalScripts.UIComponents;
 using Assets.Scripts.GlobalScripts.UITask;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 using Type = Assets.Scripts.GlobalScripts.Game.Type;
 
@@ -15,6 +16,8 @@ namespace Assets.Scripts.QuizSolveMath {
 
         [SerializeField] private MathBank[] _mathBanks;
 
+        private UIManager _uiManager;
+        private AudioManager _audioManager;
         private Timer _timer;
         private List<int> _keys;
 
@@ -27,6 +30,9 @@ namespace Assets.Scripts.QuizSolveMath {
         private int _score;
 
         private void Start() {
+            _uiManager = FindObjectOfType<UIManager>();
+            _audioManager = FindObjectOfType<AudioManager>();
+
             _keys = new List<int>();
 
             _timer = GetComponent<Timer>();
@@ -46,11 +52,12 @@ namespace Assets.Scripts.QuizSolveMath {
                 _timer.ChangeTimerState();
                 _timer.TimerText.SetText("00:00");
 
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name.Equals("panel failed"))
-                    .Panel
-                    .transform
-                    .gameObject
-                    .SetActive(true);
+                Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel failed");
+                panel.gameObject.SetActive(true);
+            }
+
+            if (_timer.Sec == 10) {
+                StartCoroutine(TimerEnding());
             }
 
             // Game finish if all question has been answered
@@ -63,11 +70,8 @@ namespace Assets.Scripts.QuizSolveMath {
 
                 string panelName = _score > 0 ? "panel success" : "panel failed";
 
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name.Equals(panelName))
-                    .Panel
-                    .transform
-                    .gameObject
-                    .SetActive(true);
+                Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, panelName);
+                panel.gameObject.SetActive(true);
             }
         }
 
@@ -85,24 +89,56 @@ namespace Assets.Scripts.QuizSolveMath {
             _useKey = _keys.ElementAt(_randomKey);
 
             // Set random question cached at TextCollection for later comparison with the user answer
-            Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("question text"))
-                .textMesh
-                .SetText(_mathBanks[_useKey].Problem);
+            TextMeshProUGUI questionText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "question");
+            questionText.SetText(_mathBanks[_useKey].Problem);
 
             // Avoid using the same spawn point
             _keys.RemoveAt(_randomKey);
+
+            TextMeshProUGUI questionHeader = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "question header");
+            questionHeader.SetText(string.Format("Question #{0}", _currentNumber));
         }
 
         public void IsAnswerCorrect() {
-            string userAnswer = Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("answer text"))
-                .textMesh
-                .text;
+            TMP_InputField inputField = (TMP_InputField)_uiManager.GetUI(UIManager.UIType.InputField, "answer");
+            string userAnswer = inputField.text;
 
             string correctAnswer = _mathBanks[_useKey].Answer;
 
             if (userAnswer.Equals(correctAnswer)) {
+                TextMeshProUGUI scoreChange = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
+                scoreChange.color = Color.green;
+                scoreChange.text = "+10";
+
+                // Get the Animation component
+                Animation anim = (Animation)_uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "score change");
+                anim.Play();
+
+                Animator animator = (Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "answer");
+                animator.SetTrigger("correct");
+
+                Array
+                    .Find(_audioManager.AudioCollection, i => i.Name.Equals("correct"))
+                    .AudioSource
+                    .Play();
+
                 _score += 10;
             } else {
+                TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
+                textUI.color = Color.red;
+                textUI.text = "-10";
+
+                Animation anim = (Animation) _uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "score change");
+                anim.Play();
+
+                Animator animator = (Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "answer");
+                animator.SetTrigger("wrong");
+
+                Array
+                    .Find(_audioManager.AudioCollection, i => i.Name.Equals("wrong"))
+                    .AudioSource
+                    .Play();
+
                 _score -= 10;
             }
 
@@ -112,44 +148,29 @@ namespace Assets.Scripts.QuizSolveMath {
             }
 
             // Set text with new score
-            Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("score text"))
-                .textMesh
-                .SetText("Score:" + _score);
-
-            ClearInput();
+            TextMeshProUGUI scoreText = (TextMeshProUGUI) _uiManager.GetUI(UIManager.UIType.Text, "score");
+            scoreText.SetText(string.Format("Score:{0}", _score));
 
             PrepareQuestion();
 
-            _inputLim = 0;
-        }
-
-        public void GetButtonContent() {
-            _inputLim++;
-
-            if (_inputLim > 5) {
-                return;
-            }
-
-            var btnContent = EventSystem.current.currentSelectedGameObject.transform.GetChild(0)
-                .GetComponent<TextMeshProUGUI>().text;
-
-            Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("answer text"))
-                .textMesh
-                .text += btnContent;
-        }
-
-        public void ClearInput() {
-            Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.textName.Equals("answer text"))
-                .textMesh
-                .SetText(string.Empty);
-
-            _inputLim = 0;
+            // Clear input field
+            TMP_InputField answerField = (TMP_InputField) _uiManager.GetUI(UIManager.UIType.InputField, "answer");
+            answerField.text = string.Empty;
         }
 
         public void Pause() {
             _paused = !_paused;
 
             Time.timeScale = _paused ? 0f : 1f;
+        }
+
+        private IEnumerator TimerEnding() {
+            Animation animation = (Animation) _uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "timer ending");
+            AnimationClip clip = animation.clip;
+            clip.wrapMode = WrapMode.Loop;
+            animation.Play();
+            yield return new WaitForSeconds(10f);
+            animation.Stop();
         }
     }
 }
