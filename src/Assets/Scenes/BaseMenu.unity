@@ -969,26 +969,38 @@ MonoBehaviour:
   _panelCollection:
   - Name: panel userinfo
     Panel: {fileID: 1319567193}
+    Animator: {fileID: 0}
   - Name: panel user
     Panel: {fileID: 1958758850}
+    Animator: {fileID: 0}
   - Name: panel home
     Panel: {fileID: 777847829}
+    Animator: {fileID: 0}
   - Name: panel category
     Panel: {fileID: 774947392}
+    Animator: {fileID: 0}
   - Name: panel problem solving
     Panel: {fileID: 1895590675}
+    Animator: {fileID: 0}
   - Name: panel language
     Panel: {fileID: 1673623312}
+    Animator: {fileID: 0}
   - Name: panel quit
     Panel: {fileID: 36064015}
-  - Name: panel transition
-    Panel: {fileID: 343971132}
+    Animator: {fileID: 0}
   _buttonCollection:
   - Name: button save
     Button: {fileID: 1103019549}
+    Animator: {fileID: 0}
   _textCollection:
-  - textName: label username
+  - Name: label username
     textMesh: {fileID: 1530468932}
+    Animator: {fileID: 0}
+  _inputFieldCollection: []
+  _animatedObjectsCollecton:
+  - Name: transition
+    AnimatedObject: {fileID: 343971131}
+    Clips: []
 --- !u!1 &144916638
 GameObject:
   m_ObjectHideFlags: 0
@@ -2136,8 +2148,8 @@ GameObject:
   - component: {fileID: 343971132}
   - component: {fileID: 343971134}
   - component: {fileID: 343971133}
-  - component: {fileID: 343971135}
   - component: {fileID: 343971136}
+  - component: {fileID: 343971135}
   m_Layer: 5
   m_Name: Transition_Panel
   m_TagString: Untagged
@@ -2201,25 +2213,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 343971131}
   m_CullTransparentMesh: 0
---- !u!95 &343971135
-Animator:
-  serializedVersion: 3
+--- !u!111 &343971135
+Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 343971131}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a281d23348a8c80429b486ca58e4a93b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 84d12b16899620c46a7953f8940d6164, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 84d12b16899620c46a7953f8940d6164, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!114 &343971136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7070,10 +7079,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1530468932}
-    characterCount: 10
+    characterCount: 3
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 2
+    spaceCount: 0
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
