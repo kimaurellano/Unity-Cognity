@@ -4,6 +4,7 @@ using Assets.Scripts.GlobalScripts.UIComponents;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.GlobalScripts.UITask {
     /// <summary>
@@ -14,9 +15,13 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         private static Transform _targetPanel;
         private static Transform _currentPanel;
 
+        private UIManager _uiManager;
+
         private void Start() {
             // For debugging. Uncomment to reset scores and user profile
             //PlayerPrefs.DeleteAll();
+
+            _uiManager = FindObjectOfType<UIManager>();
 
             // Make sure games not paused after quitting any game modes
             Time.timeScale = 1f;
@@ -26,28 +31,18 @@ namespace Assets.Scripts.GlobalScripts.UITask {
                 return;
             }
 
-            if (SceneManager.GetActiveScene().buildIndex == 0) {
-                
-            }
-
             if (PlayerPrefs.GetString("user_info") != string.Empty) {
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel userinfo")
-                    .Panel
-                    .gameObject
-                    .SetActive(false);
+                Transform panelUserInfo = (Transform) _uiManager.GetUI(UIManager.UIType.Panel, "panel userinfo");
+                panelUserInfo.gameObject.SetActive(false);
 
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel home")
-                    .Panel
-                    .gameObject
-                    .SetActive(true);
+                Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel home");
+                panelHome.gameObject.SetActive(true);
             }
         }
 
         public void CheckInput(TMP_InputField input) {
-            Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "button save")
-                .Button
-                .gameObject
-                .SetActive(input.text != string.Empty);
+            Button buttonSave = (Button) _uiManager.GetUI(UIManager.UIType.Button, "button save");
+            buttonSave.gameObject.SetActive(input.text != string.Empty);
         }
 
         public void SaveUserPref(TMP_InputField input) {
@@ -93,40 +88,36 @@ namespace Assets.Scripts.GlobalScripts.UITask {
 
         public void TransitionTo(Transform targetPanel) {
             if (targetPanel.name == "User_Panel") {
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "label username")
-                    .textMesh
-                    .SetText(PlayerPrefs.GetString("user_info"));
+                TextMeshProUGUI textLabelUsername =
+                    (TextMeshProUGUI) _uiManager.GetUI(UIManager.UIType.Text, "label username");
+                textLabelUsername.SetText(PlayerPrefs.GetString("user_info"));
             }
 
             // The panel to transition to
             _targetPanel = targetPanel;
         }
 
+        /// <summary>
+        ///     Animation event for transition panel
+        /// </summary>
         public void SwitchPanel() {
             _currentPanel.gameObject.SetActive(false);
             _targetPanel.gameObject.SetActive(true);
         }
 
-        private static IEnumerator BeginTransition(Transform transform) {
-            Animator animator = Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel transition")
-                .Panel
-                .GetComponent<Animator>();
+        private IEnumerator BeginTransition(Transform transform) {
+            Animation transition = (Animation)_uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "transition");
+            transition.Play();
 
-            // Trigger transition
-            animator.SetTrigger("transition");
-
-            // Animation has ended
-            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("PanelTransitionIdle"));
+            // Sync to the seconds when animation event is invoked
+            yield return new WaitForSeconds(0.5f);
 
             if (transform.name == "User_Panel") {
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "panel user")
-                    .Panel
-                    .gameObject
-                    .SetActive(true);
+                Transform panelUser = (Transform) _uiManager.GetUI(UIManager.UIType.Panel, "panel user");
+                panelUser.gameObject.SetActive(true);
 
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "label username")
-                    .textMesh
-                    .SetText(PlayerPrefs.GetString("user_info"));
+                TextMeshProUGUI labelUsername = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "label username");
+                labelUsername.SetText("user_info");
             }
         }
 
