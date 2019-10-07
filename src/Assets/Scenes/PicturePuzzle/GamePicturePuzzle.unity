@@ -579,7 +579,7 @@ MonoBehaviour:
   _statsCollections: []
   _panelCollection:
   - Name: panel pause
-    Panel: {fileID: 0}
+    Panel: {fileID: 1000500599}
     Animator: {fileID: 0}
   _buttonCollection:
   - Name: music
@@ -589,7 +589,7 @@ MonoBehaviour:
     Button: {fileID: 2145604629}
     Animator: {fileID: 0}
   _textCollection:
-  - Name: 
+  - Name: game result
     textMesh: {fileID: 1764170630}
     Animator: {fileID: 0}
   _inputFieldCollection: []
