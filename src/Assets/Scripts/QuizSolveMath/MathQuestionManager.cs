@@ -47,21 +47,14 @@ namespace Assets.Scripts.QuizSolveMath {
         }
 
         private void Update() {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (_timer.Min < 0 && _timer.Sec == 0) {
-                _timer.ChangeTimerState();
-                _timer.TimerText.SetText("00:00");
-
-                Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel failed");
-                panel.gameObject.SetActive(true);
-            }
-
             if (_timer.Sec == 10) {
                 StartCoroutine(TimerEnding());
             }
 
-            // Game finish if all question has been answered
-            if (_currentNumber > _keys.Count && !_gameDone) {
+            // Game finish if all question has been answered or Timer's up!
+            if (_currentNumber > _keys.Count && !_gameDone || _timer.Min < 0 && _timer.Sec == 0) {
+                _timer.ChangeTimerState();
+                _timer.TimerText.SetText("00:00");
 
                 _gameDone = !_gameDone;
 
@@ -69,6 +62,7 @@ namespace Assets.Scripts.QuizSolveMath {
                 baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
 
                 string panelName = _score > 0 ? "panel success" : "panel failed";
+                Debug.Log(string.Format("Final score: {0}", _score));
 
                 Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, panelName);
                 panel.gameObject.SetActive(true);
