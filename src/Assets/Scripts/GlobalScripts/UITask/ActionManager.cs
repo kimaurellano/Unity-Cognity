@@ -87,12 +87,6 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void TransitionTo(Transform targetPanel) {
-            if (targetPanel.name == "User_Panel") {
-                TextMeshProUGUI textLabelUsername =
-                    (TextMeshProUGUI) _uiManager.GetUI(UIManager.UIType.Text, "label username");
-                textLabelUsername.SetText(PlayerPrefs.GetString("user_info"));
-            }
-
             // The panel to transition to
             _targetPanel = targetPanel;
         }
