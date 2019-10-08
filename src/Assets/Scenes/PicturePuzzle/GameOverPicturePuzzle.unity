@@ -299,6 +299,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6181c5d76dd9a60458edb194cd2b901d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _radarMaterial: {fileID: 0}
+  _radarMesh: {fileID: 0}
 --- !u!1 &499455794
 GameObject:
   m_ObjectHideFlags: 0
@@ -1535,7 +1537,7 @@ MonoBehaviour:
   _panelCollection: []
   _buttonCollection: []
   _textCollection:
-  - Name: 
+  - Name: game result
     textMesh: {fileID: 1873278112}
     Animator: {fileID: 0}
   _inputFieldCollection: []

@@ -994,16 +994,16 @@ MonoBehaviour:
     Animator: {fileID: 0}
   _textCollection:
   - Name: flexibility
-    textMesh: {fileID: 1126664711}
+    textMesh: {fileID: 602562730}
     Animator: {fileID: 0}
   - Name: language
-    textMesh: {fileID: 1521924963}
+    textMesh: {fileID: 1935268862}
     Animator: {fileID: 0}
   - Name: memory
-    textMesh: {fileID: 1914046217}
+    textMesh: {fileID: 2092023853}
     Animator: {fileID: 0}
   - Name: problem solving
-    textMesh: {fileID: 2068004808}
+    textMesh: {fileID: 962288697}
     Animator: {fileID: 0}
   _inputFieldCollection: []
   _animatedObjectsCollecton:
@@ -2889,12 +2889,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1964570457}
-  m_Father: {fileID: 1895590675}
+  m_Father: {fileID: 1673623312}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 39, y: -170.00002}
+  m_AnchoredPosition: {x: 67.5, y: 11.5}
   m_SizeDelta: {x: 229, y: 183.1}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &649037181
@@ -4899,7 +4899,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: b99912c45167e934597c538c8b72d0db, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dcae45de289e98c40a332f76846264ee, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -6364,7 +6364,7 @@ RectTransform:
   m_Children:
   - {fileID: 267035253}
   m_Father: {fileID: 1895590675}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -6897,6 +6897,7 @@ RectTransform:
   - {fileID: 1997032721}
   - {fileID: 670470307}
   - {fileID: 42424265}
+  - {fileID: 649037180}
   m_Father: {fileID: 1592441567}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7335,7 +7336,6 @@ RectTransform:
   - {fileID: 460456463}
   - {fileID: 1583163086}
   - {fileID: 543083551}
-  - {fileID: 649037180}
   - {fileID: 1521198648}
   m_Father: {fileID: 1592441567}
   m_RootOrder: 4
