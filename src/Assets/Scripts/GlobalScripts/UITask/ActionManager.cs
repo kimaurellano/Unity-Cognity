@@ -41,7 +41,7 @@ namespace Assets.Scripts.GlobalScripts.UITask {
         }
 
         public void CheckInput(TMP_InputField input) {
-            Button buttonSave = (Button) _uiManager.GetUI(UIManager.UIType.Button, "button save");
+            Transform buttonSave = (Transform) _uiManager.GetUI(UIManager.UIType.Button, "button save");
             buttonSave.gameObject.SetActive(input.text != string.Empty);
         }
 
@@ -109,9 +109,6 @@ namespace Assets.Scripts.GlobalScripts.UITask {
             if (transform.name == "User_Panel") {
                 Transform panelUser = (Transform) _uiManager.GetUI(UIManager.UIType.Panel, "panel user");
                 panelUser.gameObject.SetActive(true);
-
-                TextMeshProUGUI labelUsername = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "label username");
-                labelUsername.SetText("user_info");
             }
         }
 
