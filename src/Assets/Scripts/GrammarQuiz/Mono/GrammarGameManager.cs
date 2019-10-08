@@ -160,7 +160,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             var highscore = events.CurrentFinalScore;
 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, Type.GameType.ProblemSolving);
+            baseScoreHandler.AddScore(highscore, Type.GameType.Language);
         }
 
         /// <summary>

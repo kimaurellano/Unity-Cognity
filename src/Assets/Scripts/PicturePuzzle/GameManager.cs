@@ -72,7 +72,7 @@ namespace Assets.Scripts.PicturePuzzle {
             if (_currentNumber > _picturePuzzleCollections.Length) {
                 // Save score
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
+                baseScoreHandler.AddScore(_score, Type.GameType.Language);
 
                 // Load game over 
                 SceneManager.LoadScene("GameOverPicturePuzzle");
