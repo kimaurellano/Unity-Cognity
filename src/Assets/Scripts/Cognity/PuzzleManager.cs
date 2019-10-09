@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.UIComponents;
 using Assets.Scripts.GlobalScripts.UITask;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Type = Assets.Scripts.GlobalScripts.Game.Type;
@@ -22,6 +23,8 @@ namespace Assets.Scripts.Cognity {
         private int[] _curRotList;
 
         private int _curRotIdx;
+
+        private UIManager _uiManager;
 
         //
         private Dictionary<string, Vector3> _originalPieceLocation;
@@ -79,6 +82,8 @@ namespace Assets.Scripts.Cognity {
 
             _timer = FindObjectOfType<Timer>();
 
+            _uiManager = FindObjectOfType<UIManager>();
+
             _levelRotList = new List<KeyValuePair<int, int[]>>();
 
             // Limit of rotation specific to levels
@@ -98,9 +103,8 @@ namespace Assets.Scripts.Cognity {
             // First level with timer set as 1:15
             _timer.StartTimerAt(1, 15f);
 
-            Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "level")
-                .textMesh
-                .SetText("Level: " + _currentLevel);
+            TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
+            levelText.SetText(string.Format("Level: {0}", _currentLevel));
         }
 
         private void Update() {
@@ -126,10 +130,8 @@ namespace Assets.Scripts.Cognity {
                 _timer.ChangeTimerState();
 
                 // Show success panel
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "success panel")
-                    .Panel
-                    .gameObject
-                    .SetActive(true);
+                Transform successPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "success panel");
+                successPanel.gameObject.SetActive(true);
 
                 // Add time as score
                 _scoreManager.AddScore(_timer.Min, _timer.Sec);
@@ -151,9 +153,8 @@ namespace Assets.Scripts.Cognity {
                 // Add time as score
                 _scoreManager.AddScore(_timer.Min, _timer.Sec);
 
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "level")
-                    .textMesh
-                    .SetText("Level: " + _currentLevel);
+                TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
+                levelText.SetText(string.Format("Level: {0}", _currentLevel));
 
                 // For every level load, timer will reset and start at specified time
                 switch (_currentLevel) {
@@ -173,10 +174,8 @@ namespace Assets.Scripts.Cognity {
 
             if (FindObjectOfType<Timer>().TimerUp) {
                 // Show failed panel
-                Array.Find(FindObjectOfType<UIManager>().PanelCollection, i => i.Name == "failed panel")
-                    .Panel
-                    .gameObject
-                    .SetActive(true);
+                Transform successPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "success panel");
+                successPanel.gameObject.SetActive(true);
             }
         }
 
