@@ -11,12 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BaseMenu.unity
     guid: 5c6734850994adc48a5dca0a2bed50cf
-  - enabled: 1
-    path: Assets/Scenes/Sudoku/MenuSudoku.unity
-    guid: 716d514ed2e9e1d45807b672cacac3ef
-  - enabled: 1
-    path: Assets/Scenes/Sudoku/GameSudoku.unity
-    guid: 25f16b189c7b5714ca32e0a02a764493
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Cognity/MenuCognity.unity
     guid: 17fad4fe2c336f144a564dfe856902af
