@@ -1,5 +1,5 @@
 ﻿using System;
-using Assets.Scripts.GlobalScripts.UIComponents;
+using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 
 namespace Assets.Scripts.Cognity {

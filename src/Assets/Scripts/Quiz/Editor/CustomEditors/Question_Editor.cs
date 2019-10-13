@@ -70,7 +70,7 @@ public class Question_Editor : Editor
         }
         if (showParameters)
         {
-            EditorGUILayout.PropertyField(useTimerProp, new GUIContent("Use Timer", "Should this question have a timer?"));
+            EditorGUILayout.PropertyField(useTimerProp, new GUIContent("Use TimerManager", "Should this question have a timer?"));
             if (useTimerProp.boolValue)
             {
                 timerProp.intValue = EditorGUILayout.IntSlider(new GUIContent("Time"), timerProp.intValue, 1, 120);

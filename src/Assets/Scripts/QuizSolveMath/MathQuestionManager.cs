@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GlobalScripts.Player;
-using Assets.Scripts.GlobalScripts.UIComponents;
-using Assets.Scripts.GlobalScripts.UITask;
+using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Type = Assets.Scripts.GlobalScripts.Game.Type;
+using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 
 namespace Assets.Scripts.QuizSolveMath {
 #pragma warning disable 649
@@ -18,7 +17,7 @@ namespace Assets.Scripts.QuizSolveMath {
 
         private UIManager _uiManager;
         private AudioManager _audioManager;
-        private Timer _timer;
+        private TimerManager _timerManager;
         private List<int> _keys;
 
         private int _currentNumber;
@@ -35,9 +34,9 @@ namespace Assets.Scripts.QuizSolveMath {
 
             _keys = new List<int>();
 
-            _timer = GetComponent<Timer>();
+            _timerManager = GetComponent<TimerManager>();
 
-            _timer.StartTimerAt(1, 0f);
+            _timerManager.StartTimerAt(1, 0f);
 
             for (var i = 0; i < _mathBanks.Length; i++) {
                 _keys.Add(i);
@@ -47,19 +46,18 @@ namespace Assets.Scripts.QuizSolveMath {
         }
 
         private void Update() {
-            if (_timer.Sec == 10) {
+            if (_timerManager.Seconds == 10) {
                 StartCoroutine(TimerEnding());
             }
 
-            // Game finish if all question has been answered or Timer's up!
-            if (_currentNumber > _keys.Count && !_gameDone || _timer.Min < 0 && _timer.Sec == 0) {
-                _timer.ChangeTimerState();
-                _timer.TimerText.SetText("00:00");
+            // Game finish if all question has been answered or TimerManager's up!
+            if (_currentNumber > _keys.Count && !_gameDone || _timerManager.Minutes < 0 && _timerManager.Seconds == 0) {
+                _timerManager.ChangeTimerState();
 
                 _gameDone = !_gameDone;
 
                 BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
+                baseScoreHandler.AddScore(_score, GameType.ProblemSolving);
 
                 string panelName = _score > 0 ? "panel success" : "panel failed";
                 Debug.Log(string.Format("Final score: {0}", _score));
@@ -111,11 +109,6 @@ namespace Assets.Scripts.QuizSolveMath {
                 Animator animator = (Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "answer");
                 animator.SetTrigger("correct");
 
-                Array
-                    .Find(_audioManager.AudioCollection, i => i.Name.Equals("correct"))
-                    .AudioSource
-                    .Play();
-
                 _score += 10;
             } else {
                 TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
@@ -127,11 +120,6 @@ namespace Assets.Scripts.QuizSolveMath {
 
                 Animator animator = (Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "answer");
                 animator.SetTrigger("wrong");
-
-                Array
-                    .Find(_audioManager.AudioCollection, i => i.Name.Equals("wrong"))
-                    .AudioSource
-                    .Play();
 
                 _score -= 10;
             }

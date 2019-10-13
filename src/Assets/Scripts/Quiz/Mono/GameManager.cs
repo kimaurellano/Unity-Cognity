@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 
 namespace Assets.Scripts.Quiz.Mono {
     public class GameManager : MonoBehaviour {
@@ -53,7 +53,7 @@ namespace Assets.Scripts.Quiz.Mono {
                 events.UpdateQuestionUI(question);
             } else {
                 Debug.LogWarning(
-                    "Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
+                    "Ups! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in PicturePuzzleGameManager.Display() method.");
             }
 
             if (question.UseTimer) {
@@ -169,7 +169,7 @@ namespace Assets.Scripts.Quiz.Mono {
             var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, Type.GameType.ProblemSolving);
+            baseScoreHandler.AddScore(highscore, GameType.ProblemSolving);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Assets.Scripts.Quiz.Mono {
 
         #endregion
 
-        #region Timer Methods
+        #region TimerManager Methods
 
         private void UpdateTimer(bool state) {
             switch (state) {

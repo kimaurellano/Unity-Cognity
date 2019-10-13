@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.GlobalScripts.UIComponents;
+﻿using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 
 namespace Assets.Scripts.Memory {
@@ -8,7 +8,7 @@ namespace Assets.Scripts.Memory {
         private Touch _touch;
 
         private void Start() {
-            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            _gameManager = GameObject.Find("PicturePuzzleGameManager").GetComponent<GameManager>();
         }
 
         private void Update() {
