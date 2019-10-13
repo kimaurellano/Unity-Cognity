@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 35
   m_EditorClassIdentifier: 
-  _info: 9 is what percent of 36?
+  _info: 9 x 36 = __
   _answers:
-  - _info: 10%
+  - _info: 294
     _isCorrect: 0
-  - _info: 15%
+  - _info: 304
     _isCorrect: 0
-  - _info: 20%
+  - _info: 314
     _isCorrect: 0
-  - _info: 25%
+  - _info: 324
     _isCorrect: 1
   _useTimer: 1
   _timer: 10

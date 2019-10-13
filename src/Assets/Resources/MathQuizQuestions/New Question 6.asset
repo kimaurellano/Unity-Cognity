@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 6
   m_EditorClassIdentifier: 
-  _info: "Simplify :150 \u30FB(6 + 3 x 8) - 5"
+  _info: Simplify :19 x 3
   _answers:
-  - _info: 2
+  - _info: 55
     _isCorrect: 0
-  - _info: 5
+  - _info: 56
     _isCorrect: 0
-  - _info: 0
+  - _info: 57
     _isCorrect: 1
-  - _info: None of the above
+  - _info: 58
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

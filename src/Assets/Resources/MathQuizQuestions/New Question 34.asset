@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 34
   m_EditorClassIdentifier: 
-  _info: 8 is what percent of 40?
+  _info: 8 x 40 = __
   _answers:
-  - _info: 10%
+  - _info: 240
     _isCorrect: 0
-  - _info: 15%
+  - _info: 280
     _isCorrect: 0
-  - _info: 20%
+  - _info: 320
     _isCorrect: 1
-  - _info: 25%
+  - _info: 360
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

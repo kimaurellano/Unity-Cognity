@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 21
   m_EditorClassIdentifier: 
-  _info: What is 999 times 100.0?
+  _info: What is 4 times 70?
   _answers:
-  - _info: 199.0
+  - _info: 160
     _isCorrect: 0
-  - _info: 999.0
+  - _info: 200
     _isCorrect: 0
-  - _info: 9990
+  - _info: 240
     _isCorrect: 0
-  - _info: 99900
+  - _info: 280
     _isCorrect: 1
   _useTimer: 1
   _timer: 10

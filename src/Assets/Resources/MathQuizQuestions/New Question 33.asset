@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 33
   m_EditorClassIdentifier: 
-  _info: Which is the equivalent decimal number for forty nine thousandths?
+  _info: __ + 23 - 17 = 15
   _answers:
-  - _info: .49
+  - _info: 7
     _isCorrect: 0
-  - _info: .0049
+  - _info: 8
     _isCorrect: 0
-  - _info: .049
+  - _info: 9
     _isCorrect: 1
-  - _info: 4.9
+  - _info: 10
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

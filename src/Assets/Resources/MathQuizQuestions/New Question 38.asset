@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 38
   m_EditorClassIdentifier: 
-  _info: "Express 2/5 as a decimal.\r"
+  _info: 56 / 2 = __
   _answers:
-  - _info: .33
+  - _info: 15
     _isCorrect: 0
-  - _info: .3
+  - _info: 24
     _isCorrect: 0
-  - _info: .4
+  - _info: 28
     _isCorrect: 1
-  - _info: .5
+  - _info: 36
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

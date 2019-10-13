@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 14
   m_EditorClassIdentifier: 
-  _info: What is the sum of one digit prime numbers?
+  _info: 9 x 4 = __
   _answers:
-  - _info: 11
+  - _info: 24
     _isCorrect: 0
-  - _info: 13
+  - _info: 28
     _isCorrect: 0
-  - _info: 15
+  - _info: 32
     _isCorrect: 0
-  - _info: 17
+  - _info: 36
     _isCorrect: 1
   _useTimer: 1
   _timer: 10

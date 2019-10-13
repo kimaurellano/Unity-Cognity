@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question
   m_EditorClassIdentifier: 
-  _info: Find the sum of 111 + 222 + 333
+  _info: Find the sum of 52 + 19
   _answers:
-  - _info: 888
+  - _info: 83
     _isCorrect: 0
-  - _info: 777
+  - _info: 69
     _isCorrect: 0
-  - _info: 666
+  - _info: 71
     _isCorrect: 1
-  - _info: 999
+  - _info: 76
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

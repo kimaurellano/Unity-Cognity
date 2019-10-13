@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 36
   m_EditorClassIdentifier: 
-  _info: 'Three tenths of 90 equals:'
+  _info: 90 - 37 = __
   _answers:
-  - _info: 18
+  - _info: 43
     _isCorrect: 0
-  - _info: 45
+  - _info: 49
     _isCorrect: 0
-  - _info: 27
+  - _info: 53
     _isCorrect: 1
-  - _info: 36
+  - _info: 57
     _isCorrect: 0
   _useTimer: 1
   _timer: 10

@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 7
   m_EditorClassIdentifier: 
-  _info: How many digits are there in 1000?
+  _info: 47 - 29
   _answers:
-  - _info: One digit
+  - _info: 15
     _isCorrect: 0
-  - _info: Two digits
+  - _info: 16
     _isCorrect: 0
-  - _info: Three digits
+  - _info: 17
     _isCorrect: 0
-  - _info: Four digits
+  - _info: 18
     _isCorrect: 1
   _useTimer: 1
   _timer: 10

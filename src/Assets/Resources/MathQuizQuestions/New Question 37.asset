@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 37
   m_EditorClassIdentifier: 
-  _info: '.4% of 36 equals:'
+  _info: 36 / 4 = ___
   _answers:
-  - _info: 1.44
+  - _info: 6
     _isCorrect: 0
-  - _info: .144
+  - _info: 9
     _isCorrect: 1
-  - _info: 14.4
+  - _info: 12
     _isCorrect: 0
-  - _info: 144
+  - _info: 15
     _isCorrect: 0
   _useTimer: 1
   _timer: 10
