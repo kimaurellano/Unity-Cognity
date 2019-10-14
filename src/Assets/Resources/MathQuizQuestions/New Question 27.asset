@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 27
   m_EditorClassIdentifier: 
-  _info: 3 x 2 + __ x 5 = 26
+  _info: (3 x 2) + (__ x 5) = 26
   _answers:
   - _info: 5
     _isCorrect: 0

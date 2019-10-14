@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 28
   m_EditorClassIdentifier: 
-  _info: 2 + 4 x __ + 7 = 41
+  _info: 2 + (4 x __) + 7 = 41
   _answers:
   - _info: 8
     _isCorrect: 1
