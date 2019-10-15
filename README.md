@@ -1,2 +1,2 @@
-# Unity Cognitive Game Collection
+# Cognity
 Contains games that tests your cognitive ability
