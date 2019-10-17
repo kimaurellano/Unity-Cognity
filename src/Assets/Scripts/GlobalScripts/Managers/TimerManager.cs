@@ -25,6 +25,13 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public Animation TimerAnimation;
 
+
+
+
+
+
+
+
         private bool _startTimer;
 
         private float _t;
@@ -72,7 +79,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             TimerText.SetText($"Time: {Minutes:00}:{Seconds:00}");
 
-            if (Minutes == 0 && Seconds <= 10) {
+            if (Minutes == 0 && Seconds == 10) {
                 if (TimerAnimation != null) {
                     TimerAnimation.Play();
                 }
@@ -87,6 +94,10 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             _t = sec;
             Minutes = min;
+        }
+
+        public void StartTimer() {
+            _startTimer = true;
         }
 
         /// <summary>

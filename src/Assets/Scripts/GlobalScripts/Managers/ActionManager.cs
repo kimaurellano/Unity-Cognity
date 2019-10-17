@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
-using Assets.Scripts.GlobalScripts.UIComponents;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.GlobalScripts.Managers {
     /// <summary>
@@ -52,18 +50,11 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void GoTo(string sceneName) {
             // Avoid per game category audio duplication(not stopping)
-            if (sceneName == "BaseMenu") {
-                Destroy(GameObject.Find("AudioManager").gameObject);
-            }
-
             SceneManager.LoadScene(sceneName);
         }
 
         [Obsolete("Use GoTo(string) function instead")]
-        public void GoToBaseMenu() {
-            // Avoid per game category audio duplication(not stopping)
-            Destroy(GameObject.Find("AudioManager").gameObject);
-
+        public void GoToBaseMenu() { 
             SceneManager.LoadScene("BaseMenu");
         }
 
@@ -129,13 +120,13 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 return;
             }
 
-            if (FindObjectOfType<AudioManager>().MuteBackground()) {
-                button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
-                button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
-            } else {
-                button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
-                button.GetChild(1).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
-            }
+            //if (FindObjectOfType<AudioManager>().LowerVolume("bg_game", 0f)) {
+            //    button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
+            //    button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
+            //} else {
+            //    button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
+            //    button.GetChild(1).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
+            //}
         }
 
         public void DestroyObject(string name) {

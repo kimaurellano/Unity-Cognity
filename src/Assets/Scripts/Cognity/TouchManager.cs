@@ -76,7 +76,7 @@ namespace Assets.Scripts.Cognity {
                         FindObjectOfType<PuzzleOutlineCollider>().LockCount++;
 
                         // Play sfx
-                        FindObjectOfType<AudioManager>().PlayPairedSfx();
+                        FindObjectOfType<AudioManager>().PlayClip("sfx_paired");
 
                         // Collect the pieces placed within the outline
                         _puzzleManager.AddLockedPiece(transform);

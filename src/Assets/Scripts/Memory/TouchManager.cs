@@ -3,12 +3,17 @@ using UnityEngine;
 
 namespace Assets.Scripts.Memory {
     public class TouchManager : MonoBehaviour {
+
+        public delegate void OnCardLock();
+
+        public static event OnCardLock onCardLockEvent;
+
         [SerializeField] private GameManager _gameManager;
 
         private Touch _touch;
 
         private void Start() {
-            _gameManager = GameObject.Find("PicturePuzzleGameManager").GetComponent<GameManager>();
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
 
         private void Update() {
@@ -34,7 +39,7 @@ namespace Assets.Scripts.Memory {
                             touchCard.GetComponent<Animator>().SetBool("flip", false);
 
                             // Play sfx on card pick
-                            FindObjectOfType<AudioManager>().PlayPairedSfx();
+                            FindObjectOfType<AudioManager>().PlayClip("sfx_paired");
 
                             if (_gameManager.FirstPick == null) {
                                 _gameManager.FirstPick = touchCard;
@@ -46,8 +51,8 @@ namespace Assets.Scripts.Memory {
                                 _gameManager.SecondPick != null &&
                                 _gameManager.FirstPick.name ==
                                 _gameManager.SecondPick.name) {
-                                _gameManager.LockCount++;
-                                Debug.Log(_gameManager.LockCount);
+                                onCardLockEvent?.Invoke();
+                                Debug.Log("Lock count increased");
 
                                 // Prevent from picking the already paired cards
                                 _gameManager.FirstPick.GetComponent<Card>().Locked = true;
