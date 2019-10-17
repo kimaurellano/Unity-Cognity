@@ -180,7 +180,7 @@ namespace Assets.Scripts.Cognity {
             Instantiate(_puzzleImagesPerLevel[_currentLevel - 1], _puzzleImage.transform);
 
             // First level with timer set as 1:15
-            _timerManager.StartTimerAt(0, 5f);
+            _timerManager.StartTimerAt(1, 15f);
 
             TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
             levelText.SetText(string.Format("Level: {0}", _currentLevel));
