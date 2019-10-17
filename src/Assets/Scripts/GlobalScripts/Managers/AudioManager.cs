@@ -113,7 +113,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             }
         }
 
-        public void LowerVolume(string name, float value) {
+        public void SetVolume(string name, float value) {
             string clipName = GetAudioClipName(name);
             foreach (var item in GetAttachedAudioComponents()) {
                 if (((AudioSource)item).clip.name.Equals(clipName)) {

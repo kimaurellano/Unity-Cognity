@@ -5,7 +5,7 @@
 
     void InitSounds();
 
-    void MuteFX();
+    void MuteSFX();
 
     void MuteBackgroundMusic();
 }
