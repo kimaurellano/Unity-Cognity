@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using TMPro;
 
 namespace Assets.Scripts.Memory {
     public class GameManager : MonoBehaviour {
@@ -15,7 +13,13 @@ namespace Assets.Scripts.Memory {
 
         private GameManager _gameManager;
 
+        private TimerManager _timerManager;
+
+        private UIManager _uiManager;
+
         private float _seconds;
+
+        private int _lockCount;
 
         [SerializeField] private Transform _firstPick;
 
@@ -33,57 +37,58 @@ namespace Assets.Scripts.Memory {
 
         public int TouchCount { get; set; }
 
-        public int LockCount { get; set; }
-
         public bool OnFlip { get; set; }
 
         public bool TimerPause { get; set; }
 
         private void Start() {
+            _uiManager = FindObjectOfType<UIManager>();
+
+            _timerManager = GetComponent<TimerManager>();
+
             _lockedCardList = new List<Transform>();
 
-            if (_gameManager != null) {
-                Destroy(_gameManager);
-            } else {
-                _gameManager = this;
-            }
+            TimerManager.OnPreGameTimerEndEvent += StartGameTimer;
 
-            DontDestroyOnLoad(this);
+            TimerManager.OnGameTimerEndEvent += EndGame;
+
+            TouchManager.onCardLockEvent += IncrementLocks;
         }
 
-        private void Update() {
-            if (SceneManager.GetActiveScene().name == "GameOverMemory") {
-                foreach (var button in GameObject.FindGameObjectsWithTag("Button")) {
-                    if (button.name == "ButtonNo") {
-                        button.GetComponent<Button>().onClick.AddListener(DestroyAllManager);
-                    } else {
-                        button.GetComponent<Button>().onClick.AddListener(DestroyGameManager);
-                    }
-                }
+        private void StartGameTimer() {
+            TimerManager.OnPreGameTimerEndEvent -= StartGameTimer;
 
-                Array.Find(FindObjectOfType<UIManager>().TextCollection, i => i.Name == "game result text")
-                    .textMesh
-                    .SetText(_seconds > 0f ? "Success" : "Failed");
+            _timerManager.StartTimerAt(0, 45f);
+        }
 
-                return;
+        private void IncrementLocks() {
+            _lockCount++;
+
+            if(_lockCount > 7) {
+                GameResult(success: true);
             }
-            
-            // There are 7 pairs
-            if (LockCount < 7) {
-                return;
-            }
+        }
+
+        private void EndGame() {
+            GameResult(success: false);
+        }
+
+        private void GameResult(bool success) {
+            TimerManager.OnGameTimerEndEvent -= EndGame;
 
             // Reset
-            LockCount = 0;
-
-            _seconds = GameObject.Find("CardSpawn").GetComponent<SpawnManager>().Sec;
+            _lockCount = 0;
 
             // Add score 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
             baseScoreHandler.AddScore(_seconds, GameType.Memory);
 
             // Load finished scene
-            SceneManager.LoadScene("GameOverMemory");
+            Transform gameResultPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
+            gameResultPanel.gameObject.SetActive(true);
+
+            TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result text");
+            gameResultText.SetText(success ? "SUCCESS!" : "FAILED");
         }
 
         public IEnumerator WaitForFlip() {
@@ -127,17 +132,6 @@ namespace Assets.Scripts.Memory {
             }
 
             Time.timeScale = TimerPause ? 0f : 1f;
-        }
-
-        private void DestroyAllManager() {
-            Destroy(gameObject);
-
-            // Prevents playing the audio on quit
-            Destroy(GameObject.Find("AudioManager").transform.gameObject);
-        }
-
-        private void DestroyGameManager() {
-            Destroy(gameObject);
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections;
+using System.Linq;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Assets.Scripts.GlobalScripts.Managers.UIManager;
 using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
-
-#pragma warning disable 649
 
 namespace Assets.Scripts.PicturePuzzle {
     public class PicturePuzzleGameManager : CoreGameBehaviour {
@@ -20,20 +18,33 @@ namespace Assets.Scripts.PicturePuzzle {
         private UIManager _uiManager;
         private TMP_InputField _answerField;
         private Animator _scoreAddAnimator;
+        private AudioManager _audioManager;
         private bool _paused;
         private int _currentNumber = 1;
         private int _score;
 
         private void Start() {
             _timerManager = GetComponent<TimerManager>();
+
             _uiManager = FindObjectOfType<UIManager>();
 
-            TimerManager.OnPreGameTimerEndEvent += StartWaitForEndTimer;
-            TimerManager.OnPreGameTimerEndEvent += StartTimer;
+            _audioManager = FindObjectOfType<AudioManager>();
+
+            //AudioSource src = gameObject.AddComponent<AudioSource>();
+            //src.clip = _audioManager.GetSrc("incorrect").clip;
+            //src.Play();
+
+            Instantiate(Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Image, _puzzlePictureContainer.transform);
 
             TimerManager.OnGameTimerEndEvent += EndGame;
 
-            Instantiate(Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Image, _puzzlePictureContainer.transform);
+            TimerManager.OnPreGameTimerEndEvent += StartTimer;
+        }
+
+        private void StartTimer() {
+            TimerManager.OnPreGameTimerEndEvent -= StartTimer;
+
+            _timerManager.StartTimerAt(0, 45f);
         }
 
         public override void Pause() {
@@ -45,7 +56,7 @@ namespace Assets.Scripts.PicturePuzzle {
 
             SaveScore(_score, GameType.Language);
 
-            Transform finishPanel = (Transform)_uiManager.GetUI(UIType.Panel, "panel game finish");
+            Transform finishPanel = (Transform)_uiManager.GetUI(UIType.Panel, "game result");
             finishPanel.gameObject.SetActive(true);
 
             TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIType.Text, "game result");
@@ -61,6 +72,8 @@ namespace Assets.Scripts.PicturePuzzle {
                 (Animator)_uiManager.GetUI(UIType.AnimatedMultipleState, "score add anim");
 
             if (_answerField.text.Contains(answer)) {
+                FindObjectOfType<AudioManager>().PlayClip("sfx_correct");
+
                 _scoreAddAnimator.GetComponent<TextMeshProUGUI>().SetText("CORRECT!");
                 _scoreAddAnimator.SetTrigger("correct");
 
@@ -72,6 +85,8 @@ namespace Assets.Scripts.PicturePuzzle {
                 _answerField.text = string.Empty;
             }
             else {
+                FindObjectOfType<AudioManager>().PlayClip("sfx_incorrect");
+
                 _scoreAddAnimator.GetComponent<TextMeshProUGUI>().SetText("WRONG!");
                 _scoreAddAnimator.SetTrigger("wrong");
             }
@@ -82,6 +97,7 @@ namespace Assets.Scripts.PicturePuzzle {
             
             if (_currentNumber > _picturePuzzleCollections.Length) {
                 EndGame();
+
                 return;
             }
 
@@ -89,29 +105,6 @@ namespace Assets.Scripts.PicturePuzzle {
 
             // Add up the time left for each answered puzzle 
             _score += (int) _timerManager.Seconds;
-        }
-
-        private void StartWaitForEndTimer() {
-            TimerManager.OnPreGameTimerEndEvent -= StartWaitForEndTimer;
-
-            StartCoroutine(IEWaitForEndTimer());
-        }
-
-        private IEnumerator IEWaitForEndTimer() {
-            yield return new WaitUntil(() => _timerManager.TimerUp);
-
-            Transform gameFinishPanel = (Transform) _uiManager.GetUI(UIType.Panel, "panel game finish");
-            gameFinishPanel.gameObject.SetActive(true);
-
-            TextMeshProUGUI gameResultText = (TextMeshProUGUI) _uiManager.GetUI(UIType.Text, "game result");
-            gameResultText.SetText("FAILED");
-        }
-
-        private void StartTimer() {
-            // We do not need it
-            TimerManager.OnPreGameTimerEndEvent -= StartTimer;
-
-            _timerManager.StartTimerAt(_timerManager.Minutes, _timerManager.Seconds);
         }
     }
 }
