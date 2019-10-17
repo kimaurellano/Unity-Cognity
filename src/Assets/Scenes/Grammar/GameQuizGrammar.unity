@@ -3612,7 +3612,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.0000076293945}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1273572578
@@ -4791,10 +4791,8 @@ MonoBehaviour:
   _buttonCollection:
   - Name: volume
     Button: {fileID: 332507184}
-    Animator: {fileID: 0}
   - Name: music
     Button: {fileID: 789808093}
-    Animator: {fileID: 0}
   _textCollection: []
   _inputFieldCollection: []
   _animatedObjectsCollecton: []
@@ -4884,8 +4882,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

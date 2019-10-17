@@ -189,7 +189,7 @@ MonoBehaviour:
   Seconds: 45
   Minutes: 0
   IsPreGameTimer: 0
-  TimerAnimation: {fileID: 0}
+  TimerAnimation: {fileID: 2046296744}
 --- !u!1 &340007787
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,7 +436,7 @@ MonoBehaviour:
   _panelCollection:
   - Name: panel pause
     Panel: {fileID: 1000500599}
-  - Name: panel game finish
+  - Name: game result
     Panel: {fileID: 1130856032659476479}
   _buttonCollection:
   - Name: music
@@ -1104,6 +1104,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ready_Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6262489343476868607, guid: c8936045a8484574f9531d4ab1babb40,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6262489343476868606, guid: c8936045a8484574f9531d4ab1babb40,
         type: 3}
@@ -2289,6 +2294,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!111 &2046296744 stripped
+Animation:
+  m_CorrespondingSourceObject: {fileID: 5274899030762362021, guid: d4596b6c618f9cf4ba482b1212e49e09,
+    type: 3}
+  m_PrefabInstance: {fileID: 2046296741}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2145604629 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7744461316018990698, guid: 782795f6f06c8d54c99847d860ecf5fc,
@@ -2503,16 +2514,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 5714206094792057192}
+    - target: {fileID: 5798053266266850648, guid: 696f4ea9569a2104a9d59d87008572b4,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoTo
+      objectReference: {fileID: 0}
+    - target: {fileID: 5798053266266850648, guid: 696f4ea9569a2104a9d59d87008572b4,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: GamePicturePuzzle
       objectReference: {fileID: 0}
     - target: {fileID: 3528902528625245034, guid: 696f4ea9569a2104a9d59d87008572b4,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5714206094792057192}
     - target: {fileID: 3528902528625245034, guid: 696f4ea9569a2104a9d59d87008572b4,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3528902528625245034, guid: 696f4ea9569a2104a9d59d87008572b4,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoTo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3528902528625245034, guid: 696f4ea9569a2104a9d59d87008572b4,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3528902528625245034, guid: 696f4ea9569a2104a9d59d87008572b4,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 696f4ea9569a2104a9d59d87008572b4, type: 3}
