@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.GlobalScripts.Game;
+using Assets.Scripts.GlobalScripts.Managers;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.Quiz.Mono;
 using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using AudioManager = Assets.Scripts.Quiz.Mono.AudioManager;
+using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
 
 namespace Assets.Scripts.MathQuiz.Mono {
     public class MathGameManager : MonoBehaviour {
@@ -54,7 +57,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
                 events.UpdateQuestionUI(question);
             } else {
                 Debug.LogWarning(
-                    "Oops! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
+                    "Oops! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in PicturePuzzleGameManager.Display() method.");
             }
         }
 
@@ -142,8 +145,10 @@ namespace Assets.Scripts.MathQuiz.Mono {
         /// <summary>
         ///     Function that is called to quit the application.
         /// </summary>
-        public void MainMenu() {
-            Destroy(GameObject.Find("AudioManager").gameObject);
+        public void BaseMenu() {
+            foreach (var item in Resources.FindObjectsOfTypeAll(typeof(AudioManager)) as AudioManager[]) {
+                Destroy(item.gameObject);
+            }
 
             SceneManager.LoadScene("BaseMenu");
         }
@@ -165,7 +170,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
             var highscore = events.CurrentFinalScore;
 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, Type.GameType.ProblemSolving);
+            baseScoreHandler.AddScore(highscore, GameType.ProblemSolving);
         }
 
         /// <summary>
@@ -237,6 +242,12 @@ namespace Assets.Scripts.MathQuiz.Mono {
         ///     Function that is called when the script instance is being loaded.
         /// </summary>
         private void Start() {
+            TimerManager.OnPreGameTimerEndEvent += StartGame;
+        }
+
+        private void StartGame() {
+            TimerManager.OnPreGameTimerEndEvent -= StartGame;
+
             events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
             timerDefaultColor = timerText.color;
@@ -258,7 +269,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
 
         #endregion
 
-        #region Timer Methods
+        #region TimerManager Methods
 
         private void UpdateTimer(bool state) {
             switch (state) {

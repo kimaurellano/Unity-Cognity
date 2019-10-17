@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &514209094295420189
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 514209094295420179}
+  - component: {fileID: 514209094295420188}
+  - component: {fileID: 514209094295420178}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &514209094295420179
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514209094295420189}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 231.72772, y: 462.2486, z: 10.786292}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &514209094295420188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514209094295420189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c12648da3cab5074596cd8e0fefca04b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &514209094295420178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514209094295420189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca7a31134695dd34186604ec6d2168d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioCollection:
+  - Name: bg_menu
+    Games:
+    - Menu
+    AudioClip: {fileID: 8300000, guid: f427fa22a9ed2454b90f7eb40cb002a4, type: 3}
+    AudioSource: {fileID: 0}
+    Volume: 1
+    playOnAwake: 1
+    loop: 1
+  - Name: bg_game
+    Games:
+    - Game
+    AudioClip: {fileID: 8300000, guid: 9007275a4120e4f4d9101f60561bf49c, type: 3}
+    AudioSource: {fileID: 0}
+    Volume: 1
+    playOnAwake: 1
+    loop: 1
+  - Name: sfx_button
+    Games:
+    - All
+    AudioClip: {fileID: 8300000, guid: 5de5aa593293a264bb4d0760a00e8cc8, type: 3}
+    AudioSource: {fileID: 0}
+    Volume: 1
+    playOnAwake: 0
+    loop: 0
+  - Name: sfx_correct
+    Games:
+    - GameQuizSolveMath
+    - GamePicturePuzzle
+    AudioClip: {fileID: 8300000, guid: 4e7d2ed2bd3ce174aa8495737ade87dc, type: 3}
+    AudioSource: {fileID: 0}
+    Volume: 1
+    playOnAwake: 0
+    loop: 0
+  - Name: sfx_incorrect
+    Games:
+    - GameQuizSolveMath
+    - GamePicturePuzzle
+    AudioClip: {fileID: 8300000, guid: b2cde81c1526d304786f03e9cedb4604, type: 3}
+    AudioSource: {fileID: 0}
+    Volume: 1
+    playOnAwake: 0
+    loop: 0
+  - Name: sfx_paired
+    Games:
+    - GameCognity
+    AudioClip: {fileID: 8300000, guid: 949b7d3b220bf7842a2cfaf978c63004, type: 3}
+    AudioSource: {fileID: 0}
+    Volume: 1
+    playOnAwake: 0
+    loop: 0

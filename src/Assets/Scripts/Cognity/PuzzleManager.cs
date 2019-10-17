@@ -1,22 +1,18 @@
-﻿using System;
+﻿using Assets.Scripts.GlobalScripts.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.GlobalScripts.Player;
-using Assets.Scripts.GlobalScripts.UIComponents;
-using Assets.Scripts.GlobalScripts.UITask;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Type = Assets.Scripts.GlobalScripts.Game.Type;
-
-#pragma warning disable 649
+using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 
 namespace Assets.Scripts.Cognity {
     /// <summary>
     ///     Main worker of the puzzle game.
     ///     Manages occuring actions within th e puzzle area.
     /// </summary>
-    public class PuzzleManager : MonoBehaviour {
+    public class PuzzleManager : CoreGameBehaviour {
 
         private List<KeyValuePair<int, int[]>> _levelRotList;
 
@@ -53,7 +49,7 @@ namespace Assets.Scripts.Cognity {
         [SerializeField] private PuzzlePieceContainer[] _puzzleLevels;
 
         // Handle scoring
-        private ScoreManager _scoreManager;
+        private PuzzleScoreManager _puzzleScoreManager;
 
         [SerializeField] private GameObject _scorePrefab;
 
@@ -64,7 +60,7 @@ namespace Assets.Scripts.Cognity {
         [SerializeField] private GameObject[] _spawnPoints;
 
         // Handle when to start
-        private Timer _timer;
+        private TimerManager _timerManager;
 
         // Is game done ?
         public bool GameDone { get; private set; }
@@ -74,13 +70,13 @@ namespace Assets.Scripts.Cognity {
 
         private void Start() {
             // Score manager of cognity namespace
-            _scoreManager = new ScoreManager();
+            _puzzleScoreManager = new PuzzleScoreManager();
 
             _originalPieceLocation = new Dictionary<string, Vector3>();
 
             _lockedPiece = new List<string>();
 
-            _timer = FindObjectOfType<Timer>();
+            _timerManager = GetComponent<TimerManager>();
 
             _uiManager = FindObjectOfType<UIManager>();
 
@@ -96,15 +92,7 @@ namespace Assets.Scripts.Cognity {
 
             _curRotIdx = 0;
 
-            Populate();
-
-            Instantiate(_puzzleImagesPerLevel[_currentLevel - 1], _puzzleImage.transform);
-
-            // First level with timer set as 1:15
-            _timer.StartTimerAt(1, 15f);
-
-            TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
-            levelText.SetText(string.Format("Level: {0}", _currentLevel));
+            TimerManager.OnPreGameTimerEndEvent += StartGame;
         }
 
         private void Update() {
@@ -121,24 +109,21 @@ namespace Assets.Scripts.Cognity {
             if (_currentLevel > 4 && !GameDone) {
                 GameDone = true;
 
-                // Stop sound
-                Array.Find(FindObjectOfType<AudioManager>().AudioCollection, i => i.Name == "background")
-                    .AudioSource
-                    .Stop();
-
                 // Stop timer
-                _timer.ChangeTimerState();
+                _timerManager.ChangeTimerState();
 
                 // Show success panel
-                Transform successPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "success panel");
+                Transform successPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game finish panel");
                 successPanel.gameObject.SetActive(true);
 
-                // Add time as score
-                _scoreManager.AddScore(_timer.Min, _timer.Sec);
+                TextMeshProUGUI gameResult = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
+                gameResult.SetText("SUCCESS");
 
-                // Save the total score
-                BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_scoreManager.TotalScore, Type.GameType.Flexibility);
+                // Add time as score
+                _puzzleScoreManager.AddScore(_timerManager.Minutes, _timerManager.Seconds);
+
+                // Save final score
+                SaveScore(_puzzleScoreManager.TotalScore, GameType.Flexibility);
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -151,7 +136,7 @@ namespace Assets.Scripts.Cognity {
                 Instantiate(_puzzleImagesPerLevel[_currentLevel - 1], _puzzleImage.transform);
 
                 // Add time as score
-                _scoreManager.AddScore(_timer.Min, _timer.Sec);
+                _puzzleScoreManager.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
                 TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
                 levelText.SetText(string.Format("Level: {0}", _currentLevel));
@@ -159,24 +144,46 @@ namespace Assets.Scripts.Cognity {
                 // For every level load, timer will reset and start at specified time
                 switch (_currentLevel) {
                     case 2:
-                        _timer.StartTimerAt(1, 30f);
+                        _timerManager.StartTimerAt(1, 30f);
                         break;
                     case 3:
-                        _timer.StartTimerAt(1, 45f);
+                        _timerManager.StartTimerAt(1, 45f);
                         break;
                     case 4:
-                        _timer.StartTimerAt(2, 00f);
+                        _timerManager.StartTimerAt(2, 00f);
                         break;
                 }
 
                 Populate();
             }
 
-            if (FindObjectOfType<Timer>().TimerUp) {
-                // Show failed panel
-                Transform successPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "success panel");
-                successPanel.gameObject.SetActive(true);
+            if (_timerManager.TimerUp) {
+                Transform gameFinishPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game finish panel");
+                gameFinishPanel.gameObject.SetActive(true);
+
+                TextMeshProUGUI gameResult = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
+                gameResult.SetText("FAILED!");
+
+                SaveScore(_puzzleScoreManager.TotalScore, GameType.Flexibility);
             }
+        }
+
+        public override void Pause() {
+            base.Pause();
+        }
+
+        private void StartGame() {
+            TimerManager.OnPreGameTimerEndEvent -= StartGame;
+
+            Populate();
+
+            Instantiate(_puzzleImagesPerLevel[_currentLevel - 1], _puzzleImage.transform);
+
+            // First level with timer set as 1:15
+            _timerManager.StartTimerAt(1, 15f);
+
+            TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
+            levelText.SetText(string.Format("Level: {0}", _currentLevel));
         }
 
         /// <summary>

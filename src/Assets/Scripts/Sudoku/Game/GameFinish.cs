@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Assets.Scripts.GlobalScripts.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Assets.Scripts.GlobalScripts.Player;
+using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 
 public class GameFinish : MonoBehaviour {
     [SerializeField] private Text resultText = null;
@@ -22,7 +22,7 @@ public class GameFinish : MonoBehaviour {
         movesValueText.text = $"{moves:D3}";
 
         _baseScoreHandler = new BaseScoreHandler();
-        _baseScoreHandler.AddScore(float.Parse(movesValueText.text), Type.GameType.ProblemSolving);
+        _baseScoreHandler.AddScore(float.Parse(movesValueText.text), GameType.ProblemSolving);
 
         gameObject.SetActive(true);
     }

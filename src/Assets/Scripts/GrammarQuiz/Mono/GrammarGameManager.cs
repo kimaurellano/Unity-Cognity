@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Player;
+using Assets.Scripts.GlobalScripts.Managers;
 using Assets.Scripts.Quiz.Mono;
 using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
+using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 
 namespace Assets.Scripts.GrammarQuiz.Mono {
     public class GrammarGameManager : MonoBehaviour {
         private bool _isPaused;
+
+        [SerializeField] private GlobalScripts.Managers.UIManager _uiManager;
 
         /// <summary>
         ///     Function that is called to update new selected answer.
@@ -54,7 +58,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 events.UpdateQuestionUI(question);
             } else {
                 Debug.LogWarning(
-                    "Oops! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in GameManager.Display() method.");
+                    "Oops! Something went wrong while trying to display new Question UI Data. GameEvents.UpdateQuestionUI is null. Issue occured in PicturePuzzleGameManager.Display() method.");
             }
         }
 
@@ -80,7 +84,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
 
             events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
-            AudioManager.Instance.PlaySound(isCorrect ? "CorrectSFX" : "IncorrectSFX");
+            Quiz.Mono.AudioManager.Instance.PlaySound(isCorrect ? "CorrectSFX" : "IncorrectSFX");
 
             if (type != UIManager.ResolutionScreenType.Finish) {
                 if (IE_WaitTillNextRound != null) {
@@ -160,7 +164,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             var highscore = events.CurrentFinalScore;
 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, Type.GameType.Language);
+            baseScoreHandler.AddScore(highscore, GameType.Language);
         }
 
         /// <summary>
@@ -232,6 +236,8 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         ///     Function that is called when the script instance is being loaded.
         /// </summary>
         private void Start() {
+            _uiManager = FindObjectOfType<GlobalScripts.Managers.UIManager>();
+
             events.StartupHighscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
             timerDefaultColor = timerText.color;
@@ -243,19 +249,21 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             Random.InitState(seed);
 
             Display();
-            
-            // Start timer once
-            IE_StartTimer = StartTimer();
-            StartCoroutine(IE_StartTimer);
+
+            TimerManager.OnPreGameTimerEndEvent += StartPreGameTimer;
 
             timerAnimtor.SetInteger(timerStateParaHash, 2);
         }
 
         #endregion
 
-        #region Timer Methods
+        #region TimerManager Methods
 
-        private IEnumerator StartTimer() {
+        private void StartPreGameTimer() {
+            StartCoroutine(IEStartTimer());
+        }
+
+        private IEnumerator IEStartTimer() {
             var totalTime = 60;
             var timeLeft = totalTime;
 
@@ -263,7 +271,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             while (timeLeft > 0) {
                 timeLeft--;
 
-                AudioManager.Instance.PlaySound("CountdownSFX");
+                Quiz.Mono.AudioManager.Instance.PlaySound("CountdownSFX");
 
                 if (timeLeft < totalTime / 2 && timeLeft > totalTime / 4) {
                     timerText.color = timerHalfWayOutColor;
@@ -291,7 +299,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 .GetComponent<TextMeshProUGUI>()
                 .SetText("FINAL SCORE:" + events.CurrentFinalScore.ToString());
 
-            AudioManager.Instance.PlaySound("IncorrectSFX");
+            Quiz.Mono.AudioManager.Instance.PlaySound("IncorrectSFX");
         }
 
         private IEnumerator WaitTillNextRound() {

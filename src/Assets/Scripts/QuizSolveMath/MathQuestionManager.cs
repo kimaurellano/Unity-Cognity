@@ -3,22 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GlobalScripts.Player;
-using Assets.Scripts.GlobalScripts.UIComponents;
-using Assets.Scripts.GlobalScripts.UITask;
+using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Type = Assets.Scripts.GlobalScripts.Game.Type;
+using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 
 namespace Assets.Scripts.QuizSolveMath {
 #pragma warning disable 649
-    public class MathQuestionManager : MonoBehaviour {
+    public class MathQuestionManager : CoreGameBehaviour {
 
         [SerializeField] private MathBank[] _mathBanks;
 
         private UIManager _uiManager;
         private AudioManager _audioManager;
-        private Timer _timer;
+        private TimerManager _timerManager;
         private List<int> _keys;
 
         private int _currentNumber;
@@ -31,42 +30,28 @@ namespace Assets.Scripts.QuizSolveMath {
 
         private void Start() {
             _uiManager = FindObjectOfType<UIManager>();
+
             _audioManager = FindObjectOfType<AudioManager>();
 
             _keys = new List<int>();
 
-            _timer = GetComponent<Timer>();
+            _timerManager = GetComponent<TimerManager>();
 
-            _timer.StartTimerAt(1, 0f);
+            TimerManager.OnPreGameTimerEndEvent += StartGame;
+        }
+
+        private void StartGame() {
+            TimerManager.OnPreGameTimerEndEvent -= StartGame;
+
+            _timerManager.StartTimer();
+
+            TimerManager.OnGameTimerEndEvent += EndGame;
 
             for (var i = 0; i < _mathBanks.Length; i++) {
                 _keys.Add(i);
             }
 
             PrepareQuestion();
-        }
-
-        private void Update() {
-            if (_timer.Sec == 10) {
-                StartCoroutine(TimerEnding());
-            }
-
-            // Game finish if all question has been answered or Timer's up!
-            if (_currentNumber > _keys.Count && !_gameDone || _timer.Min < 0 && _timer.Sec == 0) {
-                _timer.ChangeTimerState();
-                _timer.TimerText.SetText("00:00");
-
-                _gameDone = !_gameDone;
-
-                BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-                baseScoreHandler.AddScore(_score, Type.GameType.ProblemSolving);
-
-                string panelName = _score > 0 ? "panel success" : "panel failed";
-                Debug.Log(string.Format("Final score: {0}", _score));
-
-                Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, panelName);
-                panel.gameObject.SetActive(true);
-            }
         }
 
         /// <summary>
@@ -111,11 +96,6 @@ namespace Assets.Scripts.QuizSolveMath {
                 Animator animator = (Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "answer");
                 animator.SetTrigger("correct");
 
-                Array
-                    .Find(_audioManager.AudioCollection, i => i.Name.Equals("correct"))
-                    .AudioSource
-                    .Play();
-
                 _score += 10;
             } else {
                 TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
@@ -127,11 +107,6 @@ namespace Assets.Scripts.QuizSolveMath {
 
                 Animator animator = (Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "answer");
                 animator.SetTrigger("wrong");
-
-                Array
-                    .Find(_audioManager.AudioCollection, i => i.Name.Equals("wrong"))
-                    .AudioSource
-                    .Play();
 
                 _score -= 10;
             }
@@ -150,21 +125,28 @@ namespace Assets.Scripts.QuizSolveMath {
             // Clear input field
             TMP_InputField answerField = (TMP_InputField) _uiManager.GetUI(UIManager.UIType.InputField, "answer");
             answerField.text = string.Empty;
+
+            if(_currentNumber > _keys.Count) {
+                EndGame();
+            }
         }
 
-        public void Pause() {
-            _paused = !_paused;
+        public override void EndGame() {
+            _timerManager.ChangeTimerState();
 
-            Time.timeScale = _paused ? 0f : 1f;
+            _gameDone = !_gameDone;
+
+            SaveScore(_score, GameType.ProblemSolving);
+
+            TextMeshProUGUI gameResulText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
+            gameResulText.SetText(_score > 0 ? "SUCCESS!" : "FAILED");
+
+            Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
+            panel.gameObject.SetActive(true);
         }
 
-        private IEnumerator TimerEnding() {
-            Animation animation = (Animation) _uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "timer ending");
-            AnimationClip clip = animation.clip;
-            clip.wrapMode = WrapMode.Loop;
-            animation.Play();
-            yield return new WaitForSeconds(10f);
-            animation.Stop();
+        public override void Pause() {
+            base.Pause();
         }
     }
 }

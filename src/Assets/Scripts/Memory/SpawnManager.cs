@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.GlobalScripts.UITask;
+using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
-#pragma warning disable 649
 
 namespace Assets.Scripts.Memory {
     public class SpawnManager : MonoBehaviour {
@@ -17,6 +14,8 @@ namespace Assets.Scripts.Memory {
         private bool _paused;
 
         private List<int> _spawnKeys;
+
+        private TimerManager _timerManager;
 
         [SerializeField] private Transform[] _spawnPoints;
 
@@ -34,45 +33,7 @@ namespace Assets.Scripts.Memory {
                 card.GetComponent<Card>().Locked = true;
             }
 
-            Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "button pause")
-                .Button
-                .transform
-                .gameObject
-                .SetActive(false);
-        }
-
-        private void Update() {
-            if (!_gameStart) {
-                Sec -= Time.deltaTime;
-
-                _timerText.SetText(Sec.ToString("F0"));
-            } else {
-                Sec -= Time.deltaTime;
-
-                _timerText.SetText(Sec.ToString("F0"));
-            }
-
-            if (Sec < 0.01f && !_gameStart) {
-                _gameStart = true;
-
-                foreach (var item in GameObject.FindGameObjectsWithTag("Card")) {
-                    item.GetComponent<Animator>().SetBool("flip", true);
-                    // Enable all card touches
-                    item.GetComponent<Card>().Locked = false;
-                }
-
-                Sec = 45f;
-
-                Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "button pause")
-                    .Button
-                    .transform
-                    .gameObject
-                    .SetActive(true);
-
-                _timerText.SetText("");
-            } else if (Sec < 0.01f && _gameStart) {
-                SceneManager.LoadScene("GameOverMemory");
-            }
+            TimerManager.OnPreGameTimerEndEvent += CardUnlock;
         }
 
         private void Spawn() {
@@ -94,6 +55,18 @@ namespace Assets.Scripts.Memory {
 
                 // Avoid using the same spawn point
                 _spawnKeys.RemoveAt(randomKey);
+            }
+        }
+
+        private void CardUnlock() {
+            TimerManager.OnGameTimerEndEvent -= CardUnlock;
+
+            _gameStart = true;
+
+            foreach (var item in GameObject.FindGameObjectsWithTag("Card")) {
+                item.GetComponent<Animator>().SetBool("flip", true);
+                // Enable all card touches
+                item.GetComponent<Card>().Locked = false;
             }
         }
     }

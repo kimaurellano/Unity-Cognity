@@ -1045,47 +1045,34 @@ MonoBehaviour:
   _panelCollection:
   - Name: panel userinfo
     Panel: {fileID: 1319567193}
-    Animator: {fileID: 0}
   - Name: panel user
     Panel: {fileID: 1958758850}
-    Animator: {fileID: 0}
   - Name: panel home
     Panel: {fileID: 777847829}
-    Animator: {fileID: 0}
   - Name: panel category
     Panel: {fileID: 774947392}
-    Animator: {fileID: 0}
   - Name: panel problem solving
     Panel: {fileID: 1895590675}
-    Animator: {fileID: 0}
   - Name: panel language
     Panel: {fileID: 1673623312}
-    Animator: {fileID: 0}
   - Name: panel quit
     Panel: {fileID: 36064015}
-    Animator: {fileID: 0}
   _buttonCollection:
   - Name: button save
     Button: {fileID: 1103019549}
-    Animator: {fileID: 0}
   _textCollection:
   - Name: flexibility
     textMesh: {fileID: 602562730}
-    Animator: {fileID: 0}
   - Name: language
     textMesh: {fileID: 1935268862}
-    Animator: {fileID: 0}
   - Name: memory
     textMesh: {fileID: 2092023853}
-    Animator: {fileID: 0}
   - Name: problem solving
     textMesh: {fileID: 962288697}
-    Animator: {fileID: 0}
   _inputFieldCollection: []
   _animatedObjectsCollecton:
   - Name: transition
     AnimatedObject: {fileID: 343971131}
-    Clips: []
 --- !u!1 &144916638
 GameObject:
   m_ObjectHideFlags: 0
@@ -10135,3 +10122,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2131158290}
   m_CullTransparentMesh: 0
+--- !u!1001 &514209093291044923
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 514209094295420189, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 231.72772
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 462.2486
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.786292
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 514209094295420179, guid: 905a4ab69356ee94e8df5480ac635bc6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 905a4ab69356ee94e8df5480ac635bc6, type: 3}
