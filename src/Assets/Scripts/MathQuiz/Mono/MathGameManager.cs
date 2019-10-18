@@ -9,11 +9,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
-using AudioManager = Assets.Scripts.Quiz.Mono.AudioManager;
 using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
 
 namespace Assets.Scripts.MathQuiz.Mono {
-    public class MathGameManager : MonoBehaviour {
+    public class MathGameManager : CoreGameBehaviour {
         private bool _isPaused;
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
 
             events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
-            AudioManager.Instance.PlaySound(isCorrect ? "CorrectSFX" : "IncorrectSFX");
+            FindObjectOfType<GlobalScripts.Managers.AudioManager>().PlayClip(isCorrect ? "sfx_correct" : "sfx_incorrect");
 
             if (type != UIManager.ResolutionScreenType.Finish) {
                 if (IE_WaitTillNextRound != null) {
@@ -146,21 +145,11 @@ namespace Assets.Scripts.MathQuiz.Mono {
         ///     Function that is called to quit the application.
         /// </summary>
         public void BaseMenu() {
-            foreach (var item in Resources.FindObjectsOfTypeAll(typeof(AudioManager)) as AudioManager[]) {
-                Destroy(item.gameObject);
-            }
-
             SceneManager.LoadScene("BaseMenu");
         }
 
-        public void PauseGame() {
-            if (_isPaused) {
-                Time.timeScale = 1;
-                _isPaused = false;
-            } else {
-                Time.timeScale = 0;
-                _isPaused = true;
-            }
+        public override void Pause() {
+            base.Pause();
         }
 
         /// <summary>
@@ -297,8 +286,6 @@ namespace Assets.Scripts.MathQuiz.Mono {
             while (timeLeft > 0) {
                 timeLeft--;
 
-                AudioManager.Instance.PlaySound("CountdownSFX");
-
                 if (timeLeft < totalTime / 2 && timeLeft > totalTime / 4) {
                     timerText.color = timerHalfWayOutColor;
                 }
@@ -325,7 +312,9 @@ namespace Assets.Scripts.MathQuiz.Mono {
                 .GetComponent<TextMeshProUGUI>()
                 .SetText("FINAL SCORE:" + events.CurrentFinalScore.ToString());
 
-            AudioManager.Instance.PlaySound("IncorrectSFX");
+            FindObjectOfType<GlobalScripts.Managers.AudioManager>().PlayClip("sfx_incorrect");
+
+            EndGame();
         }
 
         private IEnumerator WaitTillNextRound() {

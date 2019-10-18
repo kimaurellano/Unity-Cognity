@@ -7,7 +7,7 @@ using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 using TMPro;
 
 namespace Assets.Scripts.Memory {
-    public class GameManager : MonoBehaviour {
+    public class GameManager : CoreGameBehaviour {
 
         private List<Transform> _lockedCardList;
 
@@ -39,8 +39,6 @@ namespace Assets.Scripts.Memory {
 
         public bool OnFlip { get; set; }
 
-        public bool TimerPause { get; set; }
-
         private void Start() {
             _uiManager = FindObjectOfType<UIManager>();
 
@@ -69,7 +67,9 @@ namespace Assets.Scripts.Memory {
             }
         }
 
-        private void EndGame() {
+        public override void EndGame() {
+            base.EndGame();
+
             GameResult(success: false);
         }
 
@@ -105,11 +105,11 @@ namespace Assets.Scripts.Memory {
             OnFlip = false;
         }
 
-        public void Pause() {
-            TimerPause = !TimerPause;
+        public override void Pause() {
+            base.Pause();
 
             // This should avoid the user from picking the card's gameobjects when paused
-            if (TimerPause) {
+            if (IsPaused) {
                 foreach (GameObject card in GameObject.FindGameObjectsWithTag("Card")) {
                     if (card.GetComponent<Card>().Locked) {
                         continue;
@@ -130,8 +130,6 @@ namespace Assets.Scripts.Memory {
                 // Set free the temporary locked cards
                 _lockedCardList.Clear();
             }
-
-            Time.timeScale = TimerPause ? 0f : 1f;
         }
     }
 }

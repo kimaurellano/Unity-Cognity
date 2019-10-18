@@ -25,13 +25,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public Animation TimerAnimation;
 
-
-
-
-
-
-
-
         private bool _startTimer;
 
         private float _t;

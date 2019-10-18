@@ -3,14 +3,17 @@ using System.Linq;
 using Assets.Scripts.GlobalScripts.Managers;
 using Assets.Scripts.GlobalScripts.Player;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CoreGameBehaviour : MonoBehaviour, ICoreGameBehaviour {
 
+    public delegate void OnPauseGame();
     public delegate void OnMuteGame(string sfx);
 
-    public static event OnMuteGame onMuteGameEvent;
+    public static event OnPauseGame OnPauseGameEvent;
+    public static event OnMuteGame OnMuteGameEvent;
 
-    private bool _pause;
+    public bool IsPaused { get; set; }
 
     public bool IsSFXMuted { get; set; }
 
@@ -35,14 +38,19 @@ public class CoreGameBehaviour : MonoBehaviour, ICoreGameBehaviour {
     }
 
     public virtual void MuteBackgroundMusic() {
+        AudioManager audioManager = FindObjectOfType<AudioManager>();
+        if(audioManager == null) {
+            return;
+        }
+
         IsBGMuted = !(PlayerPrefs.GetInt("IsBgMuted") == 1);
 
         PlayerPrefs.SetInt("IsBgMuted", IsBGMuted ? 1 : 0);
 
-        FindObjectOfType<AudioManager>().SetVolume("bg_game", IsBGMuted ? 0f : 1f);
-        FindObjectOfType<AudioManager>().SetVolume("bg_menu", IsBGMuted ? 0f : 1f);
+        audioManager.SetVolume("bg_game", IsBGMuted ? 0f : 1f);
+        audioManager.SetVolume("bg_menu", IsBGMuted ? 0f : 1f);
 
-        onMuteGameEvent?.Invoke("bg");
+        OnMuteGameEvent?.Invoke("bg");
     }
 
     public virtual void MuteSFX() {
@@ -64,21 +72,30 @@ public class CoreGameBehaviour : MonoBehaviour, ICoreGameBehaviour {
             }
         }
 
-        onMuteGameEvent?.Invoke("sfx");
+        OnMuteGameEvent?.Invoke("sfx");
     }
 
     public virtual void Pause() {
-        if(PlayerPrefs.GetInt("IsBgMuted") != 1) {
-            FindObjectOfType<AudioManager>().SetVolume("bg_game", _pause ? 1f : 0.3f);
+        if (PlayerPrefs.GetInt("IsBgMuted") != 1) {
+            FindObjectOfType<AudioManager>().SetVolume("bg_game", IsPaused ? 1f : 0.3f);
         }
 
-        _pause = !_pause;
+        IsPaused = !IsPaused;
 
-        Time.timeScale = _pause ? 0f : 1f;
+        Time.timeScale = IsPaused ? 0f : 1f;
+
+        OnPauseGameEvent?.Invoke();
     }
 
     public void SaveScore(float score, BaseScoreHandler.GameType gameType) {
         BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
         baseScoreHandler.AddScore(score, gameType);
+    }
+
+    public void QuitGame() {
+        OnPauseGameEvent = null;
+        OnMuteGameEvent = null;
+
+        SceneManager.LoadScene("BaseMenu");
     }
 }

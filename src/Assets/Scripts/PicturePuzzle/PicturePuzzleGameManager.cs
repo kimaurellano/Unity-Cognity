@@ -30,10 +30,6 @@ namespace Assets.Scripts.PicturePuzzle {
 
             _audioManager = FindObjectOfType<AudioManager>();
 
-            //AudioSource src = gameObject.AddComponent<AudioSource>();
-            //src.clip = _audioManager.GetSrc("incorrect").clip;
-            //src.Play();
-
             Instantiate(Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Image, _puzzlePictureContainer.transform);
 
             TimerManager.OnGameTimerEndEvent += EndGame;
@@ -52,6 +48,8 @@ namespace Assets.Scripts.PicturePuzzle {
         }
 
         public override void EndGame() {
+            base.EndGame();
+
             TimerManager.OnGameTimerEndEvent -= EndGame;
 
             SaveScore(_score, GameType.Language);

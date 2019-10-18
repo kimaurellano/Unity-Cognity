@@ -107,6 +107,9 @@ namespace Assets.Scripts.Cognity {
 
             // There is only 4 levels any more increment should result game completion
             if (_currentLevel > 4 && !GameDone) {
+
+                EndGame();
+
                 GameDone = true;
 
                 // Stop timer
@@ -158,6 +161,9 @@ namespace Assets.Scripts.Cognity {
             }
 
             if (_timerManager.TimerUp) {
+
+                EndGame();
+
                 Transform gameFinishPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game finish panel");
                 gameFinishPanel.gameObject.SetActive(true);
 

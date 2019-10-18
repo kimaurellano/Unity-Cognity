@@ -12,7 +12,7 @@ using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
 using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
 
 namespace Assets.Scripts.GrammarQuiz.Mono {
-    public class GrammarGameManager : MonoBehaviour {
+    public class GrammarGameManager : CoreGameBehaviour {
         private bool _isPaused;
 
         [SerializeField] private GlobalScripts.Managers.UIManager _uiManager;
@@ -84,7 +84,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
 
             events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
 
-            Quiz.Mono.AudioManager.Instance.PlaySound(isCorrect ? "CorrectSFX" : "IncorrectSFX");
+            FindObjectOfType<GlobalScripts.Managers.AudioManager>().PlayClip(isCorrect ? "sfx_correct" : "sfx_incorrect");
 
             if (type != UIManager.ResolutionScreenType.Finish) {
                 if (IE_WaitTillNextRound != null) {
@@ -142,19 +142,11 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         ///     Function that is called to quit the application.
         /// </summary>
         public void MainMenu() {
-            Destroy(GameObject.Find("AudioManager").gameObject);
-
             SceneManager.LoadScene("BaseMenu");
         }
 
-        public void PauseGame() {
-            if (_isPaused) {
-                Time.timeScale = 1;
-                _isPaused = false;
-            } else {
-                Time.timeScale = 0;
-                _isPaused = true;
-            }
+        public override void Pause() {
+            base.Pause();
         }
 
         /// <summary>
@@ -271,7 +263,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             while (timeLeft > 0) {
                 timeLeft--;
 
-                Quiz.Mono.AudioManager.Instance.PlaySound("CountdownSFX");
+                FindObjectOfType<GlobalScripts.Managers.AudioManager>().PlayClip("sfx_correct");
 
                 if (timeLeft < totalTime / 2 && timeLeft > totalTime / 4) {
                     timerText.color = timerHalfWayOutColor;
@@ -299,7 +291,9 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 .GetComponent<TextMeshProUGUI>()
                 .SetText("FINAL SCORE:" + events.CurrentFinalScore.ToString());
 
-            Quiz.Mono.AudioManager.Instance.PlaySound("IncorrectSFX");
+            FindObjectOfType<GlobalScripts.Managers.AudioManager>().PlayClip("sfx_oncorrect");
+
+            EndGame();
         }
 
         private IEnumerator WaitTillNextRound() {

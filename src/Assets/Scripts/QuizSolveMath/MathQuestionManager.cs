@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
@@ -85,6 +82,8 @@ namespace Assets.Scripts.QuizSolveMath {
             string correctAnswer = _mathBanks[_useKey].Answer;
 
             if (userAnswer.Equals(correctAnswer)) {
+                FindObjectOfType<AudioManager>().PlayClip("sfx_correct");
+
                 TextMeshProUGUI scoreChange = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
                 scoreChange.color = Color.green;
                 scoreChange.text = "+10";
@@ -98,6 +97,8 @@ namespace Assets.Scripts.QuizSolveMath {
 
                 _score += 10;
             } else {
+                FindObjectOfType<AudioManager>().PlayClip("sfx_incorrect");
+
                 TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
                 textUI.color = Color.red;
                 textUI.text = "-10";
@@ -132,6 +133,8 @@ namespace Assets.Scripts.QuizSolveMath {
         }
 
         public override void EndGame() {
+            base.EndGame();
+
             _timerManager.ChangeTimerState();
 
             _gameDone = !_gameDone;
