@@ -562,7 +562,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Quiz Solve Math
+  m_text: Solving Math
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41006728621e30144bf6cb113ec62635, type: 2}
   m_sharedMaterial: {fileID: 21161268254269248, guid: 41006728621e30144bf6cb113ec62635,
@@ -632,10 +632,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1095821947}
-    characterCount: 15
+    characterCount: 12
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 1
+    wordCount: 2
     linkCount: 0
     lineCount: 1
     pageCount: 1
