@@ -15,7 +15,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             AnimatedSingleState,
             AnimatedMultipleState
         }
-        [Space]
+
         [SerializeField] private StatsCollection[] _statsCollections;
         [Space]
         [SerializeField] private PanelCollection[] _panelCollection;

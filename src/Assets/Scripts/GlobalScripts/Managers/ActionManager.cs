@@ -21,20 +21,28 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             _uiManager = FindObjectOfType<UIManager>();
 
+            if (SceneManager.GetActiveScene().name.Equals("BaseMenu")) {
+                if (PlayerPrefs.GetString("DisplayPage").Equals("CategorySelection")) {
+                    Transform panelStartMenu = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu");
+                    panelStartMenu.gameObject.SetActive(false);
+
+                    Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection");
+                    panelHome.gameObject.SetActive(true);
+                } else {
+                    Transform panelStartMenu = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu");
+                    panelStartMenu.gameObject.SetActive(true);
+
+                    Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection");
+                    panelHome.gameObject.SetActive(false);
+                }
+            }
+
             // Make sure games not paused after quitting any game modes
             Time.timeScale = 1f;
 
             // Avoid null exception
             if (SceneManager.GetActiveScene().buildIndex != 0) {
                 return;
-            }
-
-            if (PlayerPrefs.GetString("user_info") != string.Empty) {
-                Transform panelUserInfo = (Transform) _uiManager.GetUI(UIManager.UIType.Panel, "panel userinfo");
-                panelUserInfo.gameObject.SetActive(false);
-
-                Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel home");
-                panelHome.gameObject.SetActive(true);
             }
         }
 
@@ -49,6 +57,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void GoTo(string sceneName) {
+            // We do not have to go back to start menu every after game quit
+            PlayerPrefs.SetString("DisplayPage", "CategorySelection");
+
             // Avoid per game category audio duplication(not stopping)
             SceneManager.LoadScene(sceneName);
         }
@@ -58,8 +69,25 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             SceneManager.LoadScene("BaseMenu");
         }
 
+        public void Back() {
+            if(((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu")).gameObject.activeSelf) {
+                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel quit")).gameObject.SetActive(true);
+            } else if (((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection")).gameObject.activeSelf) {
+                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection")).gameObject.SetActive(false);
+                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu")).gameObject.SetActive(true);
+                Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
+                btnBack.gameObject.SetActive(false);
+            } else {
+                foreach (GameObject item in GameObject.FindGameObjectsWithTag("CategoryPanel")) {
+                    item.gameObject.SetActive(false);
+                }
+
+                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection")).gameObject.SetActive(true);
+            }
+        }
+
         public void Quit() {
-            Application.Quit();
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel quit")).gameObject.SetActive(true);
         }
 
         public void Show(Transform transform) {
@@ -78,6 +106,14 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void TransitionTo(Transform targetPanel) {
+            if(targetPanel.name.Equals("start menu")) {
+                Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
+                btnBack.gameObject.SetActive(false);
+            } else {
+                Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
+                btnBack.gameObject.SetActive(true);
+            }
+
             // The panel to transition to
             _targetPanel = targetPanel;
         }
@@ -96,11 +132,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             // Sync to the seconds when animation event is invoked
             yield return new WaitForSeconds(0.5f);
-
-            if (transform.name == "User_Panel") {
-                Transform panelUser = (Transform) _uiManager.GetUI(UIManager.UIType.Panel, "panel user");
-                panelUser.gameObject.SetActive(true);
-            }
         }
 
         public void MuteBackground() {
@@ -119,14 +150,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
                 return;
             }
-
-            //if (FindObjectOfType<AudioManager>().LowerVolume("bg_game", 0f)) {
-            //    button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
-            //    button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
-            //} else {
-            //    button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
-            //    button.GetChild(1).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
-            //}
         }
 
         public void DestroyObject(string name) {
