@@ -738,7 +738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a766b32f55b53479f2d242d82c1179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _numberPrefab: {fileID: 1767552110598059912, guid: 14b63b3f78aa92d4c97650f8b6480771,
+  _numberPrefab: {fileID: 7232341245558571298, guid: 32aeb9c9172aa5c4ba420a3d41c9c6db,
     type: 3}
   _setOfSequence: 5
   _radius: 3
