@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Assets.Scripts.PickInSequence {
     public class NumberScript : MonoBehaviour {
 
-        public delegate void OnNumberPop();
+        public delegate void OnNumberPop(int number);
 
         public static event OnNumberPop OnNumberPopEvent;
 
@@ -30,19 +30,14 @@ namespace Assets.Scripts.PickInSequence {
 
                     if (_collider2D.Equals(touchPoint)) {
                         int number = int.Parse(transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text);
-                        Debug.Log("Number to touch:" + _gameManager.GetCurrentElement());
-                        if (_gameManager.GetCurrentElement() != number) {
-                            return;
-                        }
 
-                        OnNumberPopEvent?.Invoke();
+                        OnNumberPopEvent?.Invoke(number);
 
                         Destroy(touchPoint.gameObject);
                     }
                 }
             }
         }
-
 
         private void OnTriggerEnter2D(Collider2D collision) {
             gameObject.transform.position = new Vector3(

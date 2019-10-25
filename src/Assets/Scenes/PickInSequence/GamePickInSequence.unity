@@ -718,6 +718,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1564550415}
   - component: {fileID: 1564550414}
+  - component: {fileID: 1564550416}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -737,13 +738,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a766b32f55b53479f2d242d82c1179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _numberPrefab: {fileID: 7232341245558571298, guid: 32aeb9c9172aa5c4ba420a3d41c9c6db,
+  _numberPrefab: {fileID: 1767552110598059912, guid: 14b63b3f78aa92d4c97650f8b6480771,
     type: 3}
+  _setOfSequence: 5
   _radius: 3
   _minY: -1.82
-  _minX: -2.5
+  _minX: -2
   _maxY: 4.33
-  _maxX: 2.5
+  _maxX: 2
 --- !u!4 &1564550415
 Transform:
   m_ObjectHideFlags: 0
@@ -752,12 +754,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564550413}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.48, y: 4.33, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1564550416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564550413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb188dd6644c6f4487b2495043911f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimerText: {fileID: 0}
+  Seconds: 0
+  Minutes: 0
+  IsPreGameTimer: 0
+  TimerAnimation: {fileID: 0}
 --- !u!1 &1719858805
 GameObject:
   m_ObjectHideFlags: 0
