@@ -49,7 +49,7 @@ namespace Assets.Scripts.Cognity {
         [SerializeField] private PuzzlePieceContainer[] _puzzleLevels;
 
         // Handle scoring
-        private PuzzleScoreManager _puzzleScoreManager;
+        private PreScoreManager _puzzleScoreManager;
 
         [SerializeField] private GameObject _scorePrefab;
 
@@ -70,7 +70,7 @@ namespace Assets.Scripts.Cognity {
 
         private void Start() {
             // Score manager of cognity namespace
-            _puzzleScoreManager = new PuzzleScoreManager();
+            _puzzleScoreManager = new PreScoreManager();
 
             _originalPieceLocation = new Dictionary<string, Vector3>();
 
@@ -126,7 +126,7 @@ namespace Assets.Scripts.Cognity {
                 _puzzleScoreManager.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
                 // Save final score
-                SaveScore(_puzzleScoreManager.TotalScore, GameType.Flexibility);
+                SaveScore(_puzzleScoreManager.TotalTimeScore, GameType.Flexibility);
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -170,7 +170,7 @@ namespace Assets.Scripts.Cognity {
                 TextMeshProUGUI gameResult = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
                 gameResult.SetText("FAILED!");
 
-                SaveScore(_puzzleScoreManager.TotalScore, GameType.Flexibility);
+                SaveScore(_puzzleScoreManager.TotalTimeScore, GameType.Flexibility);
             }
         }
 

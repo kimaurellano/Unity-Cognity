@@ -1,5 +1,7 @@
-﻿namespace Assets.Scripts.Cognity {
-    public class PuzzleScoreManager {
+﻿namespace Assets.Scripts.GlobalScripts.Managers {
+    public class PreScoreManager {
+        public float TotalTimeScore { get; private set; }
+
         public float TotalScore { get; private set; }
 
         /// <summary>
@@ -10,7 +12,11 @@
             float minToSec = minute * 60f;
 
             // Add score. We collect score as seconds
-            TotalScore += minToSec + seconds;
+            TotalTimeScore += minToSec + seconds;
+        }
+
+        public void AddScore(float score) {
+            TotalScore += score;
         }
     }
 }
