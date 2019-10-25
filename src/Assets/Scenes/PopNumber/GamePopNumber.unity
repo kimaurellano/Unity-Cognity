@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 12
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
     m_AtlasSize: 1024
@@ -62,7 +62,6 @@ LightmapSettings:
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
     m_CompAOExponentDirect: 0
-    m_ExtractAmbientOcclusion: 0
     m_Padding: 2
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
@@ -77,16 +76,10 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 512
     m_PVRBounces: 2
-    m_PVREnvironmentSampleCount: 256
-    m_PVREnvironmentReferencePointCount: 2048
-    m_PVRFilteringMode: 1
-    m_PVRDenoiserTypeDirect: 1
-    m_PVRDenoiserTypeIndirect: 1
-    m_PVRDenoiserTypeAO: 1
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVREnvironmentMIS: 1
+    m_PVRFilteringMode: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -95,7 +88,6 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-    m_ExportTrainingData: 0
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -150,7 +142,97 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a95fd65fd13b8b4a90261a3f5512ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _questionBank: []
+  _questionBank:
+  - category: 0
+    Problem: 10 + 17 = ?
+    Answer: 27
+  - category: 0
+    Problem: 6 + 14 = ?
+    Answer: 20
+  - category: 0
+    Problem: 17 + 17 = ?
+    Answer: 34
+  - category: 0
+    Problem: 3 + 9 = ?
+    Answer: 12
+  - category: 0
+    Problem: 2 + 9 = ?
+    Answer: 24
+  - category: 0
+    Problem: 13 + 11 = ?
+    Answer: 18
+  - category: 0
+    Problem: 9 + 9 = ?
+    Answer: 13
+  - category: 0
+    Problem: 9 + 7 = ?
+    Answer: 16
+  - category: 0
+    Problem: 18 + 3 = ?
+    Answer: 21
+  - category: 0
+    Problem: 17 + 29 = ?
+    Answer: 46
+  - category: 1
+    Problem: 27 - 9 = ?
+    Answer: 19
+  - category: 1
+    Problem: 18 - 9 = ?
+    Answer: 9
+  - category: 1
+    Problem: 12 - 4 = ?
+    Answer: 8
+  - category: 1
+    Problem: 7 - 4 = ?
+    Answer: 3
+  - category: 1
+    Problem: 28 - 17 = ?
+    Answer: 11
+  - category: 1
+    Problem: 51 - 28 = ?
+    Answer: 23
+  - category: 1
+    Problem: 23 - 7 = ?
+    Answer: 16
+  - category: 1
+    Problem: 16 - 6 = ?
+    Answer: 10
+  - category: 1
+    Problem: 23 - 5 = ?
+    Answer: 18
+  - category: 1
+    Problem: 19 - 2 = ?
+    Answer: 17
+  - category: 2
+    Problem: 3 x 7 = ?
+    Answer: 21
+  - category: 2
+    Problem: 6 x 6 = ?
+    Answer: 36
+  - category: 2
+    Problem: 9 x 3 = ?
+    Answer: 27
+  - category: 2
+    Problem: 8 x 9 = ?
+    Answer: 72
+  - category: 2
+    Problem: 5 x 5 = ?
+    Answer: 25
+  - category: 3
+    Problem: 456/6 = ?
+    Answer: 76
+  - category: 3
+    Problem: 223/1 = ?
+    Answer: 223
+  - category: 3
+    Problem: 25/5 = ?
+    Answer: 5
+  - category: 3
+    Problem: 26/2 = ?
+    Answer: 13
+  - category: 3
+    Problem: 64/8 = ?
+    Answer: 8
   _numberPrefab: {fileID: 6903058425894350548, guid: 17d5a1ae544d4b74097c16bfdfc65a7a,
     type: 3}
   _spawnPositionMinX: -2.5
@@ -249,20 +331,17 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
-    m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 221591268}
@@ -547,10 +626,9 @@ Camera:
   m_ClearFlags: 1
   m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
+  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
