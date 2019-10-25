@@ -1,18 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.GlobalScripts.Managers;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.PickInSequence {
     public class GameManager : CoreGameBehaviour {
 
         [SerializeField] private GameObject _numberPrefab;
 
+        [SerializeField] private int _setOfSequence;
         [SerializeField] private float _radius;
         [SerializeField] private float _minY, _minX;
         [SerializeField] private float _maxY, _maxX;
 
         private List<int> _rndSequence;
+        private PreScoreManager _preScoreManager;
+        private TimerManager _timeManager;
         private int curElement = 0;
+        private int _curSetOfSequence = 0;
+        private float _score;
+        private bool _restartTimer;
 
         public float MinY { get => _minY; }
         public float MinX { get => _minX; }
@@ -20,9 +28,22 @@ namespace Assets.Scripts.PickInSequence {
         public float MaxX { get => _maxX; }
 
         private void Start() {
-            NumberScript.OnNumberPopEvent += ProceedToNextElement;
+            _timeManager = GetComponent<TimerManager>();
+
+            NumberScript.OnNumberPopEvent += CheckAnswer;
+
+            TimerManager.OnGameTimerEndEvent += ProceedToNextSequence;
 
             InstantiateNumber(RandomSequence(5));
+
+            _timeManager.StartTimerAt(0, 5f);
+        }
+
+        private void Update() {
+            if (_restartTimer) {
+                _restartTimer = false;
+                _timeManager.StartTimerAt(0, 5f);
+            }
         }
 
         private void InstantiateNumber(int[] sequence) {
@@ -63,22 +84,47 @@ namespace Assets.Scripts.PickInSequence {
             return _rndSequence.ToArray();
         }
 
-        private void Respawn() {
-            Debug.Log("Respawning...");
+        private void ProceedToNextSequence() {
+            ClearObjects();
 
-            foreach (var item in Resources.FindObjectsOfTypeAll(typeof(NumberScript)) as NumberScript[]) {
-                Destroy(item);
+            _restartTimer = true;
+
+            _curSetOfSequence++;
+
+            // All set of sequence are answered
+            if (_curSetOfSequence > _setOfSequence - 1) {
+                SaveScore(_preScoreManager.TotalScore, GlobalScripts.Player.BaseScoreHandler.GameType.Flexibility);
+
+                SceneManager.LoadScene("PopNumber");
             }
 
             InstantiateNumber(RandomSequence(5));
         }
 
-        public int GetCurrentElement() {
-            return _rndSequence.ToArray()[curElement];
+        private void CheckAnswer(int popNumber) {
+            if(popNumber == _rndSequence.ToArray()[curElement]) {
+                _score += 10;
+            } else {
+                _score -= 10;
+                if(_score < 0) {
+                    _score = 0;
+                }
+            }
+
+            curElement++;
+
+            // Proceed to next set of sequence
+            if(curElement > _rndSequence.Count - 1) {
+                _preScoreManager.AddScore(_score);
+
+                ProceedToNextSequence();
+            }
         }
 
-        private void ProceedToNextElement() {
-            curElement++;
+        private void ClearObjects() {
+            foreach (var item in FindObjectsOfType<NumberScript>()) {
+                Destroy(item.gameObject);
+            }
         }
     }
 }
