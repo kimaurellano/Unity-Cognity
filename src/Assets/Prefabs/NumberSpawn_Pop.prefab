@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 2165080240460846315}
   - component: {fileID: 3833492871897725064}
   m_Layer: 0
-  m_Name: NumberSpawn 1
+  m_Name: NumberSpawn_Pop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -389,3 +389,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf322c0bfdf2b224896486b67a5ce3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  content: {fileID: 1065324226062004314}

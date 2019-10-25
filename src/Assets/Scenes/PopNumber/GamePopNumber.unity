@@ -150,11 +150,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a95fd65fd13b8b4a90261a3f5512ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _questionBank: []
   _numberPrefab: {fileID: 6903058425894350548, guid: 17d5a1ae544d4b74097c16bfdfc65a7a,
     type: 3}
   _spawnPositionMinX: -2.5
   _spawnPositionMaxX: 2.5
   _spawnPositionY: 5.3
+  _problemText: {fileID: 1354202334}
 --- !u!4 &165575871
 Transform:
   m_ObjectHideFlags: 0
