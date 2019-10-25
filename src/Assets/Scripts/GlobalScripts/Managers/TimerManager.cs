@@ -51,7 +51,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             if (TimerUp) {
                 OnGameTimerEndEvent?.Invoke();
 
-                TimerText.SetText("Time: 00:00");
+                TimerText?.SetText("Time: 00:00");
 
                 _startTimer = false;
             }
@@ -70,7 +70,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 Minutes--;
             }
 
-            TimerText.SetText($"Time: {Minutes:00}:{Seconds:00}");
+            TimerText?.SetText($"Time: {Minutes:00}:{Seconds:00}");
 
             if (Minutes == 0 && Seconds == 10) {
                 if (TimerAnimation != null) {

@@ -28,12 +28,18 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
                     Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection");
                     panelHome.gameObject.SetActive(true);
+
+                    Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
+                    btnBack.gameObject.SetActive(true);
                 } else {
                     Transform panelStartMenu = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu");
                     panelStartMenu.gameObject.SetActive(true);
 
                     Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection");
                     panelHome.gameObject.SetActive(false);
+
+                    Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
+                    btnBack.gameObject.SetActive(false);
                 }
             }
 
@@ -154,6 +160,11 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void DestroyObject(string name) {
             Destroy(GameObject.Find(name));
+        }
+
+        private void OnApplicationQuit() {
+            PlayerPrefs.SetString("DisplayPage", "StartMenu");
+            Debug.Log("application quit");
         }
     }
 }
