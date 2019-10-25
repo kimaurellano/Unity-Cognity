@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 40
   m_EditorClassIdentifier: 
-  _info: 18 / 8 = __
+  _info: 42 / 7 = __
   _answers:
   - _info: 2
-    _isCorrect: 1
+    _isCorrect: 0
   - _info: 4
     _isCorrect: 0
   - _info: 6
-    _isCorrect: 0
+    _isCorrect: 1
   - _info: 8
     _isCorrect: 0
   _useTimer: 1

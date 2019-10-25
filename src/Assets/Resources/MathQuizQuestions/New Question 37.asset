@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e3773ddaa9ce48835846fb8e11c7f, type: 3}
   m_Name: New Question 37
   m_EditorClassIdentifier: 
-  _info: 36 / 4 = ___
+  _info: 27 / 3 = ___
   _answers:
   - _info: 6
     _isCorrect: 0
