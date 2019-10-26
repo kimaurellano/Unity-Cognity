@@ -13,6 +13,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public static event OnTimerEnd OnPreGameTimerEndEvent;
         public static event OnTimerEnd OnGameTimerEndEvent;
 
+        private float _tempSec;
+        private int _tempMin;
+
         public TextMeshProUGUI TimerText;
         public Animation TimerAnimation;
         public float Seconds;
@@ -80,20 +83,34 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         ///     Starts timer
         /// </summary>
         public void StartTimerAt(int min, float sec) {
+            // For reset
             StopTimer();
 
             Ticking = true;
 
             _t = sec;
             Minutes = min;
+
+            _tempMin = min;
+            _tempSec = sec;
         }
 
         public void StartTimer() {
+            // For reset
+            StopTimer();
+
             Ticking = true;
         }
 
         public void StopTimer() {
             Ticking = false;
+        }
+
+        /// <summary>
+        ///     Will reset to the original minute and second used from StartTimerAt(min, sec)
+        /// </summary>
+        public void ResetTimer() {
+            StartTimerAt(_tempMin, _tempSec);
         }
 
         /// <summary>
