@@ -45,7 +45,7 @@ namespace Assets.Scripts.PopNumber {
             // Dsiplay first question
             _problemText.SetText(_questionList[_questionIdx].Problem);
             // Start timer
-            _timerManager.StartTimerAt(0, 10f);
+            _timerManager.StartTimerAt(0, 20f);
 
             spawnCoroutine = StartCoroutine(TimeCheck());
 
@@ -57,11 +57,12 @@ namespace Assets.Scripts.PopNumber {
             if (_proceeded) {
                 Debug.Log("Proceeded");
                 _proceeded = false;
-                _timerManager.StartTimerAt(0, 10f);
+                _timerManager.StopTimer();
+                _timerManager.StartTimerAt(0, 20f);
             }
 
             if (_timerManager.TimerUp) {
-                _timerManager.StartTimerAt(0, 10f);
+                _timerManager.StartTimerAt(0, 20f);
             }
         }
 
@@ -85,7 +86,7 @@ namespace Assets.Scripts.PopNumber {
         // Spawn the answer
         private IEnumerator SpawnAnswer() {
             while (true) {
-                if (_timerManager.Seconds == 5) {
+                if (_timerManager.Seconds == 15f) {
                     GameObject spawnedPrefab = Instantiate(
                     _numberPrefab,
                     new Vector3(Random.Range(_spawnPositionMinX, _spawnPositionMaxX), _spawnPositionY, 0f),
