@@ -4,13 +4,14 @@ using UnityEngine;
 namespace Assets.Scripts.PopNumber {
     public class NumberScript : MonoBehaviour {
 
-        public delegate void OnNumberPop();
+        public delegate void OnBottomHit(int number);
+        public delegate void OnNumberPop(int number);
 
+        public static event OnBottomHit OnBottomHitEvent;
         public static event OnNumberPop OnNumberPopEvent;
 
         [SerializeField] private TextMeshProUGUI content;
 
-        private GameManager _gameManager;
         private Collider2D _collider2D;
         private Touch _touch;
 
@@ -19,8 +20,6 @@ namespace Assets.Scripts.PopNumber {
 
         private void Start() {
             _collider2D = GetComponent<Collider2D>();
-
-            _gameManager = FindObjectOfType<GameManager>();
 
             content.SetText(Content);
         }
@@ -38,12 +37,8 @@ namespace Assets.Scripts.PopNumber {
 
                     if (_collider2D.Equals(touchPoint)) {
                         int number = int.Parse(transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text);
-                        Debug.Log("Number to touch:" + _gameManager.GetCurrentAnswer());
-                        if (_gameManager.GetCurrentAnswer() != number) {
-                            return;
-                        }
 
-                        OnNumberPopEvent?.Invoke();
+                        OnNumberPopEvent?.Invoke(number);
 
                         Destroy(touchPoint.gameObject);
                     }
@@ -51,7 +46,12 @@ namespace Assets.Scripts.PopNumber {
             }
         }
 
-        private void OnBecameInvisible() {
+        private void OnTriggerEnter2D(Collider2D collision) {
+            if (collision.gameObject.name.Equals("Bottom")) {
+               // Tell what number has hit the bottom
+               OnBottomHitEvent?.Invoke(int.Parse(Content));
+            }
+
             Destroy(gameObject);
         }
     }

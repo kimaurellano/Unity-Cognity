@@ -17,56 +17,99 @@ namespace Assets.Scripts.PopNumber {
         [SerializeField] private float _spawnPositionY;
         [SerializeField] private TextMeshProUGUI _problemText;
 
+        private Coroutine spawnCoroutine, spawnAnswer;
         private List<QuestionBank> _questionList;
+        private PreScoreManager _preScoreManager;
         private TimerManager _timerManager;
+        private int _catIdx = 0;
         private int _questionIdx = 0;
-        private float _quarter = 45f;
         private float _speedIncrease = 1f;
         private float _spawnTime = 1.5f;
-        private float _wait;
+        private float _score;
+        private bool _proceeded;
 
         private void Start() {
+            _preScoreManager = new PreScoreManager();
             _questionList = new List<QuestionBank>();
             _timerManager = GetComponent<TimerManager>();
-            _timerManager.StartTimerAt(4, 0f);
 
-            NumberScript.OnNumberPopEvent += ProceedToNextQuestion;
+            // Check the popped number
+            NumberScript.OnNumberPopEvent += CheckNumber;
+            // When the number hits the bottom
+            NumberScript.OnBottomHitEvent += CheckAndDestroy;
 
-            StartCoroutine(StartSpawning());
+            TimerManager.OnGameTimerEndEvent += StopSpawning;
 
+            // Ready questions
+            CategoryAddToList((QuestionBank.Category)_catIdx);
+            // Dsiplay first question
             _problemText.SetText(_questionList[_questionIdx].Problem);
+            // Start timer
+            _timerManager.StartTimerAt(0, 10f);
+
+            spawnCoroutine = StartCoroutine(TimeCheck());
+
+            StartCoroutine(SpawnAnswer());
         }
 
         private void Update() {
-            if (_timerManager.Seconds == _quarter) {
-                _wait = 5f;
-                _spawnTime -= 0.3f;
-                _speedIncrease++;
-                _quarter = _timerManager.Seconds - 15f;
+            // When proceeded to next question
+            if (_proceeded) {
+                Debug.Log("Proceeded");
+                _proceeded = false;
+                _timerManager.StartTimerAt(0, 10f);
+            }
 
-                ProceedToNextQuestion();
+            if (_timerManager.TimerUp) {
+                _timerManager.StartTimerAt(0, 10f);
             }
         }
 
-        private IEnumerator StartSpawning() {
-            while (!_timerManager.TimerUp) {
-                if (_timerManager.Seconds == 0f) {
-                    switch (_timerManager.Minutes) {
-                        case 4:
-                            RandomAddToList(QuestionBank.Category.Add);
-                            break;
-                        case 3:
-                            RandomAddToList(QuestionBank.Category.Sub);
-                            break;
-                        case 2:
-                            RandomAddToList(QuestionBank.Category.Mult);
-                            break;
-                        case 1:
-                            RandomAddToList(QuestionBank.Category.Div);
-                            break;
-                    }
+        private void IncreaseDifficulty() {
+            _spawnTime -= 0.2f;
+            if (_spawnTime < 0) {
+                _spawnTime = 0.03f;
+            }
+            _speedIncrease++;
+
+            // Prevents different number prefab move speed
+            OverrideActiveNumberSpeed(_speedIncrease);
+        }
+
+        private void StopSpawning() {
+            StopCoroutine(spawnCoroutine);
+
+            ProceedToNextQuestion();
+        }
+
+        // Spawn the answer
+        private IEnumerator SpawnAnswer() {
+            while (true) {
+                if (_timerManager.Seconds == 5) {
+                    GameObject spawnedPrefab = Instantiate(
+                    _numberPrefab,
+                    new Vector3(Random.Range(_spawnPositionMinX, _spawnPositionMaxX), _spawnPositionY, 0f),
+                    Quaternion.identity);
+
+                    int answer = int.Parse(_questionList[_questionIdx].Answer);
+
+                    NumberScript script = spawnedPrefab.GetComponent<NumberScript>();
+                    script.MoveSpeed = _speedIncrease;
+                    script.Content = answer.ToString();
+
+                    Debug.Log("Answer spawned:" + answer.ToString());
+
+                    // Prevent spawning multiple time at n second
+                    yield return new WaitForSeconds(1);
                 }
 
+                yield return null;
+            }
+        }
+
+        // Spawn random answers and resets time
+        private IEnumerator TimeCheck() {
+            while (true) {
                 GameObject spawnedPrefab = Instantiate(
                     _numberPrefab,
                     new Vector3(Random.Range(_spawnPositionMinX, _spawnPositionMaxX), _spawnPositionY, 0f),
@@ -76,32 +119,78 @@ namespace Assets.Scripts.PopNumber {
 
                 NumberScript script = spawnedPrefab.GetComponent<NumberScript>();
                 script.MoveSpeed = _speedIncrease;
-                int minRand = answer - 5;
-                int maxRand = answer + 5;
-                script.Content = Random.Range(minRand, maxRand).ToString();
+                script.Content = Random.Range(answer - 5, answer + 5).ToString();
 
                 yield return new WaitForSeconds(_spawnTime);
+            }
+        }
 
-                while (_wait > -1) {
-                    yield return new WaitForSeconds(1f);
-                    _wait--;
-                    Debug.Log("Wait time:" + _wait);
+        // Prevents different number prefab move speed
+        private void OverrideActiveNumberSpeed(float speed) {
+            foreach (var item in FindObjectsOfType<NumberScript>()) {
+                item.MoveSpeed = speed;
+            }
+        }
+
+        // When the number hits the bottom
+        private void CheckAndDestroy(int number) {
+            // Once the correct number hits the bottom. Proceed.
+            if (number == int.Parse(_questionList[_questionIdx].Answer)) {
+                foreach (var item in FindObjectsOfType<NumberScript>()) {
+                    Destroy(item.gameObject);
+                }
+
+                ProceedToNextQuestion();
+            }
+        }
+
+        // Check the popped number
+        private void CheckNumber(int number) {
+            if (number == int.Parse(_questionList[_questionIdx].Answer)) {
+                _score += 10;
+            } else {
+                _score -= 10;
+                if (_score < 0) {
+                    _score = 0;
                 }
             }
 
-            yield break;
+            _preScoreManager.AddScore(_score);
+
+            ProceedToNextQuestion();
         }
 
         private void ProceedToNextQuestion() {
-            if(_questionIdx > _questionList.Count) {
+            _proceeded = true;
+
+            // Proceeds to next category
+            if (_questionIdx > _questionList.Count) {
+                _catIdx++;
+
+                // We only have 4 categories
+                if (_catIdx > 4) {
+                    EndGame();
+                }
+
+                CategoryAddToList((QuestionBank.Category)_catIdx);
+
+                _questionIdx = 0;
+
                 return;
             }
 
+            // For every question
+            IncreaseDifficulty();
+
+            // Display next question
             _questionIdx++;
             _problemText.SetText(_questionList[_questionIdx].Problem);
+
+            // Start spawning the possible answers
+            StartCoroutine(TimeCheck());
         }
 
-        private void RandomAddToList(QuestionBank.Category category) {
+        private void CategoryAddToList(QuestionBank.Category category) {
             _questionList.Clear();
 
             foreach (var item in _questionBank.Where(q => q.category == category)) {
@@ -110,6 +199,7 @@ namespace Assets.Scripts.PopNumber {
 
             System.Random rng = new System.Random();
 
+            // Randomize the question
             List<QuestionBank> temp = new List<QuestionBank>();
             foreach (var item in _questionList.OrderBy(o => rng.Next())) {
                 temp.Add(item);
@@ -119,8 +209,10 @@ namespace Assets.Scripts.PopNumber {
             _questionList = temp;
         }
 
-        public int GetCurrentAnswer() {
-            return int.Parse(_questionList[_questionIdx].Answer);
+        public override void EndGame() {
+            SaveScore(_preScoreManager.TotalScore, GlobalScripts.Player.BaseScoreHandler.GameType.Flexibility);
+
+            base.EndGame();
         }
 
         [System.Serializable]
