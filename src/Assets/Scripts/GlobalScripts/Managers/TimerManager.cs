@@ -14,18 +14,15 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public static event OnTimerEnd OnGameTimerEndEvent;
 
         public TextMeshProUGUI TimerText;
-
+        public Animation TimerAnimation;
         public float Seconds;
-
         public int Minutes;
-
         public bool IsPreGameTimer;
 
         public TextMeshProUGUI AttachedTextObject => GetComponent<TextMeshProUGUI>();
 
-        public Animation TimerAnimation;
-
-        private bool _startTimer;
+        // Ticking will be managed only by StartTimerAt and StartTimer
+        public bool Ticking { get; private set; }
 
         private float _t;
 
@@ -46,14 +43,14 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         private void Update() {
-            if (_startTimer) Tick();
+            if (Ticking) Tick();
 
             if (TimerUp) {
                 OnGameTimerEndEvent?.Invoke();
 
                 TimerText?.SetText("Time: 00:00");
 
-                _startTimer = false;
+                Ticking = false;
             }
         }
 
@@ -83,21 +80,31 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         ///     Starts timer
         /// </summary>
         public void StartTimerAt(int min, float sec) {
-            _startTimer = true;
+            StopTimer();
+
+            Ticking = true;
 
             _t = sec;
             Minutes = min;
         }
 
         public void StartTimer() {
-            _startTimer = true;
+            Ticking = true;
+        }
+
+        public void StopTimer() {
+            Ticking = false;
         }
 
         /// <summary>
         ///     Pauses/Unpauses timer
         /// </summary>
         public void ChangeTimerState() {
-            _startTimer = !_startTimer;
+            Ticking = !Ticking;
+        }
+
+        public void ChangeTimerState(bool state) {
+            Ticking = state;
         }
 
         private IEnumerator PreGameTimer(float seconds) {
