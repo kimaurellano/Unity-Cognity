@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.GlobalScripts.Managers;
 using System.Collections.Generic;
+using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;

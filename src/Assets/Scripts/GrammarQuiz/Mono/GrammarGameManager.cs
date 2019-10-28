@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.Managers;
 using Assets.Scripts.Quiz.Mono;

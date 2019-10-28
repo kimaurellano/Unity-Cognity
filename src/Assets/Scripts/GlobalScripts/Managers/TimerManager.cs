@@ -70,7 +70,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 Minutes--;
             }
 
-            TimerText?.SetText($"Time: {Minutes:00}:{Seconds:00}");
+            if (TimerText != null) {
+                TimerText?.SetText(Minutes == 0 ? $"Time: {Seconds:00}s" : $"Time: {Minutes:00}:{Seconds:00}");
+            }
 
             if (Minutes == 0 && Mathf.RoundToInt(Seconds) == 10) {
                 if (TimerAnimation == null) return;
