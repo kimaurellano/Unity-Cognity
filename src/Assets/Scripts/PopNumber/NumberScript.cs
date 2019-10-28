@@ -10,7 +10,7 @@ namespace Assets.Scripts.PopNumber {
         public static event OnBottomHit OnBottomHitEvent;
         public static event OnNumberPop OnNumberPopEvent;
 
-        [SerializeField] private TextMeshProUGUI content;
+        [SerializeField] private TextMeshProUGUI _content;
 
         private Collider2D _collider2D;
         private Touch _touch;
@@ -21,7 +21,7 @@ namespace Assets.Scripts.PopNumber {
         private void Start() {
             _collider2D = GetComponent<Collider2D>();
 
-            content.SetText(Content);
+            _content.SetText(Content);
         }
 
         private void Update() {
