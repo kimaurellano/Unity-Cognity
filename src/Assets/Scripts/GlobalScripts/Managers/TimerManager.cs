@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GlobalScripts.Managers {
     /// <summary>
-    ///     Provides TimerManager functionality.
+    /// Provides TimerManager functionality.
     /// </summary>
     public class TimerManager : MonoBehaviour {
         public delegate void OnTimerEnd();
@@ -13,8 +13,11 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public static event OnTimerEnd OnPreGameTimerEndEvent;
         public static event OnTimerEnd OnGameTimerEndEvent;
 
+        private Coroutine _coroutineTick;
+        private Coroutine _coroutingPreGameTimer;
         private float _tempSec;
         private int _tempMin;
+        private float _t;
 
         public TextMeshProUGUI TimerText;
         public Animation TimerAnimation;
@@ -24,41 +27,38 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public TextMeshProUGUI AttachedTextObject => GetComponent<TextMeshProUGUI>();
 
-        // Ticking will be managed only by StartTimerAt and StartTimer
-        public bool Ticking { get; private set; }
-
-        private float _t;
-
-        /// <summary>
-        ///     Ups timer upon t minutes less than 0
-        /// </summary>
-        public bool TimerUp => Minutes < 0 && Seconds == 0;
+        public bool Active { get; private set; }
 
         private void Start() {
             if (IsPreGameTimer) {
                 // The script should be attached on a text object if used as a pre-game timer
                 transform.parent.gameObject.SetActive(true);
 
-                StartCoroutine(PreGameTimer(Seconds));
-
-                return;
+                _coroutingPreGameTimer = StartCoroutine(IE_PreGameTimer(Seconds));
             }
         }
 
         private void Update() {
-            if (Ticking) Tick();
+            // When paused
+            if (!Active) return;
 
-            if (TimerUp) {
+            // Timer up
+            if (Minutes < 0 && Mathf.RoundToInt(Seconds) == 0) {
+                Debug.Log("Timer up");
+
+                Active = false;
+
                 OnGameTimerEndEvent?.Invoke();
 
                 TimerText?.SetText("Time: 00:00");
-
-                Ticking = false;
             }
+
+            // Continue ticking
+            Tick();
         }
 
         /// <summary>
-        ///     Handles ticking of timer
+        /// Handles ticking of timer
         /// </summary>
         private void Tick() {
             _t -= Time.deltaTime;
@@ -72,69 +72,64 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             TimerText?.SetText($"Time: {Minutes:00}:{Seconds:00}");
 
-            if (Minutes == 0 && Seconds == 10) {
-                if (TimerAnimation != null) {
-                    TimerAnimation.Play();
-                }
+            if (Minutes == 0 && Mathf.RoundToInt(Seconds) == 10) {
+                if (TimerAnimation == null) return;
+                
+                TimerAnimation.Play();
             }
         }
 
         /// <summary>
-        ///     Starts timer
+        /// Starts timer
         /// </summary>
         public void StartTimerAt(int min, float sec) {
-            // For reset
-            StopTimer();
-
-            Ticking = true;
-
             _t = sec;
             Minutes = min;
+
+            Active = true;
+
+            Debug.Log($"<color=green>Started at {min}:{sec}, Active:{Active}</color>");
 
             _tempMin = min;
             _tempSec = sec;
         }
 
         public void StartTimer() {
-            // For reset
-            StopTimer();
-
-            Ticking = true;
-        }
-
-        public void StopTimer() {
-            Ticking = false;
+            Active = true;
         }
 
         /// <summary>
-        ///     Will reset to the original minute and second used from StartTimerAt(min, sec)
+        /// Will reset to the original minute and second used from StartTimerAt(min, sec)
         /// </summary>
         public void ResetTimer() {
             StartTimerAt(_tempMin, _tempSec);
+
+            Debug.Log("Timer reset");
         }
 
         /// <summary>
-        ///     Pauses/Unpauses timer
+        /// Pauses/Unpauses timer
         /// </summary>
         public void ChangeTimerState() {
-            Ticking = !Ticking;
+            Active = !Active;
         }
 
         public void ChangeTimerState(bool state) {
-            Ticking = state;
+            Active = state;
         }
 
-        private IEnumerator PreGameTimer(float seconds) {
+        private IEnumerator IE_PreGameTimer(float seconds) {
             var countDown = seconds;
 
             while (countDown > -1) {
-                AttachedTextObject.SetText(countDown.ToString());
+                AttachedTextObject?.SetText(countDown.ToString());
 
                 countDown--;
 
                 // Avoid null reference exception
                 if (TimerAnimation == null) {
-                    throw new ArgumentNullException("There is no animation attached");
+                    Debug.LogWarning("There's no timer animation", TimerAnimation);
+                    yield break;
                 }
 
                 TimerAnimation.Play();
@@ -147,6 +142,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             // Invoke all the subcribed methods
             OnPreGameTimerEndEvent?.Invoke();
+
+            StopCoroutine(_coroutingPreGameTimer);
         }
     }
 }
