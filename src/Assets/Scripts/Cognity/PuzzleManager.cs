@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -80,13 +81,14 @@ namespace Assets.Scripts.Cognity {
 
             _uiManager = FindObjectOfType<UIManager>();
 
-            _levelRotList = new List<KeyValuePair<int, int[]>>();
+            _levelRotList = new List<KeyValuePair<int, int[]>> {
+                new KeyValuePair<int, int[]>(1, new[] {0, 90, 180, 270, 360}),
+                new KeyValuePair<int, int[]>(2, new[] {182}),
+                new KeyValuePair<int, int[]>(3, new[] {0, 90, 180, 270, 360}),
+                new KeyValuePair<int, int[]>(4, new[] {334, 18, 22, -874, 0})
+            };
 
             // Limit of rotation specific to levels
-            _levelRotList.Add(new KeyValuePair<int, int[]>(1, new []{ 0, 90, 180, 270, 360 }));
-            _levelRotList.Add(new KeyValuePair<int, int[]>(2, new []{ 182 }));
-            _levelRotList.Add(new KeyValuePair<int, int[]>(3, new []{ 0, 90, 180, 270, 360 }));
-            _levelRotList.Add(new KeyValuePair<int, int[]>(4, new []{ 334, 18, 22, -874, 0 }));
 
             _curRotList = _levelRotList[_currentLevel - 1].Value;
 
@@ -142,7 +144,7 @@ namespace Assets.Scripts.Cognity {
                 _puzzleScoreManager.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
                 TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
-                levelText.SetText(string.Format("Level: {0}", _currentLevel));
+                levelText.SetText($"Level: {_currentLevel}");
 
                 // For every level load, timer will reset and start at specified time
                 switch (_currentLevel) {
@@ -160,7 +162,8 @@ namespace Assets.Scripts.Cognity {
                 Populate();
             }
 
-            if (_timerManager.TimerUp) {
+            // Timer's up
+            if (Mathf.RoundToInt(_timerManager.Seconds) == 0 && Mathf.RoundToInt(_timerManager.Minutes) < 0) {
 
                 EndGame();
 
@@ -174,10 +177,6 @@ namespace Assets.Scripts.Cognity {
             }
         }
 
-        public override void Pause() {
-            base.Pause();
-        }
-
         private void StartGame() {
             TimerManager.OnPreGameTimerEndEvent -= StartGame;
 
@@ -189,7 +188,7 @@ namespace Assets.Scripts.Cognity {
             _timerManager.StartTimerAt(1, 15f);
 
             TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
-            levelText.SetText(string.Format("Level: {0}", _currentLevel));
+            levelText.SetText($"Level: {_currentLevel}");
         }
 
         /// <summary>
