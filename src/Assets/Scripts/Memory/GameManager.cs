@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
@@ -50,7 +51,7 @@ namespace Assets.Scripts.Memory {
 
             TimerManager.OnGameTimerEndEvent += EndGame;
 
-            TouchManager.onCardLockEvent += IncrementLocks;
+            TouchManager.OnCardLockEvent += IncrementLocks;
         }
 
         private void StartGameTimer() {
@@ -62,15 +63,15 @@ namespace Assets.Scripts.Memory {
         private void IncrementLocks() {
             _lockCount++;
 
-            if(_lockCount > 7) {
-                GameResult(success: true);
+            if(_lockCount == 7) {
+                GameResult(true);
             }
         }
 
         public override void EndGame() {
             base.EndGame();
 
-            GameResult(success: false);
+            GameResult(false);
         }
 
         private void GameResult(bool success) {
