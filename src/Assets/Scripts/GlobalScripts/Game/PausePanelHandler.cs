@@ -5,59 +5,69 @@ using UnityEngine.UI;
 namespace Assets.Scripts.GlobalScripts.Game {
     public class PausePanelHandler : CoreGameBehaviour {
 
-        private Animator showDialogAnim;
+        private CoreGameBehaviour[] _coreGameBehaviour;
+        private Animator _showDialogAnim;
 
         private bool _isPaused;
 
         private void Start() {
-            if (!(Resources.FindObjectsOfTypeAll<CoreGameBehaviour>() is CoreGameBehaviour[] gameManager)) {
+            Debug.Log("Pause panel init");
+
+            _coreGameBehaviour = Resources.FindObjectsOfTypeAll<CoreGameBehaviour>();
+            if (_coreGameBehaviour == null) {
                 return;
             }
 
             // Auto attaches resume capability for all game types
-            foreach (var item in gameManager.Where(i => !i.name.Equals(transform.name))) {
+            foreach (var item in _coreGameBehaviour.Where(i => !i.name.Equals(transform.name))) {
                 transform.Find("ButtonResume").GetComponent<Button>().onClick.AddListener(item.Pause);
+                transform.Find("ButtonTryAgain").GetComponent<Button>().onClick.AddListener(item.Retry);
             }
 
-            showDialogAnim = GetComponent<Animator>();
             OnMuteGameEvent += UpdateUI;
             OnPauseGameEvent += ShowDialog;
+            OnQuitGameEvent += RemoveAttached;
         }
 
-        public override void MuteBackgroundMusic() {
-            base.MuteBackgroundMusic();
-        }
+        private void RemoveAttached() {
+            OnQuitGameEvent -= RemoveAttached;
 
-        public override void MuteSFX() {
-            base.MuteSFX();
+            foreach (var item in _coreGameBehaviour.Where(i => !i.name.Equals(transform.name))) {
+                transform.Find("ButtonResume").GetComponent<Button>().onClick.RemoveListener(item.Pause);
+                transform.Find("ButtonTryAgain").GetComponent<Button>().onClick.RemoveListener(item.Retry);
+            }
         }
 
         private void UpdateUI(string sfx) {
             if (sfx == "bg") {
-                if (IsBGMuted) {
+                if (IsBgMuted) {
                     transform.Find("ButtonMusic").GetChild(0).gameObject.SetActive(true);
                     transform.Find("ButtonMusic").GetChild(1).gameObject.SetActive(false);
                 } else {
                     transform.Find("ButtonMusic").GetChild(0).gameObject.SetActive(false);
                     transform.Find("ButtonMusic").GetChild(1).gameObject.SetActive(true);
                 }
-                IsBGMuted = !IsBGMuted;
+                IsBgMuted = !IsBgMuted;
             } else {
-                if (IsSFXMuted) {
+                if (IsSfxMuted) {
                     transform.Find("ButtonVolume").GetChild(0).gameObject.SetActive(true);
                     transform.Find("ButtonVolume").GetChild(1).gameObject.SetActive(false);
                 } else {
                     transform.Find("ButtonVolume").GetChild(0).gameObject.SetActive(false);
                     transform.Find("ButtonVolume").GetChild(1).gameObject.SetActive(true);
                 }
-                IsSFXMuted = !IsSFXMuted;
+                IsSfxMuted = !IsSfxMuted;
             }
         }
 
         private void ShowDialog() {
+            foreach (var item in Resources.FindObjectsOfTypeAll<PausePanelHandler>()) {
+                _showDialogAnim = item.GetComponent<Animator>();
+            }
+
             _isPaused = !_isPaused;
 
-            showDialogAnim.Play(_isPaused ? "ShowPause" : "HidePause");
+            _showDialogAnim.Play(_isPaused ? "ShowPause" : "HidePause");
         }
     }
 }
