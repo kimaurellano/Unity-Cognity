@@ -6,28 +6,36 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.GlobalScripts.Game {
-    public class CoreGameBehaviour : MonoBehaviour, ICoreGameBehaviour {
+    [RequireComponent(typeof(ActionManager))]
+    public class CoreGameBehaviour : MonoBehaviour {
 
+        public delegate void OnQuitGame();
         public delegate void OnPauseGame();
         public delegate void OnMuteGame(string sfx);
 
+        public static event OnQuitGame OnQuitGameEvent;
         public static event OnPauseGame OnPauseGameEvent;
         public static event OnMuteGame OnMuteGameEvent;
 
         public bool IsPaused { get; set; }
 
-        public bool IsSFXMuted { get; set; }
+        public bool IsSfxMuted { get; set; }
 
-        public bool IsBGMuted { get; set; }
+        public bool IsBgMuted { get; set; }
 
         private void Awake() {
-            IsSFXMuted = false;
+            IsSfxMuted = false;
 
             PlayerPrefs.SetInt("IsMuted", 0);
 
-            IsBGMuted = false;
+            IsBgMuted = false;
 
             PlayerPrefs.SetInt("IsBgMuted", 0);
+        }
+
+        public void Retry() {
+            Scene active = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(active.name);
         }
 
         public virtual void EndGame() {
@@ -44,32 +52,32 @@ namespace Assets.Scripts.GlobalScripts.Game {
                 return;
             }
 
-            IsBGMuted = PlayerPrefs.GetInt("IsBgMuted") != 1;
+            IsBgMuted = PlayerPrefs.GetInt("IsBgMuted") != 1;
 
-            PlayerPrefs.SetInt("IsBgMuted", IsBGMuted ? 1 : 0);
+            PlayerPrefs.SetInt("IsBgMuted", IsBgMuted ? 1 : 0);
 
-            audioManager.SetVolume("bg_game", IsBGMuted ? 0f : 1f);
-            audioManager.SetVolume("bg_menu", IsBGMuted ? 0f : 1f);
+            audioManager.SetVolume("bg_game", IsBgMuted ? 0f : 0.3f);
+            audioManager.SetVolume("bg_menu", IsBgMuted ? 0f : 0.3f);
 
             OnMuteGameEvent?.Invoke("bg");
         }
 
-        public virtual void MuteSFX() {
+        public virtual void MuteSfx() {
             AudioCollection audioCollection = FindObjectOfType<AudioCollection>();
             if(audioCollection == null) {
                 return;
             }
 
-            IsSFXMuted = PlayerPrefs.GetInt("IsMuted") != 1;
+            IsSfxMuted = PlayerPrefs.GetInt("IsMuted") != 1;
 
-            PlayerPrefs.SetInt("IsMuted", IsSFXMuted ? 1 : 0);
+            PlayerPrefs.SetInt("IsMuted", IsSfxMuted ? 1 : 0);
 
             GameObject audioManager = audioCollection.gameObject;
 
             AudioSource[] components = audioManager.GetComponents<AudioSource>();
             foreach (var item in audioCollection.audioCollection.Where(audio => audio.Name.StartsWith("sfx"))) {
                 foreach (var sfx in components.Where(i => i.clip.name.Equals(item.AudioClip.name))) {
-                    sfx.mute = IsSFXMuted;
+                    sfx.mute = IsSfxMuted;
                 }
             }
 
@@ -94,6 +102,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public void QuitGame() {
+            OnQuitGameEvent?.Invoke();
+
             OnPauseGameEvent = null;
             OnMuteGameEvent = null;
 
