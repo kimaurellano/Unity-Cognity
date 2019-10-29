@@ -73,7 +73,7 @@ namespace Assets.Scripts.QuizSolveMath {
             _keys.RemoveAt(_randomKey);
 
             TextMeshProUGUI questionHeader = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "question header");
-            questionHeader.SetText(string.Format("Question #{0}", _currentNumber));
+            questionHeader.SetText($"Question #{_currentNumber}");
         }
 
         public void IsAnswerCorrect() {
@@ -120,7 +120,7 @@ namespace Assets.Scripts.QuizSolveMath {
 
             // Set text with new score
             TextMeshProUGUI scoreText = (TextMeshProUGUI) _uiManager.GetUI(UIManager.UIType.Text, "score");
-            scoreText.SetText(string.Format("Score:{0}", _score));
+            scoreText.SetText($"Score:{_score}");
 
             PrepareQuestion();
 
@@ -147,10 +147,6 @@ namespace Assets.Scripts.QuizSolveMath {
 
             Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
             panel.gameObject.SetActive(true);
-        }
-
-        public override void Pause() {
-            base.Pause();
         }
     }
 }

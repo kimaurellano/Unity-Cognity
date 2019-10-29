@@ -34,38 +34,32 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             InitSounds();
 
-            AttachButtonSFX();
+            AttachButtonSfx();
 
             // Reattach button sfx every scene change
-            SceneManager.activeSceneChanged += onSceneChanged;
+            SceneManager.activeSceneChanged += OnSceneChanged;
         }
 
         private void ButtonClick() {
             PlayClip("sfx_button");
         }
 
-        public void onSceneChanged(Scene current, Scene next) {
+        public void OnSceneChanged(Scene current, Scene next) {
             Debug.Log("Scene changed");
-            AttachButtonSFX();
+            AttachButtonSfx();
 
             InitSounds();
-
-            if(current.name == "GameQuizMath" || current.name == "GameQuizGrammar") {
-                transform.gameObject.SetActive(false);
-            } else if (current.name == "BaseMenu") {
-                transform.gameObject.SetActive(true);
-            }
         }
 
-        private void AttachButtonSFX() {
+        private void AttachButtonSfx() {
             // Get all active objects
-            foreach (var button in Resources.FindObjectsOfTypeAll(typeof(Button)) as Button[]) {
+            foreach (var button in (Button[]) Resources.FindObjectsOfTypeAll(typeof(Button))) {
                 Debug.Log("Attaching:" + button.name);
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
 
             // Get all inactive objects
-            foreach (var button in FindObjectsOfType(typeof(Button)) as Button[]) {
+            foreach (var button in (Button[]) FindObjectsOfType(typeof(Button))) {
                 Debug.Log("Attaching:" + button.name);
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
@@ -73,7 +67,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         private void InitSounds() {
             // Remove attached audio to the current scene
-            Component[] attachedComponents = GetAttachedAudioComponents();
+            AudioSource[] attachedComponents = GetAttachedAudioComponents();
             if (attachedComponents != null) {
                 foreach (var item in attachedComponents) {
                     Destroy(item);
@@ -83,13 +77,13 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             }
 
             // Re-assign proper audio to a scene
-            AttachSFXToScene(SceneManager.GetActiveScene().name);
+            AttachSfxToScene(SceneManager.GetActiveScene().name);
         }
 
-        private void AttachSFXToScene(string scene) {
+        private void AttachSfxToScene(string scene) {
             foreach (var item in _audioCollection.audioCollection) {
-                foreach (var name in item.Games) {
-                    if (scene.Contains(name) || scene.Equals(name) || name.Equals("All")) {
+                foreach (var i in item.Games) {
+                    if (scene.Contains(i) || scene.Equals(i) || i.Equals("All")) {
                         AudioSource src = gameObject.AddComponent<AudioSource>();
                         src.clip = item.AudioClip;
                         src.volume = item.Volume;
@@ -107,8 +101,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void PlayClip(string name) {
             string clipName = GetAudioClipName(name);
             foreach (var item in GetAttachedAudioComponents()) {
-                if (((AudioSource)item).clip.name.Equals(clipName)) {
-                    ((AudioSource)item).Play();
+                if (item.clip.name.Equals(clipName)) {
+                    item.Play();
                 }
             }
         }
@@ -116,8 +110,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void SetVolume(string name, float value) {
             string clipName = GetAudioClipName(name);
             foreach (var item in GetAttachedAudioComponents()) {
-                if (((AudioSource)item).clip.name.Equals(clipName)) {
-                    ((AudioSource)item).volume = value;
+                if (item.clip.name.Equals(clipName)) {
+                    item.volume = value;
                 }
             }
         }
@@ -131,8 +125,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             return clipName;
         }
 
-        public Component[] GetAttachedAudioComponents() {
-            return GetComponents<AudioSource>() as Component[];
+        public AudioSource[] GetAttachedAudioComponents() {
+            return GetComponents<AudioSource>();
         }
     }
 }

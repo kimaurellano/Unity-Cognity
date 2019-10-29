@@ -146,10 +146,6 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             SceneManager.LoadScene("BaseMenu");
         }
 
-        public override void Pause() {
-            base.Pause();
-        }
-
         /// <summary>
         ///     Function that is called to set new highscore if game score is higher.
         /// </summary>
