@@ -193,6 +193,12 @@ namespace Assets.Scripts.PopNumber {
 
                 // We only have 4 categories
                 if (_catIdx > 4) {
+                    Transform gameResultPanel = (Transform) _uiManager.GetUI(UIManager.UIType.Panel, "game result");
+                    gameResultPanel.gameObject.SetActive(true);
+
+                    TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
+                    gameResultText.SetText("Complete!");
+
                     EndGame();
                 }
 
