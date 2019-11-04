@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
-using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.Managers;
 using Assets.Scripts.Quiz.Mono;
 using Assets.Scripts.Quiz.ScriptableObject;
@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.GrammarQuiz.Mono {
     public class GrammarGameManager : CoreGameBehaviour {
@@ -152,8 +152,9 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         private void SetHighscore() {
             var highscore = events.CurrentFinalScore;
 
-            BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, GameType.Language);
+            BaseScoreHandler baseScoreHandler = new BaseScoreHandler(0, 100);
+            baseScoreHandler.AddScore(highscore);
+            baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
         }
 
         /// <summary>
@@ -193,7 +194,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
 
         private IEnumerator IE_StartTimer;
 
-        private bool IsFinished => FinishedQuestions.Count >= Questions.Length;
+        private bool IsFinished => FinishedQuestions.Count > 10;
 
         #endregion
 
@@ -253,7 +254,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         }
 
         private IEnumerator IEStartTimer() {
-            var totalTime = 60;
+            const int totalTime = 60;
             var timeLeft = totalTime;
 
             timerText.color = timerDefaultColor;

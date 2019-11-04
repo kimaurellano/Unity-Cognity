@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Assets.Scripts.GlobalScripts.Managers.UIManager;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.PicturePuzzle {
     public class PicturePuzzleGameManager : CoreGameBehaviour {
@@ -14,6 +15,7 @@ namespace Assets.Scripts.PicturePuzzle {
         [SerializeField] private PicturePuzzleCollection[] _picturePuzzleCollections;
         [SerializeField] private Image _puzzlePictureContainer;
 
+        private BaseScoreHandler _baseScoreHandler;
         private TimerManager _timerManager;
         private PicturePuzzleGameManager _picturePuzzleGameManager;
         private UIManager _uiManager;
@@ -36,6 +38,8 @@ namespace Assets.Scripts.PicturePuzzle {
             TimerManager.OnGameTimerEndEvent += EndGame;
 
             TimerManager.OnPreGameTimerEndEvent += StartTimer;
+
+            _baseScoreHandler = new BaseScoreHandler(0, 50);
         }
 
         private void StartTimer() {
@@ -44,16 +48,12 @@ namespace Assets.Scripts.PicturePuzzle {
             _timerManager.StartTimerAt(0, 45f);
         }
 
-        public override void Pause() {
-            base.Pause();
-        }
-
         public override void EndGame() {
             base.EndGame();
 
             TimerManager.OnGameTimerEndEvent -= EndGame;
 
-            SaveScore(_score, GameType.Language);
+            _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
 
             Transform finishPanel = (Transform)_uiManager.GetUI(UIType.Panel, "game result");
             finishPanel.gameObject.SetActive(true);
@@ -103,7 +103,7 @@ namespace Assets.Scripts.PicturePuzzle {
             Instantiate(Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Image, _puzzlePictureContainer.transform);
 
             // Add up the time left for each answered puzzle 
-            _score += (int) _timerManager.Seconds;
+            _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
         }
     }
 }

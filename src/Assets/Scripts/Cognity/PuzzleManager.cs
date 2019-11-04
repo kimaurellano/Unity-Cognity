@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.Cognity {
     /// <summary>
@@ -49,9 +50,6 @@ namespace Assets.Scripts.Cognity {
         // The contents of every level
         [SerializeField] private PuzzlePieceContainer[] _puzzleLevels;
 
-        // Handle scoring
-        private PreScoreManager _puzzleScoreManager;
-
         [SerializeField] private GameObject _scorePrefab;
 
         // Holds spawn point IDs
@@ -63,6 +61,8 @@ namespace Assets.Scripts.Cognity {
         // Handle when to start
         private TimerManager _timerManager;
 
+        private BaseScoreHandler _baseScoreHandler;
+
         // Is game done ?
         public bool GameDone { get; private set; }
 
@@ -70,9 +70,6 @@ namespace Assets.Scripts.Cognity {
         public Transform LastTouchedPiece { get; set; }
 
         private void Start() {
-            // Score manager of cognity namespace
-            _puzzleScoreManager = new PreScoreManager();
-
             _originalPieceLocation = new Dictionary<string, Vector3>();
 
             _lockedPiece = new List<string>();
@@ -95,6 +92,8 @@ namespace Assets.Scripts.Cognity {
             _curRotIdx = 0;
 
             TimerManager.OnPreGameTimerEndEvent += StartGame;
+
+            _baseScoreHandler = new BaseScoreHandler(0, 312);
         }
 
         private void Update() {
@@ -125,10 +124,10 @@ namespace Assets.Scripts.Cognity {
                 gameResult.SetText("SUCCESS");
 
                 // Add time as score
-                _puzzleScoreManager.AddScore(_timerManager.Minutes, _timerManager.Seconds);
+                _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
                 // Save final score
-                SaveScore(_puzzleScoreManager.TotalTimeScore, GameType.Flexibility);
+                _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -141,7 +140,7 @@ namespace Assets.Scripts.Cognity {
                 Instantiate(_puzzleImagesPerLevel[_currentLevel - 1], _puzzleImage.transform);
 
                 // Add time as score
-                _puzzleScoreManager.AddScore(_timerManager.Minutes, _timerManager.Seconds);
+                _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
                 TextMeshProUGUI levelText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "level");
                 levelText.SetText($"Level: {_currentLevel}");
@@ -173,7 +172,8 @@ namespace Assets.Scripts.Cognity {
                 TextMeshProUGUI gameResult = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
                 gameResult.SetText("FAILED!");
 
-                SaveScore(_puzzleScoreManager.TotalTimeScore, GameType.Flexibility);
+                // Save final score
+                _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
             }
         }
 

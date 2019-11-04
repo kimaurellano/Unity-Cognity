@@ -1,15 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
-using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.Quiz.Mono;
 using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
 
 namespace Assets.Scripts.MathQuiz.Mono {
@@ -159,8 +159,9 @@ namespace Assets.Scripts.MathQuiz.Mono {
         private void SetHighscore() {
             var highscore = events.CurrentFinalScore;
 
-            BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, GameType.ProblemSolving);
+            BaseScoreHandler baseScoreHandler = new BaseScoreHandler(0, 100);
+            baseScoreHandler.AddScore(highscore);
+            baseScoreHandler.SaveScore(UserStat.GameCategory.ProblemSolving);
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
 
         private IEnumerator IE_StartTimer;
 
-        private bool IsFinished => FinishedQuestions.Count >= Questions.Length;
+        private bool IsFinished => FinishedQuestions.Count > 10;
 
         #endregion
 

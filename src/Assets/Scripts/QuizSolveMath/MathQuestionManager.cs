@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.QuizSolveMath {
 #pragma warning disable 649
@@ -59,6 +60,12 @@ namespace Assets.Scripts.QuizSolveMath {
             // Monitor current question we are at
             _currentNumber++;
 
+            if (_currentNumber > 10) {
+                EndGame();
+
+                return;
+            }
+
             // Generate random spawn
             _randomKey = Random.Range(0, _keys.Count);
 
@@ -109,13 +116,6 @@ namespace Assets.Scripts.QuizSolveMath {
 
                 Animator animator = (Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "answer");
                 animator.SetTrigger("wrong");
-
-                _score -= 10;
-            }
-
-            // Avoid negative result
-            if (_score <= 0) {
-                _score = 0;
             }
 
             // Set text with new score
@@ -140,7 +140,9 @@ namespace Assets.Scripts.QuizSolveMath {
 
             _gameDone = !_gameDone;
 
-            SaveScore(_score, GameType.ProblemSolving);
+            BaseScoreHandler baseScoreHandler = new BaseScoreHandler(0, 100);
+            baseScoreHandler.AddScore(_score);
+            baseScoreHandler.SaveScore(UserStat.GameCategory.ProblemSolving);
 
             TextMeshProUGUI gameResulText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
             gameResulText.SetText(_score > 0 ? "SUCCESS!" : "FAILED");

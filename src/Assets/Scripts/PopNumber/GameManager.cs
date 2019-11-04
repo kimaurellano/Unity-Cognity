@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace Assets.Scripts.PopNumber {
         [SerializeField] private float _spawnRate;
         [SerializeField] private TextMeshProUGUI _problemText;
 
+        private BaseScoreHandler _baseScoreHandler;
         private Vector2 _screenBounds;
         private UIManager _uiManager;
         private Coroutine _spawnCoroutine, _spawnAnswer;
@@ -58,6 +60,8 @@ namespace Assets.Scripts.PopNumber {
             _spawnCoroutine = StartCoroutine(RandomSpawn());
 
             StartCoroutine(SpawnAnswer());
+
+            _baseScoreHandler = new BaseScoreHandler(0, 100);
         }
 
         private void StopSpawning() {
@@ -170,7 +174,7 @@ namespace Assets.Scripts.PopNumber {
                 }
             }
 
-            _preScoreManager.AddScore(_score);
+            _baseScoreHandler.AddScore(_score);
 
             ProceedToNextQuestion();
         }
@@ -187,26 +191,14 @@ namespace Assets.Scripts.PopNumber {
             // Ready next question
             _questionIdx++;
 
-            // Proceeds to next category
             if (_questionIdx > _questionList.Count - 1) {
-                _catIdx++;
+                EndGame();
 
-                // We only have 4 categories
-                if (_catIdx > 4) {
-                    Transform gameResultPanel = (Transform) _uiManager.GetUI(UIManager.UIType.Panel, "game result");
-                    gameResultPanel.gameObject.SetActive(true);
+                Transform gameResultPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
+                gameResultPanel.gameObject.SetActive(true);
 
-                    TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
-                    gameResultText.SetText("Complete!");
-
-                    EndGame();
-                }
-
-                CategoryAddToList((QuestionBank.Category)_catIdx);
-
-                _questionIdx = 0;
-
-                _problemText.SetText(_questionList[_questionIdx].Problem);
+                TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
+                gameResultText.SetText("Complete!");
             } else {
                 _problemText.SetText(_questionList[_questionIdx].Problem);
             }
@@ -234,7 +226,7 @@ namespace Assets.Scripts.PopNumber {
         }
 
         public override void EndGame() {
-            SaveScore(_preScoreManager.TotalScore, GlobalScripts.Player.BaseScoreHandler.GameType.Flexibility);
+            _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
             base.EndGame();
         }

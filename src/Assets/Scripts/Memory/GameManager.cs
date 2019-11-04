@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
-using Assets.Scripts.GlobalScripts.Player;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 using TMPro;
 
 namespace Assets.Scripts.Memory {
@@ -81,8 +81,9 @@ namespace Assets.Scripts.Memory {
             _lockCount = 0;
 
             // Add score 
-            BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(_seconds, GameType.Memory);
+            BaseScoreHandler baseScoreHandler = new BaseScoreHandler(0, 45);
+            baseScoreHandler.AddScore(0, _seconds);
+            baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
             // Load finished scene
             Transform gameResultPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
