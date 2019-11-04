@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using Assets.Scripts.DataComponent.Database;
+using Assets.Scripts.DataComponent.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace Assets.Scripts.GlobalScripts.Managers {
     /// <summary>
@@ -12,8 +16,11 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         private static Transform _targetPanel;
         private static Transform _currentPanel;
-
+        private static List<Transform> _pageStack;
+        private List<Transform> _pages;
         private UIManager _uiManager;
+        private bool _isBackPressed;
+        private bool _onQuit;
 
         private void Start() {
             // For debugging. Uncomment to reset scores and user profile
@@ -21,40 +28,33 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             _uiManager = FindObjectOfType<UIManager>();
 
-            if (SceneManager.GetActiveScene().name.Equals("BaseMenu")) {
-                if (PlayerPrefs.GetString("DisplayPage").Equals("CategorySelection")) {
-                    Transform panelStartMenu = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu");
-                    panelStartMenu.gameObject.SetActive(false);
+            _pageStack = new List<Transform>();
+        }
 
-                    Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection");
-                    panelHome.gameObject.SetActive(true);
-
-                    Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
-                    btnBack.gameObject.SetActive(true);
-                } else {
-                    Transform panelStartMenu = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu");
-                    panelStartMenu.gameObject.SetActive(true);
-
-                    Transform panelHome = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection");
-                    panelHome.gameObject.SetActive(false);
-
-                    Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
-                    btnBack.gameObject.SetActive(false);
+        private void Update() {
+            if (Input.GetKeyUp(KeyCode.Escape)) {
+                // Ignore other ActionManager script instance
+                if (transform.name.Equals("ActionManager")) {
+                    Back();
                 }
-            }
-
-            // Make sure games not paused after quitting any game modes
-            Time.timeScale = 1f;
-
-            // Avoid null exception
-            if (SceneManager.GetActiveScene().buildIndex != 0) {
-                return;
             }
         }
 
         public void CheckInput(TMP_InputField input) {
-            Transform buttonSave = (Transform) _uiManager.GetUI(UIManager.UIType.Button, "button save");
-            buttonSave.gameObject.SetActive(input.text != string.Empty);
+            DatabaseManager databaseManager = new DatabaseManager();
+            var user = databaseManager.GetUser(input.text);
+            if(user == null) {
+                Debug.Log("<color=red>Not found!</color>");
+                return;
+            }
+
+            Debug.Log("<color=green>Exists!</color>");
+
+            user.IsLogged = true;
+            databaseManager.UpdateUser(user.Username, user);
+
+            TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
+            TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
         }
 
         public void SaveUserPref(TMP_InputField input) {
@@ -75,25 +75,26 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             SceneManager.LoadScene("BaseMenu");
         }
 
-        public void Back() {
-            if(((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu")).gameObject.activeSelf) {
-                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel quit")).gameObject.SetActive(true);
-            } else if (((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection")).gameObject.activeSelf) {
-                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection")).gameObject.SetActive(false);
-                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu")).gameObject.SetActive(true);
-                Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
-                btnBack.gameObject.SetActive(false);
-            } else {
-                foreach (GameObject item in GameObject.FindGameObjectsWithTag("CategoryPanel")) {
-                    item.gameObject.SetActive(false);
-                }
+        public void QuitDialog() {
+            _onQuit = !_onQuit;
 
-                ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection")).gameObject.SetActive(true);
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel quit")).gameObject.SetActive(true);
+
+            Animator anim = (Animator) _uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "quit dialog");
+            anim.Play(_onQuit ? "Quit" : "Hide");
+
+            if (!_onQuit) {
+                StartCoroutine(QuitDialogExit());
             }
         }
 
-        public void Quit() {
-            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel quit")).gameObject.SetActive(true);
+        private IEnumerator QuitDialogExit() {
+            yield return new WaitForSeconds(1f);
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "panel quit")).gameObject.SetActive(false);
+        }
+
+        public void QuitApp() {
+            Application.Quit();
         }
 
         public void Show(Transform transform) {
@@ -112,16 +113,20 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void TransitionTo(Transform targetPanel) {
-            if(targetPanel.name.Equals("start menu")) {
-                Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
-                btnBack.gameObject.SetActive(false);
-            } else {
-                Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
-                btnBack.gameObject.SetActive(true);
-            }
-
             // The panel to transition to
             _targetPanel = targetPanel;
+
+        }
+
+        private IEnumerator BeginTransition(Transform transform) {
+            Animation transition = (Animation)_uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "transition");
+            transition.Play();
+
+            // Sync to the seconds when animation event is invoked
+            yield return new WaitForSeconds(0.3f);
+
+            Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
+            btnBack.gameObject.SetActive(_pageStack.Count > 1);
         }
 
         /// <summary>
@@ -130,14 +135,19 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void SwitchPanel() {
             _currentPanel.gameObject.SetActive(false);
             _targetPanel.gameObject.SetActive(true);
+
+            if (_pageStack.Contains(_targetPanel)) {
+                return;
+            }
+
+            _pageStack.Add(_targetPanel);
         }
 
-        private IEnumerator BeginTransition(Transform transform) {
-            Animation transition = (Animation)_uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "transition");
-            transition.Play();
+        public void Back() {
+            TransitionFrom(_pageStack[_pageStack.Count - 1]);
+            TransitionTo(_pageStack[_pageStack.Count - 2]);
 
-            // Sync to the seconds when animation event is invoked
-            yield return new WaitForSeconds(0.5f);
+            _pageStack.RemoveAt(_pageStack.Count - 1);
         }
 
         public void MuteBackground() {
@@ -153,13 +163,16 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
                 button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
                 button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
-
-                return;
             }
         }
 
         public void DestroyObject(string name) {
             Destroy(GameObject.Find(name));
+        }
+
+        public void TestDbWrite() {
+            DatabaseManager databaseManager = new DatabaseManager();
+            databaseManager.CreateNewUser(new User{ Username = "test", IsLogged = false, FirstRun = true });
         }
 
         private void OnApplicationQuit() {
