@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.GlobalScripts.Player;
+using Assets.Scripts.DataComponent.Model;
+using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
+using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.Quiz.Mono {
     public class GameManager : MonoBehaviour {
@@ -168,8 +169,9 @@ namespace Assets.Scripts.Quiz.Mono {
         private static void SetHighScore() {
             var highscore = PlayerPrefs.GetInt(GameUtility.SavePrefKey);
 
-            BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(highscore, GameType.ProblemSolving);
+            BaseScoreHandler baseScoreHandler = new BaseScoreHandler(0, 100);
+            baseScoreHandler.AddScore(highscore);
+            baseScoreHandler.SaveScore(UserStat.GameCategory.ProblemSolving);
         }
 
         /// <summary>

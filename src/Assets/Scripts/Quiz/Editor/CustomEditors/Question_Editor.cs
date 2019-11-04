@@ -88,7 +88,7 @@ public class Question_Editor : Editor
                     }
                 }
             }
-            addScoreProp.intValue = EditorGUILayout.IntSlider(new GUIContent("Add TotalScore"), addScoreProp.intValue, 0, 100);
+            addScoreProp.intValue = EditorGUILayout.IntSlider(new GUIContent("Add Score"), addScoreProp.intValue, 0, 100);
         }
         GUILayout.Space(7.5f);
         GUILayout.Label("Answers", EditorStyles.miniLabel);
