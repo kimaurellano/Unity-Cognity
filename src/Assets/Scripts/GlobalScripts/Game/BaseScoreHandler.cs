@@ -1,8 +1,21 @@
 ﻿using System;
+using System.Linq;
+using Assets.Scripts.DataComponent.Database;
+using Assets.Scripts.DataComponent.Model;
 using UnityEngine;
 
-namespace Assets.Scripts.GlobalScripts.Player {
+namespace Assets.Scripts.GlobalScripts.Game {
     public class BaseScoreHandler {
+
+        private delegate void OnSetMinMax();
+
+        private static event OnSetMinMax OnSetMinMaxEvent;
+
+        private int _maxValue;
+        private int _minValue;
+
+        public int Score { get; private set; }
+
         public enum GameType {
             Flexibility = 1,
             Memory = 2,
@@ -10,19 +23,52 @@ namespace Assets.Scripts.GlobalScripts.Player {
             Language = 3
         }
 
-        public void AddScore(float score, GameType gameType) {
-            string category = Enum.GetName(typeof(GameType), gameType);
+        /// <summary>
+        /// Set the minimum and maximum possible score of the game
+        /// </summary>
+        public BaseScoreHandler(int min, int max) {
+            _minValue = min;
+            _maxValue = max;
+        }
 
-            // Up to 2 decimal places
-            double newScore = Math.Truncate(100 * (score / 1000)) / 100;
-            Debug.Log("new score:" + newScore);
+        // Conversion of game 0-score x to percentage equivalent
+        private static float Normalize(int input, int inMin, int inMax, int outMin, int outMax) {
+            return (input - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        }
 
-            float oldScore = PlayerPrefs.GetFloat(category);
-            Debug.Log("old score:" + oldScore);
+        public void SaveScore(UserStat.GameCategory category) {
+            DatabaseManager databaseManager = new DatabaseManager();
 
-            // Add new score to the current by category
-            PlayerPrefs.SetFloat(category, (float)newScore + oldScore);
-            Debug.Log("total score:" + ((float)newScore + oldScore));
+            string username = databaseManager.GetUsers().FirstOrDefault(u => u.IsLogged)?.Username;
+
+            float result = Normalize(Score, _minValue, _maxValue, 0, 100);
+
+            databaseManager.SaveScore(username, result, category);
+        }
+
+        /// <summary>
+        /// Time-based game score
+        /// </summary>
+        /// <param name="minute"></param>
+        /// <param name="seconds"></param>
+        public void AddScore(float minute, float seconds) {
+            // Convert to seconds
+            float minToSec = minute * 60f;
+
+            // Add score. We collect score as seconds
+            Score += (int)minToSec + (int)seconds;
+        }
+
+        /// <summary>
+        /// Non Time-based game score
+        /// </summary>
+        /// <param name="score"></param>
+        public void AddScore(float score) {
+            Score += (int)score;
+        }
+
+        public void DeductScore(float value) {
+            Score -= (int)value;
         }
     }
 }

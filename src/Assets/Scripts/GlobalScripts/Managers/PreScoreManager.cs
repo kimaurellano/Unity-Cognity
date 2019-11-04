@@ -5,7 +5,7 @@
         public float TotalScore { get; private set; }
 
         /// <summary>
-        ///     Add score for every level iteration
+        ///  Add score for every level iteration
         /// </summary>
         public void AddScore(float minute, float seconds) {
             // Convert to seconds

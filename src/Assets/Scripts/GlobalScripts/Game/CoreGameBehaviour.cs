@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts.DataComponent.Database;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Managers;
-using Assets.Scripts.GlobalScripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +18,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public static event OnPauseGame OnPauseGameEvent;
         public static event OnMuteGame OnMuteGameEvent;
 
+        private DatabaseManager _databaseManager;
+
         public bool IsPaused { get; set; }
 
         public bool IsSfxMuted { get; set; }
@@ -31,6 +34,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
             IsBgMuted = false;
 
             PlayerPrefs.SetInt("IsBgMuted", 0);
+
+            _databaseManager = new DatabaseManager();
         }
 
         public void Retry() {
@@ -94,11 +99,6 @@ namespace Assets.Scripts.GlobalScripts.Game {
             Time.timeScale = IsPaused ? 0f : 1f;
 
             OnPauseGameEvent?.Invoke();
-        }
-
-        public void SaveScore(float score, BaseScoreHandler.GameType gameType) {
-            BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(score, gameType);
         }
 
         public void QuitGame() {
