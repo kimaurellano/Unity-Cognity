@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using Assets.Scripts.DataComponent.Model;
 using TMPro;
@@ -29,6 +30,23 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             _uiManager = FindObjectOfType<UIManager>();
 
             _pageStack = new List<Transform>();
+
+            // Auto log user if not logged out
+            Utility utility = new Utility();
+            StartCoroutine(utility.LoadJson(category => {
+                if (category.last_user != string.Empty) {
+                    TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
+                    TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
+
+                    // The user is logged in
+                    DatabaseManager databaseManager = new DatabaseManager();
+                    User update = databaseManager.GetUser(category.last_user);
+                    update.IsLogged = true;
+
+                    databaseManager.UpdateUser(category.last_user, update);
+                    databaseManager.Close();
+                }
+            }));
         }
 
         private void Update() {
@@ -52,9 +70,18 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             user.IsLogged = true;
             databaseManager.UpdateUser(user.Username, user);
+            databaseManager.Close();
 
-            TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
-            TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
+            Utility utility = new Utility();
+            StartCoroutine(utility.LoadJson(isDone => {
+                if (isDone) {
+                    // The logged user
+                    utility.WriteValue(user.Username);
+
+                    TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
+                    TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
+                }
+            }));
         }
 
         public void SaveUserPref(TMP_InputField input) {
@@ -94,6 +121,24 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void QuitApp() {
+            // Auto log-out user
+            Utility utility = new Utility();
+            StartCoroutine(utility.LoadJson(category => {
+                if (category.last_user != string.Empty) {
+                    string user = category.last_user;
+
+                    // Empty json last_user
+                    utility.WriteValue(string.Empty);
+
+                    DatabaseManager databaseManager = new DatabaseManager();
+                    User update = databaseManager.GetUser(user);
+                    update.IsLogged = false;
+
+                    databaseManager.UpdateUser(user, update);
+                    databaseManager.Close();
+                }
+            }));
+
             Application.Quit();
         }
 

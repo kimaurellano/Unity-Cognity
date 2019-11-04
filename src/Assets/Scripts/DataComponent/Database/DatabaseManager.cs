@@ -107,6 +107,10 @@ namespace Assets.Scripts.DataComponent.Database {
             return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' ORDER BY DATE ASC");
         }
 
+        public void Close() {
+            _connection.Close();
+        }
+
         private static void SaveSessionScore(string username, float score) {
             _connection
                 .Query<UserScoreHistory>(
