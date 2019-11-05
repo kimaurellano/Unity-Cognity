@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
+using Assets.Scripts.GlobalScripts.Game;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.Networking;
@@ -15,10 +17,14 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         private string _streamingAssetsPath;
 
         [System.Serializable]
-        public class Category {
+        public class Data {
             public Games category { get; set; }
 
             public string last_user { get; set; }
+
+            public string page { get; set; }
+
+            public string loaded { get; set; }
         }
 
         [System.Serializable]
@@ -31,8 +37,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             public string[] problemsolving { get; set; }
         }
-        
-        public IEnumerator LoadJson(System.Action<Category> callback) {
+
+        public IEnumerator LoadJson(System.Action<Data> callback) {
             if (Application.platform == RuntimePlatform.Android) {
                 // The path to write to
                 _persistentPath = $"{Application.persistentDataPath}/UtilityData.json";
@@ -58,7 +64,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // Read the data contents of the persistent file
             string persistentData = File.ReadAllText(_persistentPath);
 
-            Category value = JsonConvert.DeserializeObject<Category>(persistentData);
+            Data value = JsonConvert.DeserializeObject<Data>(persistentData);
 
             callback(value);
 
@@ -93,32 +99,73 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             yield return null;
         }
 
-        public void WriteValue(string lastUser) {
+        public IEnumerator LoadJson() {
+            if (Application.platform == RuntimePlatform.Android) {
+                // The path to write to
+                _persistentPath = $"{Application.persistentDataPath}/UtilityData.json";
+
+                // The path to get the .json file
+                _streamingAssetsPath = Path.Combine(Application.streamingAssetsPath + "/", "UtilityData.json");
+
+                if (_streamingAssetsPath.Contains("://") || _streamingAssetsPath.Contains(":///")) {
+                    // Get the compressed jar file containing streaming assets
+                    var www = UnityWebRequest.Get(_streamingAssetsPath);
+                    yield return www.SendWebRequest();
+
+                    // Cache all the loaded data from the UnityWebRequest to the persistent file
+                    File.WriteAllBytes(_persistentPath, www.downloadHandler.data);
+                } else {
+                    // Cache all the loaded data from the UnityWebRequest to the persistent file
+                    File.WriteAllBytes(_persistentPath, File.ReadAllBytes(_streamingAssetsPath));
+                }
+            } else {
+                _persistentPath = @"Assets/StreamingAssets/UtilityData.json";
+            }
+
+            yield return null;
+        }
+
+        public void ModifyJson(Data newData) {
             _persistentPath = 
                 Application.platform == RuntimePlatform.Android ? 
                     $"{Application.persistentDataPath}/UtilityData.json" : @"Assets/StreamingAssets/UtilityData.json";
 
             string data = File.ReadAllText(_persistentPath);
 
-            Category oldValue = JsonConvert.DeserializeObject<Category>(data);
+            Data oldValue = JsonConvert.DeserializeObject<Data>(data);
 
-            var updatedCategory = new Category {
-                last_user = lastUser,
-                category = new Games {
-                    flexibility = oldValue.category.flexibility,
-                    memory = oldValue.category.memory,
-                    language = oldValue.category.language,
-                    problemsolving = oldValue.category.problemsolving
-                }
-            };
-
-            JsonConvert.PopulateObject(JsonConvert.SerializeObject(updatedCategory), oldValue);
+            JsonConvert.PopulateObject(JsonConvert.SerializeObject(newData), oldValue);
 
             string d = JsonConvert.SerializeObject(oldValue);
             
             byte[] bytes = Encoding.ASCII.GetBytes(d);
             
             File.WriteAllBytes(_persistentPath, bytes);
+        }
+
+        public Data GetData() {
+            return JsonConvert.DeserializeObject<Data>(File.ReadAllText(_persistentPath));
+        }
+
+        public string[] GetGameFromCategory(string loadCategory, BaseScoreHandler.GameType gameType) {
+            string data = File.ReadAllText(_persistentPath);
+
+            Data d = JsonConvert.DeserializeObject<Data>(data);
+
+            switch (gameType) {
+                case BaseScoreHandler.GameType.Flexibility:
+                    return d.category.flexibility;
+                case BaseScoreHandler.GameType.Memory:
+                    return d.category.memory;
+                case BaseScoreHandler.GameType.Language:
+                    return d.category.language;
+                case BaseScoreHandler.GameType.ProblemSolving:
+                    return d.category.problemsolving;
+            }
+
+            
+
+            return null;
         }
     }
 }
