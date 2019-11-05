@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using Assets.Scripts.DataComponent.Model;
 using UnityEngine;
 
 namespace Assets.Scripts.GlobalScripts.Game {
-    public class BaseScoreHandler {
+    public class BaseScoreHandler : DatabaseManager {
 
         private delegate void OnSetMinMax();
 
@@ -17,9 +18,9 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public int Score { get; private set; }
 
         public enum GameType {
-            Flexibility = 1,
-            Memory = 2,
-            ProblemSolving = 4,
+            Flexibility = 0,
+            Memory = 1,
+            ProblemSolving = 2,
             Language = 3
         }
 
@@ -32,18 +33,27 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         // Conversion of game 0-score x to percentage equivalent
-        private static float Normalize(int input, int inMin, int inMax, int outMin, int outMax) {
-            return (input - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        private static float Normalize(float x, float inMin, float inMax, float outMin, float outMax) {
+            return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
         }
 
         public void SaveScore(UserStat.GameCategory category) {
-            DatabaseManager databaseManager = new DatabaseManager();
+            User user = GetUsers().FirstOrDefault(u => u.IsLogged);
 
-            string username = databaseManager.GetUsers().FirstOrDefault(u => u.IsLogged)?.Username;
+            if (user == null) {
+                return;
+            }
 
-            float result = Normalize(Score, _minValue, _maxValue, 0, 100);
+            UserStat stat = GetUserStat(user.Username, category);
+            if(stat == null) {
+                return;
+            }
 
-            databaseManager.SaveScore(username, result, category);
+            float result = Normalize(Score, _minValue, _maxValue, 0f, 1f);
+            result *= 100;
+            stat.Score = (stat.Score + result) / 2;
+            Debug.Log($"Normalized:{result}");
+            UpdateUserStat(user.Username, stat, category);
         }
 
         /// <summary>

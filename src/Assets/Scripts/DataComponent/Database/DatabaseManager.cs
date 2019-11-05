@@ -81,7 +81,7 @@ namespace Assets.Scripts.DataComponent.Database {
             existingUser = updatedUserStat;
 
             _connection.RunInTransaction(() => { _connection.Update(existingUser); });
-            Debug.Log("<color=green>User updated</color>");
+            Debug.Log("<color=green>User score updated</color>");
 
             // Record the score per game taken. Accumulated to compute for overall 
             // session score which will serve as score history
@@ -118,10 +118,6 @@ namespace Assets.Scripts.DataComponent.Database {
             return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' ORDER BY DATE ASC");
         }
 
-        public void Close() {
-            _connection.Close();
-        }
-
         private static void SaveSessionScore(string username, float score) {
             _connection
                 .Query<UserScoreHistory>(
@@ -129,6 +125,10 @@ namespace Assets.Scripts.DataComponent.Database {
                     $"VALUES(NULL, '{username}', {score}, '{DateTime.Now.ToString(CultureInfo.InvariantCulture)}')");
 
             Debug.Log("<color=green>Score logged</color>");
+        }
+
+        public void Close() {
+            _connection.Close();
         }
     }
 }

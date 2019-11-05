@@ -3,7 +3,6 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
-using Assets.Scripts.GlobalScripts.Game;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.Networking;
@@ -24,7 +23,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             public string page { get; set; }
 
-            public string loaded { get; set; }
+            public int loaded { get; set; }
         }
 
         [System.Serializable]
@@ -38,7 +37,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             public string[] problemsolving { get; set; }
         }
 
-        public IEnumerator LoadJson(System.Action<Data> callback) {
+        public IEnumerator LoadJson(Action<Data> callback) {
             if (Application.platform == RuntimePlatform.Android) {
                 // The path to write to
                 _persistentPath = $"{Application.persistentDataPath}/UtilityData.json";
@@ -71,7 +70,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             yield return null;
         }
 
-        public IEnumerator LoadJson(System.Action<bool> IsDone) {
+        public IEnumerator LoadJson(Action<bool> IsDone) {
             if (Application.platform == RuntimePlatform.Android) {
                 // The path to write to
                 _persistentPath = $"{Application.persistentDataPath}/UtilityData.json";
@@ -145,27 +144,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public Data GetData() {
             return JsonConvert.DeserializeObject<Data>(File.ReadAllText(_persistentPath));
-        }
-
-        public string[] GetGameFromCategory(string loadCategory, BaseScoreHandler.GameType gameType) {
-            string data = File.ReadAllText(_persistentPath);
-
-            Data d = JsonConvert.DeserializeObject<Data>(data);
-
-            switch (gameType) {
-                case BaseScoreHandler.GameType.Flexibility:
-                    return d.category.flexibility;
-                case BaseScoreHandler.GameType.Memory:
-                    return d.category.memory;
-                case BaseScoreHandler.GameType.Language:
-                    return d.category.language;
-                case BaseScoreHandler.GameType.ProblemSolving:
-                    return d.category.problemsolving;
-            }
-
-            
-
-            return null;
         }
     }
 }
