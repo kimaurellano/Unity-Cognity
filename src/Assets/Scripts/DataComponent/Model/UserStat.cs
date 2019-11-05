@@ -1,13 +1,7 @@
 ﻿using SQLite4Unity3d;
-using UnityEngine;
 
 namespace Assets.Scripts.DataComponent.Model {
-    public class UserStat : MonoBehaviour {
-        [PrimaryKey, AutoIncrement] public int Id { get; set; }
-
-        public string Username { get; set; }
-
-        public float Score { get; set; }
+    public class UserStat {
 
         public enum GameCategory {
             Flexibility,
@@ -18,6 +12,12 @@ namespace Assets.Scripts.DataComponent.Model {
 
             ProblemSolving
         }
+
+        [PrimaryKey, AutoIncrement] public int Id { get; set; }
+
+        public string Username { get; set; }
+
+        public float Score { get; set; }
 
         public GameCategory Category { get; set; }
     }

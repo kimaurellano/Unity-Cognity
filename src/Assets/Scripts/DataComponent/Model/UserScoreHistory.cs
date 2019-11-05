@@ -1,8 +1,7 @@
 ﻿using SQLite4Unity3d;
-using UnityEngine;
 
 namespace Assets.Scripts.DataComponent.Model {
-    public class UserScoreHistory : MonoBehaviour {
+    public class UserScoreHistory {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
