@@ -5,6 +5,7 @@ using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.GlobalScripts.Game {
     [RequireComponent(typeof(ActionManager))]
@@ -19,6 +20,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public static event OnMuteGame OnMuteGameEvent;
 
         private DatabaseManager _databaseManager;
+
+        private GameCollection _gameCollection;
 
         public bool IsPaused { get; set; }
 
@@ -36,6 +39,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
             PlayerPrefs.SetInt("IsBgMuted", 0);
 
             _databaseManager = new DatabaseManager();
+            _gameCollection = FindObjectOfType<GameCollection>();
         }
 
         public void Retry() {
@@ -45,10 +49,29 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         public virtual void EndGame() {
             FindObjectOfType<AudioManager>().SetVolume("bg_game", 0f);
-        }
 
-        public virtual void InitSounds() {
-            throw new NotImplementedException();
+            Utility utility = new Utility();
+            // Load persistent data
+            StartCoroutine(utility.LoadJson());
+            // Fetch the current known loaded scene
+            Utility.Data newData = utility.GetData();
+            // Proceed to next category
+            int currentCatIdx = newData.loaded++;
+            // We only have 4 categories
+            if (currentCatIdx > 3) {
+                currentCatIdx = 0;
+            }
+            // Write new values to json file to be read again after game end
+            newData.loaded = currentCatIdx;
+            utility.ModifyJson(newData);
+
+            // Non zero count
+            int gamePerCatCount = _gameCollection.GameCollections[currentCatIdx].Games.Length - 1;
+            // Random scene to load per games of a category
+            string sceneToLoad = _gameCollection.GameCollections[currentCatIdx].Games[Random.Range(0, gamePerCatCount)];
+            // Load
+            Debug.Log("Load in sequence -> Loading : " + sceneToLoad);
+            SceneManager.LoadScene(sceneToLoad);
         }
 
         public virtual void MuteBackgroundMusic() {
