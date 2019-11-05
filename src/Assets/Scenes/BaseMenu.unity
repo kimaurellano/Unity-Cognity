@@ -3620,6 +3620,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 608386914}
   m_CullTransparentMesh: 0
+--- !u!1 &641408523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 641408525}
+  - component: {fileID: 641408524}
+  m_Layer: 0
+  m_Name: GameSequenceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &641408524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641408523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e447588801bc34db45551d72d0d3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameCollection:
+  - CategoryName: flexibility
+    Games:
+    - GameCognity
+    - GamePickInSequence
+  - CategoryName: memory
+    Games:
+    - GameMemory
+  - CategoryName: language
+    Games:
+    - GameQuizGrammar
+    - GamePicturePuzzle
+  - CategoryName: problemsolving
+    Games:
+    - GameQuizMath
+    - GameQuizSolveMath
+    - GamePopNumber
+--- !u!4 &641408525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641408523}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 258.9999, y: 460.5001, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &645253421
 GameObject:
   m_ObjectHideFlags: 0
@@ -4784,7 +4844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: -540}
+  m_AnchoredPosition: {x: 0.000061035156, y: -408}
   m_SizeDelta: {x: 620.5, y: 117.599976}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &827647130
@@ -7031,7 +7091,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1255581941
 RectTransform:
   m_ObjectHideFlags: 0
