@@ -41,14 +41,6 @@ namespace Assets.Scripts.DataComponent.Database {
             _connection = new SQLiteConnection(filepath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
         }
 
-        public User GetUser(string username) {
-            return _connection.Query<User>($"SELECT * FROM User WHERE Username='{username}'").FirstOrDefault();
-        }
-
-        public IEnumerable<User> GetUsers() {
-            return _connection.Query<User>("SELECT * FROM User");
-        }
-
         public void CreateNewUser(User user) {
             if (GetUser(user.Username)?.Username != null) {
                 Debug.Log("<color=yellow>User exists already</color>");
@@ -72,11 +64,28 @@ namespace Assets.Scripts.DataComponent.Database {
                 return;
             }
 
-            existingUser.Username = updatedUser.Username;
-            existingUser.FirstRun = updatedUser.FirstRun;
-            existingUser.IsLogged = updatedUser.IsLogged;
+            existingUser = updatedUser;
+
             _connection.RunInTransaction(() => { _connection.Update(existingUser); });
             Debug.Log("<color=green>User updated</color>");
+        }
+
+        public void UpdateUserStat(string username, UserStat updatedUserStat, UserStat.GameCategory category) {
+            UserStat existingUser = 
+                _connection.Query<UserStat>($"SELECT * FROM UserStat WHERE Username='{username}' AND Category={(int)category}").FirstOrDefault();
+            if (existingUser == null) {
+                Debug.Log("<color=red>User non-existent</color>");
+                return;
+            }
+
+            existingUser = updatedUserStat;
+
+            _connection.RunInTransaction(() => { _connection.Update(existingUser); });
+            Debug.Log("<color=green>User updated</color>");
+
+            // Record the score per game taken. Accumulated to compute for overall 
+            // session score which will serve as score history
+            SaveSessionScore(username, existingUser.Score);
         }
 
         public void DeleteUser(string username) {
@@ -89,18 +98,20 @@ namespace Assets.Scripts.DataComponent.Database {
             Debug.Log("<color=green>User deleted</color>");
         }
 
-        public void SaveScore(string username, float score, UserStat.GameCategory category) {
-            UserStat userStat = _connection.Query<UserStat>($"SELECT * FROM UserStat WHERE Username='{username}' AND Category={category}").FirstOrDefault();
-            if (userStat != null) {
-                // Normalize score
-                userStat.Score = (score + userStat.Score) / 2;
-                _connection.RunInTransaction(() => { _connection.Update(userStat); });
-                Debug.Log($"<color=green>User({username}) score updated in category:{category}</color>");
+        public User GetUser(string username) {
+            return _connection.Query<User>($"SELECT * FROM User WHERE Username='{username}'").FirstOrDefault();
+        }
 
-                // Record the score per game taken. Accumulated to compute for overall 
-                // session score which will serve as score history
-                SaveSessionScore(username, userStat.Score);
-            }
+        public IEnumerable<User> GetUsers() {
+            return _connection.Query<User>("SELECT * FROM User");
+        }
+
+        public IEnumerable<UserStat> GetUserStats() {
+            return _connection.Query<UserStat>("SELECT * FROM UserStat");
+        }
+
+        public UserStat GetUserStat(string username, UserStat.GameCategory category) {
+            return _connection.Query<UserStat>($"SELECT * FROM UserStat WHERE Username='{username}' AND Category={(int)category}").FirstOrDefault();
         }
 
         public IEnumerable<UserScoreHistory> GetScoreHistory(string username) {
