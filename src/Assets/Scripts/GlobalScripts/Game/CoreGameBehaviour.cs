@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Assets.Scripts.DataComponent.Database;
-using Assets.Scripts.DataComponent.Model;
+﻿using System.Linq;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,17 +8,17 @@ namespace Assets.Scripts.GlobalScripts.Game {
     [RequireComponent(typeof(ActionManager))]
     public class CoreGameBehaviour : MonoBehaviour {
 
+        public delegate void OnEndGame();
         public delegate void OnQuitGame();
         public delegate void OnPauseGame();
         public delegate void OnMuteGame(string sfx);
 
+        public static event OnEndGame OnEndGameEvent;
         public static event OnQuitGame OnQuitGameEvent;
         public static event OnPauseGame OnPauseGameEvent;
         public static event OnMuteGame OnMuteGameEvent;
 
-        private DatabaseManager _databaseManager;
-
-        private GameCollection _gameCollection;
+        private static GameCollection _gameCollection;
 
         public bool IsPaused { get; set; }
 
@@ -38,7 +35,6 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
             PlayerPrefs.SetInt("IsBgMuted", 0);
 
-            _databaseManager = new DatabaseManager();
             _gameCollection = FindObjectOfType<GameCollection>();
         }
 
@@ -50,13 +46,21 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public virtual void EndGame() {
             FindObjectOfType<AudioManager>().SetVolume("bg_game", 0f);
 
+            OnEndGameEvent?.Invoke();
+        }
+
+        /// <summary>
+        /// Returns next scene of a random game in the next category
+        /// </summary>
+        public string GetNextScene() {
             Utility utility = new Utility();
             // Load persistent data
             StartCoroutine(utility.LoadJson());
             // Fetch the current known loaded scene
             Utility.Data newData = utility.GetData();
             // Proceed to next category
-            int currentCatIdx = newData.loaded++;
+            int currentCatIdx = newData.loaded;
+            currentCatIdx++;
             // We only have 4 categories
             if (currentCatIdx > 3) {
                 currentCatIdx = 0;
@@ -70,8 +74,9 @@ namespace Assets.Scripts.GlobalScripts.Game {
             // Random scene to load per games of a category
             string sceneToLoad = _gameCollection.GameCollections[currentCatIdx].Games[Random.Range(0, gamePerCatCount)];
             // Load
-            Debug.Log("Load in sequence -> Loading : " + sceneToLoad);
-            SceneManager.LoadScene(sceneToLoad);
+            Debug.Log("Load in sequence -> Loading next category: " + currentCatIdx + " with game:" + sceneToLoad);
+
+            return sceneToLoad;
         }
 
         public virtual void MuteBackgroundMusic() {
