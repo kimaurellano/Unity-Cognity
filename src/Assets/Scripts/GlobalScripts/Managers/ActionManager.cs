@@ -26,10 +26,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         private bool _onQuit;
 
         private void Start() {
-            // For debugging. Uncomment to reset scores and user profile
-            //PlayerPrefs.DeleteAll();
-
-            // Auto log user if not logged out
             _utility = new Utility();
 
             _pageStack = new List<Transform>();
@@ -46,6 +42,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 StartCoroutine(_utility.LoadJson(data => { result = data.last_user; }));
                 if (lastLogged?.Username != null) {
                     // If a user is left logged in but quitted the app
+
+                    FindObjectOfType<StatsManager>().UpdateRadarChart();
+
                     if (result == "login") {
                         if (lastLogged.Username != null) {
                             ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
@@ -106,16 +105,19 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             Debug.Log("<color=green>Exists!</color>");
 
+            // Update user state
             user.IsLogged = true;
             databaseManager.UpdateUser(user.Username, user);
             databaseManager.Close();
+
+            FindObjectOfType<StatsManager>().UpdateRadarChart();
 
             StartCoroutine(_utility.LoadJson(isDone => {
                 if (isDone) {
                     Utility.Data newData = _utility.GetData();
                     newData.last_user = user.Username;
                     _utility.ModifyJson(newData);
-
+                    
                     TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
                     TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
 
@@ -147,7 +149,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         private IEnumerator AfterAccCreate() {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1f);
 
             TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "account create"));
             TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
@@ -262,7 +264,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         /// <summary>
-        ///     Animation event for transition panel
+        /// Animation event for transition panel
         /// </summary>
         public void SwitchPanel() {
             _currentPanel.gameObject.SetActive(false);
