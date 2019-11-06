@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using Assets.Scripts.DataComponent.Model;
 using UnityEngine;
@@ -20,8 +18,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public enum GameType {
             Flexibility = 0,
             Memory = 1,
-            ProblemSolving = 2,
-            Language = 3
+            Language = 2,
+            ProblemSolving = 3
         }
 
         /// <summary>
@@ -51,7 +49,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
             float result = Normalize(Score, _minValue, _maxValue, 0f, 1f);
             result *= 100;
-            stat.Score = (stat.Score + result) / 2;
+            stat.Score = float.Parse(((stat.Score + result) / 2).ToString("0.0"));
             Debug.Log($"Normalized:{result}");
             UpdateUserStat(user.Username, stat, category);
         }

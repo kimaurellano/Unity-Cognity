@@ -81,7 +81,7 @@ namespace Assets.Scripts.DataComponent.Database {
             existingUser = updatedUserStat;
 
             _connection.RunInTransaction(() => { _connection.Update(existingUser); });
-            Debug.Log("<color=green>User score updated</color>");
+            Debug.Log($"<color=green>User score updated at category:{(int)category}</color>");
 
             // Record the score per game taken. Accumulated to compute for overall 
             // session score which will serve as score history

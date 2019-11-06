@@ -5,11 +5,8 @@ namespace Assets.Scripts.DataComponent.Model {
 
         public enum GameCategory {
             Flexibility,
-
-            Language,
-
             Memory,
-
+            Language,
             ProblemSolving
         }
 

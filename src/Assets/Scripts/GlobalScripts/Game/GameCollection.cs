@@ -15,9 +15,9 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         public Collection[] GameCollections { get => _gameCollection; set => _gameCollection = value; }
 
-        private void Start() {
+        private void Awake() {
             if (_gameCollectionInstance != null) {
-                Destroy(_gameCollectionInstance);
+                Destroy(gameObject);
             } else {
                 _gameCollectionInstance = this;
             }
