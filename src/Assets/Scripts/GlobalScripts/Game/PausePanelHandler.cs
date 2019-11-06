@@ -27,10 +27,12 @@ namespace Assets.Scripts.GlobalScripts.Game {
             OnMuteGameEvent += UpdateUI;
             OnPauseGameEvent += ShowDialog;
             OnQuitGameEvent += RemoveAttached;
+            OnEndGameEvent += RemoveAttached;
         }
 
         private void RemoveAttached() {
             OnQuitGameEvent -= RemoveAttached;
+            OnEndGameEvent -= RemoveAttached;
 
             foreach (var item in _coreGameBehaviour.Where(i => !i.name.Equals(transform.name))) {
                 transform.Find("ButtonResume").GetComponent<Button>().onClick.RemoveListener(item.Pause);
