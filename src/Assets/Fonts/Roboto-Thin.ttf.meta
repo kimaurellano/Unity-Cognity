@@ -11,7 +11,8 @@ TrueTypeFontImporter:
   fontName: Roboto Thin
   fontNames:
   - Roboto Thin
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 7c96c1024367d9b4fa34352683581d36, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

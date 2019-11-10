@@ -6,20 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
     path: Assets/Scenes/TestScene/TestScene.unity
     guid: 483cd2f47ba579846978bcee0e4eb34a
   - enabled: 1
     path: Assets/Scenes/BaseMenu.unity
     guid: 5c6734850994adc48a5dca0a2bed50cf
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Cognity/MenuCognity.unity
     guid: 17fad4fe2c336f144a564dfe856902af
@@ -32,12 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PopNumber/GamePopNumber.unity
     guid: b1358909dbed92b4cb5f469633a8ad59
-  - enabled: 1
-    path: Assets/Scenes/PickInSequence/MenuPickInSequence.unity
-    guid: 17318851cc26100428923506c7d444c9
-  - enabled: 1
-    path: Assets/Scenes/PickInSequence/GamePickInSequence.unity
-    guid: 01b90f1a493c96949ac9a2de53cd77e1
   - enabled: 1
     path: Assets/Scenes/Memory/MenuMemory.unity
     guid: 7f475cf67db8be14fb57fca5c796f989
@@ -68,6 +53,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Grammar/GameQuizGrammar.unity
     guid: 836439e8ad4e6234c8712f0472d038e3
+  - enabled: 1
+    path: Assets/Scenes/PickInSequence/MenuPickInSequence.unity
+    guid: 17318851cc26100428923506c7d444c9
+  - enabled: 1
+    path: Assets/Scenes/PickInSequence/GamePickInSequence.unity
+    guid: 01b90f1a493c96949ac9a2de53cd77e1
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000

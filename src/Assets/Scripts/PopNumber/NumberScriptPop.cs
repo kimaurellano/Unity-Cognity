@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Assets.Scripts.PopNumber {
-    public class NumberScript : MonoBehaviour {
+    public class NumberScriptPop : MonoBehaviour {
 
         public delegate void OnBottomHit(int number);
         public delegate void OnNumberPop(int number);

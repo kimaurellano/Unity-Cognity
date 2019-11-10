@@ -12,13 +12,12 @@ namespace Assets.Scripts.PickInSequence {
         [SerializeField] private GameObject _numberPrefab;
 
         [SerializeField] private int _setOfSequence;
-        [SerializeField] private float _radius;
         [SerializeField] private float _minY, _minX;
         [SerializeField] private float _maxY, _maxX;
 
         private System.Random _rnd;
         private List<int> _rndSequence;
-        private NumberScript _numberScript;
+        private NumberScriptPick _numberScriptPick;
         private BaseScoreHandler _baseScoreHandler;
         private TimerManager _timeManager;
         private int _curElement;
@@ -34,7 +33,7 @@ namespace Assets.Scripts.PickInSequence {
         private void Start() {
             _timeManager = GetComponent<TimerManager>();
 
-            NumberScript.OnNumberPopEvent += CheckAnswer;
+            NumberScriptPick.OnNumberPopPickEvent += CheckAnswer;
             TimerManager.OnGameTimerEndEvent += ProceedToNextSequence;
 
             InstantiateNumber(RandomSequence(5));
@@ -58,8 +57,8 @@ namespace Assets.Scripts.PickInSequence {
                     new Vector3(Random.Range(_minX, _maxX), Random.Range(_minY, _maxY), 0f),
                     Quaternion.identity);
 
-                NumberScript script = numPrefab.GetComponent<NumberScript>();
-                script.Content = number.ToString();
+                NumberScriptPick scriptPick = numPrefab.GetComponent<NumberScriptPick>();
+                scriptPick.Content = number.ToString();
             }
         }
 
@@ -99,7 +98,7 @@ namespace Assets.Scripts.PickInSequence {
                 _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
                 // Clear event
-                NumberScript.OnNumberPopEvent -= CheckAnswer;
+                NumberScriptPick.OnNumberPopPickEvent -= CheckAnswer;
                 TimerManager.OnGameTimerEndEvent -= ProceedToNextSequence;
 
                 EndGame();
@@ -113,10 +112,10 @@ namespace Assets.Scripts.PickInSequence {
         public void CheckAnswer(int number, Transform transform) {
             Debug.Log(
                 $"Number popped:{number}\n" +
-                      $"Current answer:{CurrentAnswer()}\n" +
+                      $"Current answer:{_rndSequence.ToArray()[_curElement]}\n" +
                       $"Transform:{transform.name}");
 
-            if (number == CurrentAnswer()) {
+            if (number == _rndSequence.ToArray()[_curElement]) {
                 Debug.Log("Same!");
                 _curElement++;
                 Destroy(transform.gameObject);
@@ -137,13 +136,9 @@ namespace Assets.Scripts.PickInSequence {
         }
 
         private static void ClearObjects() {
-            foreach (var item in FindObjectsOfType<NumberScript>()) {
+            foreach (var item in FindObjectsOfType<NumberScriptPick>()) {
                 Destroy(item.gameObject);
             }
-        }
-
-        public int CurrentAnswer() {
-            return _rndSequence.ToArray()[_curElement];
         }
     }
 }

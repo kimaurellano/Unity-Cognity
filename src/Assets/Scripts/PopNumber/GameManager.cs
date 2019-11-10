@@ -41,9 +41,9 @@ namespace Assets.Scripts.PopNumber {
                     Camera.main.transform.position.z));
 
             // Check the popped number
-            NumberScript.OnNumberPopEvent += CheckNumber;
+            NumberScriptPop.OnNumberPopEvent += CheckNumber;
             // When the number hits the bottom
-            NumberScript.OnBottomHitEvent += CheckAndDestroy;
+            NumberScriptPop.OnBottomHitEvent += CheckAndDestroy;
 
             TimerManager.OnGameTimerEndEvent += _timerManager.ChangeTimerState;
             TimerManager.OnGameTimerEndEvent += IncreaseDifficulty;
@@ -77,15 +77,16 @@ namespace Assets.Scripts.PopNumber {
                     Mathf.RoundToInt(_timerManager.Seconds) == 15) {
                     GameObject spawnedPrefab = Instantiate(
                         _numberPrefab,
+                        // Top screen + offset to offscreen the prefabs instantiation
                         new Vector3(Random.Range(-_screenBounds.x + 0.5f, _screenBounds.x - 0.5f),
                             _screenBounds.y + 0.5f, 0f),
                         Quaternion.identity);
 
                     int answer = int.Parse(_questionList[_questionIdx].Answer);
 
-                    NumberScript script = spawnedPrefab.GetComponent<NumberScript>();
-                    script.MoveSpeed = _speed;
-                    script.Content = answer.ToString();
+                    NumberScriptPop scriptPop = spawnedPrefab.GetComponent<NumberScriptPop>();
+                    scriptPop.MoveSpeed = _speed;
+                    scriptPop.Content = answer.ToString();
 
                     Debug.Log("Answer spawned:" + answer);
 
@@ -108,9 +109,9 @@ namespace Assets.Scripts.PopNumber {
 
                 int answer = int.Parse(_questionList[_questionIdx].Answer);
 
-                NumberScript script = spawnedPrefab.GetComponent<NumberScript>();
-                script.MoveSpeed = _speed;
-                script.Content = Random.Range(answer - 5, answer + 5).ToString();
+                NumberScriptPop scriptPop = spawnedPrefab.GetComponent<NumberScriptPop>();
+                scriptPop.MoveSpeed = _speed;
+                scriptPop.Content = Random.Range(answer - 5, answer + 5).ToString();
 
                 yield return new WaitForSeconds(_spawnRate);
             }
@@ -134,7 +135,7 @@ namespace Assets.Scripts.PopNumber {
 
             _timerManager.ResetTimer();
 
-            foreach (var item in FindObjectsOfType<NumberScript>()) {
+            foreach (var item in FindObjectsOfType<NumberScriptPop>()) {
                 item.MoveSpeed = _speed;
             }
         }
@@ -178,7 +179,7 @@ namespace Assets.Scripts.PopNumber {
         }
 
         private void DestroyNumbers() {
-            foreach (var item in FindObjectsOfType<NumberScript>()) {
+            foreach (var item in FindObjectsOfType<NumberScriptPop>()) {
                 Destroy(item.gameObject);
             }
         }
@@ -221,8 +222,8 @@ namespace Assets.Scripts.PopNumber {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
             // Clear
-            NumberScript.OnNumberPopEvent -= CheckNumber;
-            NumberScript.OnBottomHitEvent -= CheckAndDestroy;
+            NumberScriptPop.OnNumberPopEvent -= CheckNumber;
+            NumberScriptPop.OnBottomHitEvent -= CheckAndDestroy;
             TimerManager.OnGameTimerEndEvent -= IncreaseDifficulty;
             TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
 

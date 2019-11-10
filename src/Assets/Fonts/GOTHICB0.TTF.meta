@@ -11,7 +11,13 @@ TrueTypeFontImporter:
   fontName: Century Gothic
   fontNames:
   - Century Gothic
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: fe1607000f5261345be6808aca938b8e, type: 3}
+  - {fileID: 12800000, guid: afb9225972619904ca179a0ee28557cf, type: 3}
+  - {fileID: 12800000, guid: b52f4f2d54194df43a5e1524dea2aa90, type: 3}
+  - {fileID: 12800000, guid: 1414d62e1682e354bb994bea552f90b4, type: 3}
+  - {fileID: 12800000, guid: dce5659e06a6e334592d5fac43bc81e8, type: 3}
+  - {fileID: 12800000, guid: 792cb80f2b180dc4d8fdb421835e7d2a, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
