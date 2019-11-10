@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.GlobalScripts.Managers;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
@@ -24,7 +23,6 @@ namespace Assets.Scripts.PopNumber {
         private UIManager _uiManager;
         private Coroutine _spawnCoroutine, _spawnAnswer;
         private List<QuestionBank> _questionList;
-        private PreScoreManager _preScoreManager;
         private TimerManager _timerManager;
         private int _catIdx;
         private int _correctCount;
@@ -35,7 +33,6 @@ namespace Assets.Scripts.PopNumber {
 
         private void Start() {
             _uiManager = FindObjectOfType<UIManager>();
-            _preScoreManager = new PreScoreManager();
             _questionList = new List<QuestionBank>();
             _timerManager = GetComponent<TimerManager>();
 
@@ -48,6 +45,7 @@ namespace Assets.Scripts.PopNumber {
             // When the number hits the bottom
             NumberScript.OnBottomHitEvent += CheckAndDestroy;
 
+            TimerManager.OnGameTimerEndEvent += _timerManager.ChangeTimerState;
             TimerManager.OnGameTimerEndEvent += IncreaseDifficulty;
 
             // Ready questions
@@ -193,12 +191,6 @@ namespace Assets.Scripts.PopNumber {
 
             if (_questionIdx > _questionList.Count - 1) {
                 EndGame();
-
-                Transform gameResultPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
-                gameResultPanel.gameObject.SetActive(true);
-
-                TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
-                gameResultText.SetText("Complete!");
             } else {
                 _problemText.SetText(_questionList[_questionIdx].Problem);
             }
@@ -227,6 +219,12 @@ namespace Assets.Scripts.PopNumber {
 
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
+
+            // Clear
+            NumberScript.OnNumberPopEvent -= CheckNumber;
+            NumberScript.OnBottomHitEvent -= CheckAndDestroy;
+            TimerManager.OnGameTimerEndEvent -= IncreaseDifficulty;
+            TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
 
             base.EndGame();
         }

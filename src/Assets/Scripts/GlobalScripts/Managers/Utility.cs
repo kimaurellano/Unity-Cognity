@@ -67,7 +67,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             callback(value);
 
-            yield return null;
+            yield return 0;
         }
 
         public IEnumerator LoadJson(Action<bool> IsDone) {
@@ -95,10 +95,10 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             IsDone(true);
 
-            yield return null;
+            yield return 0;
         }
 
-        public IEnumerator LoadJson() {
+        public void LoadJson() {
             if (Application.platform == RuntimePlatform.Android) {
                 // The path to write to
                 _persistentPath = $"{Application.persistentDataPath}/UtilityData.json";
@@ -109,7 +109,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 if (_streamingAssetsPath.Contains("://") || _streamingAssetsPath.Contains(":///")) {
                     // Get the compressed jar file containing streaming assets
                     var www = UnityWebRequest.Get(_streamingAssetsPath);
-                    yield return www.SendWebRequest();
 
                     // Cache all the loaded data from the UnityWebRequest to the persistent file
                     File.WriteAllBytes(_persistentPath, www.downloadHandler.data);
@@ -120,8 +119,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             } else {
                 _persistentPath = @"Assets/StreamingAssets/UtilityData.json";
             }
-
-            yield return null;
         }
 
         public void ModifyJson(Data newData) {

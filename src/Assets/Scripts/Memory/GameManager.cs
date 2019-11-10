@@ -6,6 +6,7 @@ using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Memory {
     public class GameManager : CoreGameBehaviour {
@@ -50,6 +51,7 @@ namespace Assets.Scripts.Memory {
             TimerManager.OnPreGameTimerEndEvent += StartGameTimer;
 
             TimerManager.OnGameTimerEndEvent += EndGame;
+            TimerManager.OnGameTimerEndEvent += _timerManager.ChangeTimerState;
 
             TouchManager.OnCardLockEvent += IncrementLocks;
         }
@@ -71,6 +73,10 @@ namespace Assets.Scripts.Memory {
         public override void EndGame() {
             base.EndGame();
 
+            // Clear
+            TouchManager.OnCardLockEvent -= IncrementLocks;
+            TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
+
             GameResult(false);
         }
 
@@ -85,12 +91,7 @@ namespace Assets.Scripts.Memory {
             baseScoreHandler.AddScore(0, _seconds);
             baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
-            // Load finished scene
-            Transform gameResultPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
-            gameResultPanel.gameObject.SetActive(true);
-
-            TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result text");
-            gameResultText.SetText(success ? "SUCCESS!" : "FAILED");
+            SceneManager.LoadScene(GetNextScene());
         }
 
         public IEnumerator WaitForFlip() {

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,6 +20,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public static event OnMuteGame OnMuteGameEvent;
 
         private static GameCollection _gameCollection;
+        private bool _disposed;
 
         public bool IsPaused { get; set; }
 
@@ -39,6 +41,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public void Retry() {
+            ClearEvents();
+
             Scene active = SceneManager.GetActiveScene();
             SceneManager.LoadScene(active.name);
         }
@@ -47,6 +51,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
             FindObjectOfType<AudioManager>().SetVolume("bg_game", 0f);
 
             OnEndGameEvent?.Invoke();
+
+            ClearEvents();
         }
 
         /// <summary>
@@ -55,7 +61,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public string GetNextScene() {
             Utility utility = new Utility();
             // Load persistent data
-            StartCoroutine(utility.LoadJson());
+            utility.LoadJson();
             // Fetch the current known loaded scene
             Utility.Data newData = utility.GetData();
             // Proceed to next category
@@ -132,10 +138,16 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public void QuitGame() {
             OnQuitGameEvent?.Invoke();
 
-            OnPauseGameEvent = null;
-            OnMuteGameEvent = null;
+            ClearEvents();
 
             SceneManager.LoadScene("BaseMenu");
+        }
+
+        public void ClearEvents() {
+            OnEndGameEvent = null;
+            OnQuitGameEvent = null;
+            OnPauseGameEvent = null;
+            OnMuteGameEvent = null;
         }
     }
 }

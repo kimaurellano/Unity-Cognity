@@ -27,8 +27,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Cognity/GameCognity.unity
     guid: af4dd799879b3364d990ec6abf95c0c0
   - enabled: 1
+    path: Assets/Scenes/PopNumber/MenuPopNumber.unity
+    guid: 9f50c963f02c4fd4198a41378439e0ff
+  - enabled: 1
     path: Assets/Scenes/PopNumber/GamePopNumber.unity
     guid: b1358909dbed92b4cb5f469633a8ad59
+  - enabled: 1
+    path: Assets/Scenes/PickInSequence/MenuPickInSequence.unity
+    guid: 17318851cc26100428923506c7d444c9
   - enabled: 1
     path: Assets/Scenes/PickInSequence/GamePickInSequence.unity
     guid: 01b90f1a493c96949ac9a2de53cd77e1

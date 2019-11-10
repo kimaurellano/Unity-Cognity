@@ -5,8 +5,8 @@ using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
-using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.QuizSolveMath {
 #pragma warning disable 649
@@ -144,11 +144,7 @@ namespace Assets.Scripts.QuizSolveMath {
             baseScoreHandler.AddScore(_score);
             baseScoreHandler.SaveScore(UserStat.GameCategory.ProblemSolving);
 
-            TextMeshProUGUI gameResulText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
-            gameResulText.SetText(_score > 0 ? "SUCCESS!" : "FAILED");
-
-            Transform panel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
-            panel.gameObject.SetActive(true);
+            SceneManager.LoadScene(GetNextScene());
         }
     }
 }

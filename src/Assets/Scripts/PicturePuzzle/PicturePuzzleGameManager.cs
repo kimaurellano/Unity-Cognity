@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Assets.Scripts.GlobalScripts.Managers.UIManager;
-using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.PicturePuzzle {
     public class PicturePuzzleGameManager : CoreGameBehaviour {
@@ -53,13 +52,14 @@ namespace Assets.Scripts.PicturePuzzle {
 
             TimerManager.OnGameTimerEndEvent -= EndGame;
 
+            _timerManager.ChangeTimerState();
+
+            // Add up the time left for each answered puzzle 
+            _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
+
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
 
-            Transform finishPanel = (Transform)_uiManager.GetUI(UIType.Panel, "game result");
-            finishPanel.gameObject.SetActive(true);
-
-            TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIType.Text, "game result");
-            gameResultText.SetText("SUCCESS!");
+            SceneManager.LoadScene(GetNextScene());
         }
 
         public void CheckAnswer() {
@@ -101,9 +101,6 @@ namespace Assets.Scripts.PicturePuzzle {
             }
 
             Instantiate(Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Image, _puzzlePictureContainer.transform);
-
-            // Add up the time left for each answered puzzle 
-            _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
         }
     }
 }

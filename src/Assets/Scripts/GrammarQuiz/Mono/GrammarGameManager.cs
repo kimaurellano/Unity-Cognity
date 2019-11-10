@@ -10,7 +10,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
-using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.GrammarQuiz.Mono {
     public class GrammarGameManager : CoreGameBehaviour {
@@ -70,7 +69,7 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             bool isCorrect = CheckAnswers();
             FinishedQuestions.Add(currentQuestion);
 
-            UpdateScore(isCorrect ? Questions[currentQuestion].AddScore : -Questions[currentQuestion].AddScore);
+            UpdateScore(isCorrect ? Questions[currentQuestion].AddScore : 0);
 
             if (IsFinished) {
                 SetHighscore();
@@ -250,6 +249,8 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
         #region TimerManager Methods
 
         private void StartPreGameTimer() {
+            TimerManager.OnPreGameTimerEndEvent -= StartPreGameTimer;
+
             StartCoroutine(IEStartTimer());
         }
 
@@ -278,20 +279,11 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             // Finalize scoring and show Finish Display Elements
             events.ScoreUpdated?.Invoke();
 
+            EndGame();
+
             SetHighscore();
 
-            var type = UIManager.ResolutionScreenType.Finish;
-
-            events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
-
-            GameObject
-                .Find("ResolutionCanvas/ResolutionScreen/State_Info_Text")
-                .GetComponent<TextMeshProUGUI>()
-                .SetText("FINAL SCORE:" + events.CurrentFinalScore.ToString());
-
-            FindObjectOfType<GlobalScripts.Managers.AudioManager>().PlayClip("sfx_oncorrect");
-
-            EndGame();
+            SceneManager.LoadScene(GetNextScene());
         }
 
         private IEnumerator WaitTillNextRound() {
