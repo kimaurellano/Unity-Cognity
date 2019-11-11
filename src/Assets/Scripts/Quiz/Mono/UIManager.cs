@@ -121,7 +121,7 @@ namespace Assets.Scripts.Quiz.Mono {
                 case ResolutionScreenType.Incorrect:
                     UIElements.ResolutionBG.color = parameters.IncorrectBGColor;
                     UIElements.ResolutionStateInfoText.text = "WRONG!";
-                    UIElements.ResolutionScoreText.text = "-" + score;
+                    UIElements.ResolutionScoreText.text = string.Empty;
                     break;
                 case ResolutionScreenType.Finish:
                     UIElements.ResolutionBG.color = parameters.FinalBGColor;

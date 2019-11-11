@@ -2,21 +2,24 @@
 using UnityEngine;
 
 namespace Assets.Scripts.PickInSequence {
-    public class NumberScript : MonoBehaviour {
+    public class NumberScriptPick : MonoBehaviour {
 
-        public delegate void OnNumberPop(int number);
+        public delegate void OnNumberPopPick(int number, Transform transform);
 
-        public static event OnNumberPop OnNumberPopEvent;
+        public static event OnNumberPopPick OnNumberPopPickEvent;
 
-        private GameManager _gameManager;
+        [SerializeField] private TextMeshProUGUI _content;
+
         private Collider2D _collider2D;
         private Touch _touch;
         private string _number;
 
+        public string Content { get; set; }
+
         private void Start() {
             _collider2D = GetComponent<Collider2D>();
 
-            _gameManager = FindObjectOfType<GameManager>();
+            _content.SetText(Content);
         }
 
         private void Update() {
@@ -30,20 +33,11 @@ namespace Assets.Scripts.PickInSequence {
 
                     if (_collider2D.Equals(touchPoint)) {
                         int number = int.Parse(transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text);
-
-                        OnNumberPopEvent?.Invoke(number);
-
-                        Destroy(touchPoint.gameObject);
+                        Debug.Log($"at NumberScriptPick.cs:{number}, {transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text}");
+                        OnNumberPopPickEvent?.Invoke(number, transform);
                     }
                 }
             }
-        }
-
-        private void OnTriggerEnter2D(Collider2D collision) {
-            gameObject.transform.position = new Vector3(
-                Random.Range(_gameManager.MinX, _gameManager.MaxX),
-                Random.Range(_gameManager.MinY, _gameManager.MaxY),
-                0f);
         }
     }
 }

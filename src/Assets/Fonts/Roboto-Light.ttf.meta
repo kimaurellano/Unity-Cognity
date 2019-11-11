@@ -11,7 +11,8 @@ TrueTypeFontImporter:
   fontName: Roboto Light
   fontNames:
   - Roboto Light
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: f7563e8a2fb61854a8086b5be3277a27, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

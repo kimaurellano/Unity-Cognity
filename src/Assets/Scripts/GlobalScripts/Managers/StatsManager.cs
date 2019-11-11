@@ -33,25 +33,25 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             float problemSolvingProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.ProblemSolving).Score / 100f;
             TextMeshProUGUI problemSolvingPercentText = (TextMeshProUGUI) _uiManager.GetUI(UIManager.UIType.Text, "problem solving");
-            problemSolvingPercentText.SetText((problemSolvingProgress * 100f).ToString("##.###") + "%");
+            problemSolvingPercentText.SetText(Format(ClampPercent(problemSolvingProgress * 100f)));
             // Bottom left
             vertices[0] = new Vector3(-defaultWidth - problemSolvingProgress * MAX_VALUE, -defaultHeight - problemSolvingProgress * MAX_VALUE);
 
             float memoryProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Memory).Score / 100f;
             TextMeshProUGUI memoryPercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "memory");
-            memoryPercentText.SetText((memoryProgress * 100f).ToString("##.###") + "%");
+            memoryPercentText.SetText(Format(ClampPercent(memoryProgress * 100f)));
             // Top left
             vertices[1] = new Vector3(-defaultWidth - memoryProgress * MAX_VALUE, defaultHeight + memoryProgress * MAX_VALUE);
 
             float flexibilityProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Flexibility).Score / 100f;
             TextMeshProUGUI flexibilityPercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "flexibility");
-            flexibilityPercentText.SetText((flexibilityProgress * 100f).ToString("##.###") + "%");
+            flexibilityPercentText.SetText(Format(ClampPercent(flexibilityProgress * 100f)));
             // Top right
             vertices[2] = new Vector3(defaultWidth + flexibilityProgress * MAX_VALUE, defaultHeight + flexibilityProgress * MAX_VALUE);
 
             float languageProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Language).Score / 100f;
             TextMeshProUGUI languagePercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "language");
-            languagePercentText.SetText((languageProgress * 100f).ToString("##.###") + "%");
+            languagePercentText.SetText(Format(ClampPercent(languageProgress * 100f)));
             // Bottom right
             vertices[3] = new Vector3(defaultWidth + languageProgress * MAX_VALUE, -defaultHeight - languageProgress * MAX_VALUE);
 
@@ -64,6 +64,20 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             _radarMesh.GetComponent<CanvasRenderer>().SetMaterial(_radarMaterial, null);
 
             databaseManager.Close();
+        }
+
+        private static float ClampPercent(float value) {
+            if (value > 100f) {
+                value = 100f;
+            } else if (value < 0) {
+                value = 0f;
+            }
+
+            return value;
+        }
+
+        private static string Format(float value) {
+            return value <= 0 ? "0%" : value.ToString("##.###") + "%";
         }
     }
 }

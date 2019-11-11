@@ -630,7 +630,7 @@ PrefabInstance:
     - target: {fileID: 8965805783225028812, guid: 782795f6f06c8d54c99847d860ecf5fc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1608
+      value: 2464
       objectReference: {fileID: 0}
     - target: {fileID: 8965805783225028812, guid: 782795f6f06c8d54c99847d860ecf5fc,
         type: 3}
@@ -2856,10 +2856,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimerText: {fileID: 1088748143}
+  TimerAnimation: {fileID: 1088748141}
   Seconds: 0
   Minutes: 1
   IsPreGameTimer: 0
-  TimerAnimation: {fileID: 1088748141}
 --- !u!1 &1853772555
 GameObject:
   m_ObjectHideFlags: 0

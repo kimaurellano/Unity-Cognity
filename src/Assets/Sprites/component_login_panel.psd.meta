@@ -1,15 +1,11 @@
 fileFormatVersion: 2
 guid: e21831ec3749e50418730a971f080162
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -4855402930298946734
-    second: component_login_panel_0
-  - first:
-      213: -732958114293048701
-    second: component_login_panel_1
+  fileIDToRecycleName:
+    21300000: component_login_panel_0
+    21300002: component_login_panel_1
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 9
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -116,7 +112,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 3dfecd3e498e31843860f1b3227cffd9
-      internalID: -4855402930298946734
       vertices: []
       indices: 
       edges: []
@@ -137,7 +132,6 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 13a1215457e4c114c8e5ecc71f04e569
-      internalID: -732958114293048701
       vertices: []
       indices: 
       edges: []
@@ -146,12 +140,10 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: eb2fe2f19f585394896b7fe8e62fd730
-    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 1

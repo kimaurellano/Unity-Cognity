@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace Assets.Scripts.PopNumber {
-    public class NumberScript : MonoBehaviour {
+    public class NumberScriptPop : MonoBehaviour {
 
         public delegate void OnBottomHit(int number);
         public delegate void OnNumberPop(int number);
@@ -36,7 +36,7 @@ namespace Assets.Scripts.PopNumber {
                     Collider2D touchPoint = Physics2D.OverlapPoint(touchPos);
 
                     if (_collider2D.Equals(touchPoint)) {
-                        int number = int.Parse(transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text);
+                        int number = int.Parse(_content.text);
 
                         OnNumberPopEvent?.Invoke(number);
 

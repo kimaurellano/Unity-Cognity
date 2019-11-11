@@ -1,0 +1,11 @@
+{
+	"category":{
+		"flexibility" : ["GameCognity", "GamePickInSequence"],
+		"memory" : ["GameMemory"],
+		"language" : ["GameQuizGrammar", "GamePicturePuzzle"],
+		"problemsolving" : ["GameQuizMath", "GameQuizSolveMath", "GamePopNumber"]
+	},
+	"last_user":"Test",
+	"page":"login",
+	"loaded":""
+}

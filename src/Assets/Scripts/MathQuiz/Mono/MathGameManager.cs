@@ -9,7 +9,6 @@ using Assets.Scripts.Quiz.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 using UIManager = Assets.Scripts.Quiz.Mono.UIManager;
 
 namespace Assets.Scripts.MathQuiz.Mono {
@@ -68,7 +67,7 @@ namespace Assets.Scripts.MathQuiz.Mono {
             bool isCorrect = CheckAnswers();
             FinishedQuestions.Add(currentQuestion);
 
-            UpdateScore(isCorrect ? Questions[currentQuestion].AddScore : -Questions[currentQuestion].AddScore);
+            UpdateScore(isCorrect ? Questions[currentQuestion].AddScore : 0);
 
             if (IsFinished) {
                 SetHighscore();
@@ -147,10 +146,6 @@ namespace Assets.Scripts.MathQuiz.Mono {
         /// </summary>
         public void BaseMenu() {
             SceneManager.LoadScene("BaseMenu");
-        }
-
-        public override void Pause() {
-            base.Pause();
         }
 
         /// <summary>
@@ -303,20 +298,11 @@ namespace Assets.Scripts.MathQuiz.Mono {
             // Finalize scoring and show Finish Display Elements
             events.ScoreUpdated?.Invoke();
 
+            EndGame();
+
             SetHighscore();
 
-            var type = UIManager.ResolutionScreenType.Finish;
-
-            events.DisplayResolutionScreen?.Invoke(type, Questions[currentQuestion].AddScore);
-
-            GameObject
-                .Find("ResolutionCanvas/ResolutionScreen/State_Info_Text")
-                .GetComponent<TextMeshProUGUI>()
-                .SetText("FINAL SCORE:" + events.CurrentFinalScore.ToString());
-
-            FindObjectOfType<GlobalScripts.Managers.AudioManager>().PlayClip("sfx_incorrect");
-
-            EndGame();
+            SceneManager.LoadScene(GetNextScene());
         }
 
         private IEnumerator WaitTillNextRound() {

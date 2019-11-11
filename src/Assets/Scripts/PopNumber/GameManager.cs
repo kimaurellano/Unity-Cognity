@@ -1,7 +1,6 @@
 ﻿using Assets.Scripts.GlobalScripts.Managers;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
@@ -24,7 +23,6 @@ namespace Assets.Scripts.PopNumber {
         private UIManager _uiManager;
         private Coroutine _spawnCoroutine, _spawnAnswer;
         private List<QuestionBank> _questionList;
-        private PreScoreManager _preScoreManager;
         private TimerManager _timerManager;
         private int _catIdx;
         private int _correctCount;
@@ -35,7 +33,6 @@ namespace Assets.Scripts.PopNumber {
 
         private void Start() {
             _uiManager = FindObjectOfType<UIManager>();
-            _preScoreManager = new PreScoreManager();
             _questionList = new List<QuestionBank>();
             _timerManager = GetComponent<TimerManager>();
 
@@ -44,10 +41,11 @@ namespace Assets.Scripts.PopNumber {
                     Camera.main.transform.position.z));
 
             // Check the popped number
-            NumberScript.OnNumberPopEvent += CheckNumber;
+            NumberScriptPop.OnNumberPopEvent += CheckNumber;
             // When the number hits the bottom
-            NumberScript.OnBottomHitEvent += CheckAndDestroy;
+            NumberScriptPop.OnBottomHitEvent += CheckAndDestroy;
 
+            TimerManager.OnGameTimerEndEvent += _timerManager.ChangeTimerState;
             TimerManager.OnGameTimerEndEvent += IncreaseDifficulty;
 
             // Ready questions
@@ -79,15 +77,16 @@ namespace Assets.Scripts.PopNumber {
                     Mathf.RoundToInt(_timerManager.Seconds) == 15) {
                     GameObject spawnedPrefab = Instantiate(
                         _numberPrefab,
+                        // Top screen + offset to offscreen the prefabs instantiation
                         new Vector3(Random.Range(-_screenBounds.x + 0.5f, _screenBounds.x - 0.5f),
                             _screenBounds.y + 0.5f, 0f),
                         Quaternion.identity);
 
                     int answer = int.Parse(_questionList[_questionIdx].Answer);
 
-                    NumberScript script = spawnedPrefab.GetComponent<NumberScript>();
-                    script.MoveSpeed = _speed;
-                    script.Content = answer.ToString();
+                    NumberScriptPop scriptPop = spawnedPrefab.GetComponent<NumberScriptPop>();
+                    scriptPop.MoveSpeed = _speed;
+                    scriptPop.Content = answer.ToString();
 
                     Debug.Log("Answer spawned:" + answer);
 
@@ -110,9 +109,9 @@ namespace Assets.Scripts.PopNumber {
 
                 int answer = int.Parse(_questionList[_questionIdx].Answer);
 
-                NumberScript script = spawnedPrefab.GetComponent<NumberScript>();
-                script.MoveSpeed = _speed;
-                script.Content = Random.Range(answer - 5, answer + 5).ToString();
+                NumberScriptPop scriptPop = spawnedPrefab.GetComponent<NumberScriptPop>();
+                scriptPop.MoveSpeed = _speed;
+                scriptPop.Content = Random.Range(answer - 5, answer + 5).ToString();
 
                 yield return new WaitForSeconds(_spawnRate);
             }
@@ -136,7 +135,7 @@ namespace Assets.Scripts.PopNumber {
 
             _timerManager.ResetTimer();
 
-            foreach (var item in FindObjectsOfType<NumberScript>()) {
+            foreach (var item in FindObjectsOfType<NumberScriptPop>()) {
                 item.MoveSpeed = _speed;
             }
         }
@@ -180,7 +179,7 @@ namespace Assets.Scripts.PopNumber {
         }
 
         private void DestroyNumbers() {
-            foreach (var item in FindObjectsOfType<NumberScript>()) {
+            foreach (var item in FindObjectsOfType<NumberScriptPop>()) {
                 Destroy(item.gameObject);
             }
         }
@@ -193,12 +192,6 @@ namespace Assets.Scripts.PopNumber {
 
             if (_questionIdx > _questionList.Count - 1) {
                 EndGame();
-
-                Transform gameResultPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
-                gameResultPanel.gameObject.SetActive(true);
-
-                TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
-                gameResultText.SetText("Complete!");
             } else {
                 _problemText.SetText(_questionList[_questionIdx].Problem);
             }
@@ -227,6 +220,12 @@ namespace Assets.Scripts.PopNumber {
 
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
+
+            // Clear
+            NumberScriptPop.OnNumberPopEvent -= CheckNumber;
+            NumberScriptPop.OnBottomHitEvent -= CheckAndDestroy;
+            TimerManager.OnGameTimerEndEvent -= IncreaseDifficulty;
+            TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
 
             base.EndGame();
         }

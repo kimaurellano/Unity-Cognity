@@ -11,7 +11,8 @@ TrueTypeFontImporter:
   fontName: Roboto Medium
   fontNames:
   - Roboto Medium
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: ebef178403205dc49909316ebe6be7a7, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

@@ -40,12 +40,12 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 string result = string.Empty;
 
                 StartCoroutine(_utility.LoadJson(data => { result = data.last_user; }));
+                // If a user is left logged in but quitted the app
                 if (lastLogged?.Username != null) {
-                    // If a user is left logged in but quitted the app
-
                     FindObjectOfType<StatsManager>().UpdateRadarChart();
 
                     if (result == "login") {
+                        Debug.Log("<color=green>Json file page:login</color>");
                         if (lastLogged.Username != null) {
                             ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
                                 .gameObject
@@ -55,6 +55,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                                 .SetActive(true);
                         }
                     } else {
+                        Debug.Log("<color=green>Json file page:category selection</color>");
                         // When exits from a game
                         ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
                             .gameObject
@@ -167,18 +168,16 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                         Utility.Data newData = _utility.GetData();
                         newData.page = "category selection";
                         _utility.ModifyJson(newData);
-                        Debug.Log($"<color=orange>Json file updated! page:{newData.page}</color>");
+                        Debug.Log($"<color=green>Json file updated! page:{_utility.GetData().page}</color>");
                     }
                 }));
             }
 
-            // Know where we started
             for (int i = 0; i < _gameCollection.GameCollections.Length; i++) {
                 if (_gameCollection.GameCollections[i].Games.Any(sceneName.Equals)) {
-                    Utility.Data newData = _utility.GetData();
-                    newData.loaded = i;
-                    _utility.ModifyJson(newData);
-                    Debug.Log($"<color=orange>Json file updated! loaded:{newData.loaded}</color>");
+                    // Know where we started. At what scene index from GameCollection
+                    FindObjectOfType<GameCollection>().Loaded = i;
+                    Debug.Log($"<color=orange>Json file updated! loaded:{FindObjectOfType<GameCollection>().Loaded}</color>");
                     break;
                 }
             }
@@ -223,6 +222,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             Utility.Data newData = _utility.GetData();
             newData.page = "login";
             _utility.ModifyJson(newData);
+
+            Debug.Log($"<color=green>Update to page:{_utility.GetData().page}</green>");
 
             Application.Quit();
         }

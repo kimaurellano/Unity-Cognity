@@ -6,13 +6,13 @@ using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
-using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
 
 namespace Assets.Scripts.Cognity {
     /// <summary>
-    ///     Main worker of the puzzle game.
-    ///     Manages occuring actions within th e puzzle area.
+    /// Main worker of the puzzle game.
+    /// Manages occuring actions within th e puzzle area.
     /// </summary>
     public class PuzzleManager : CoreGameBehaviour {
 
@@ -108,26 +108,20 @@ namespace Assets.Scripts.Cognity {
 
             // There is only 4 levels any more increment should result game completion
             if (_currentLevel > 4 && !GameDone) {
-
-                EndGame();
-
                 GameDone = true;
 
                 // Stop timer
                 _timerManager.ChangeTimerState();
-
-                // Show success panel
-                Transform successPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game finish panel");
-                successPanel.gameObject.SetActive(true);
-
-                TextMeshProUGUI gameResult = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
-                gameResult.SetText("SUCCESS");
 
                 // Add time as score
                 _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
                 // Save final score
                 _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
+
+                EndGame();
+
+                SceneManager.LoadScene(GetNextScene());
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -164,8 +158,6 @@ namespace Assets.Scripts.Cognity {
             // Timer's up
             if (Mathf.RoundToInt(_timerManager.Seconds) == 0 && Mathf.RoundToInt(_timerManager.Minutes) < 0) {
 
-                EndGame();
-
                 Transform gameFinishPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game finish panel");
                 gameFinishPanel.gameObject.SetActive(true);
 
@@ -174,6 +166,10 @@ namespace Assets.Scripts.Cognity {
 
                 // Save final score
                 _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
+
+                EndGame();
+
+                SceneManager.LoadScene(GetNextScene());
             }
         }
 
@@ -192,7 +188,7 @@ namespace Assets.Scripts.Cognity {
         }
 
         /// <summary>
-        ///     Animates the selected puzzle piece.
+        /// Animates the selected puzzle piece.
         /// </summary>
         /// <param name="transform">Transform to animate</param>
         /// <param name="animate">Start or Stop animation</param>
@@ -242,7 +238,7 @@ namespace Assets.Scripts.Cognity {
         }
 
         /// <summary>
-        ///     Use these for starting the game and going to next level
+        /// Use these for starting the game and going to next level
         /// </summary>
         public void Populate() {
             // Remove the current outline
@@ -298,7 +294,7 @@ namespace Assets.Scripts.Cognity {
         }
 
         /// <summary>
-        ///     Add piece to be listed as locked in chronological order
+        /// Add piece to be listed as locked in chronological order
         /// </summary>
         /// <param name="toLock">piece to be listed as locked</param>
         public void AddLockedPiece(Transform toLock) {

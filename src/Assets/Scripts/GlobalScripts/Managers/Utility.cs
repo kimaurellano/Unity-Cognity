@@ -67,7 +67,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             callback(value);
 
-            yield return null;
+            Debug.Log($"<color=green>Json data has been loaded with callback Data</color>");
+
+            yield return 0;
         }
 
         public IEnumerator LoadJson(Action<bool> IsDone) {
@@ -95,10 +97,12 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             IsDone(true);
 
-            yield return null;
+            Debug.Log($"<color=green>Json data has been loaded with callback bool</color>");
+
+            yield return 0;
         }
 
-        public IEnumerator LoadJson() {
+        public void LoadJson() {
             if (Application.platform == RuntimePlatform.Android) {
                 // The path to write to
                 _persistentPath = $"{Application.persistentDataPath}/UtilityData.json";
@@ -109,7 +113,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 if (_streamingAssetsPath.Contains("://") || _streamingAssetsPath.Contains(":///")) {
                     // Get the compressed jar file containing streaming assets
                     var www = UnityWebRequest.Get(_streamingAssetsPath);
-                    yield return www.SendWebRequest();
 
                     // Cache all the loaded data from the UnityWebRequest to the persistent file
                     File.WriteAllBytes(_persistentPath, www.downloadHandler.data);
@@ -121,7 +124,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 _persistentPath = @"Assets/StreamingAssets/UtilityData.json";
             }
 
-            yield return null;
+            Debug.Log($"<color=green>Json data has been loaded with no callback</color>");
         }
 
         public void ModifyJson(Data newData) {
@@ -140,6 +143,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             byte[] bytes = Encoding.ASCII.GetBytes(d);
             
             File.WriteAllBytes(_persistentPath, bytes);
+
+            Debug.Log($"<color=green>Json data has been modified</color>");
         }
 
         public Data GetData() {
