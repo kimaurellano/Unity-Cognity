@@ -67,6 +67,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             callback(value);
 
+            Debug.Log($"<color=green>Json data has been loaded with callback Data</color>");
+
             yield return 0;
         }
 
@@ -95,6 +97,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             IsDone(true);
 
+            Debug.Log($"<color=green>Json data has been loaded with callback bool</color>");
+
             yield return 0;
         }
 
@@ -119,6 +123,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             } else {
                 _persistentPath = @"Assets/StreamingAssets/UtilityData.json";
             }
+
+            Debug.Log($"<color=green>Json data has been loaded with no callback</color>");
         }
 
         public void ModifyJson(Data newData) {
@@ -137,6 +143,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             byte[] bytes = Encoding.ASCII.GetBytes(d);
             
             File.WriteAllBytes(_persistentPath, bytes);
+
+            Debug.Log($"<color=green>Json data has been modified</color>");
         }
 
         public Data GetData() {
