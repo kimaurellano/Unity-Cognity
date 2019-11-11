@@ -73,14 +73,13 @@ namespace Assets.Scripts.Memory {
         public override void EndGame() {
             base.EndGame();
 
-            // Clear
-            TouchManager.OnCardLockEvent -= IncrementLocks;
-            TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
-
             GameResult(false);
         }
 
         private void GameResult(bool success) {
+            // Clear
+            TouchManager.OnCardLockEvent -= IncrementLocks;
+            TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
             TimerManager.OnGameTimerEndEvent -= EndGame;
 
             // Reset
