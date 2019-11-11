@@ -55,34 +55,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
             ClearEvents();
         }
 
-        /// <summary>
-        /// Returns next scene of a random game in the next category
-        /// </summary>
         public string GetNextScene() {
-            Utility utility = new Utility();
-            // Load persistent data
-            utility.LoadJson();
-            // Fetch the current known loaded scene
-            Utility.Data newData = utility.GetData();
-            // Proceed to next category
-            int currentCatIdx = newData.loaded;
-            currentCatIdx++;
-            // We only have 4 categories
-            if (currentCatIdx > 3) {
-                currentCatIdx = 0;
-            }
-            // Write new values to json file to be read again after game end
-            newData.loaded = currentCatIdx;
-            utility.ModifyJson(newData);
-
-            // Non zero count
-            int gamePerCatCount = _gameCollection.GameCollections[currentCatIdx].Games.Length - 1;
-            // Random scene to load per games of a category
-            string sceneToLoad = _gameCollection.GameCollections[currentCatIdx].Games[Random.Range(0, gamePerCatCount)];
-            // Load
-            Debug.Log("Load in sequence -> Loading next category: " + currentCatIdx + " with game:" + sceneToLoad);
-
-            return sceneToLoad;
+            return FindObjectOfType<GameCollection>().GetNextScene();
         }
 
         public virtual void MuteBackgroundMusic() {
