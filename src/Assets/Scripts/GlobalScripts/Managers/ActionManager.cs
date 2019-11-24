@@ -130,6 +130,15 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void CreateUser(TMP_InputField newUser) {
             TextMeshProUGUI notifText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "create notif");
+
+            if (newUser.text == string.Empty) {
+                notifText.transform.gameObject.SetActive(true);
+                notifText.SetText("Field cannot be empty");
+                notifText.color = new Color32(255, 0, 0, 189);
+
+                return;
+            }
+
             DatabaseManager databaseManager = new DatabaseManager();
             if(databaseManager.GetUser(newUser.text)?.Username != null) {
                 notifText.transform.gameObject.SetActive(true);
