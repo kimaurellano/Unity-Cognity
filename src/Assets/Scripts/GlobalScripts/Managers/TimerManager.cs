@@ -46,11 +46,11 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             if (Minutes < 0 && Mathf.RoundToInt(Seconds) == 0) {
                 Debug.Log("Timer up");
 
+                TimerText?.SetText("Time: 00:00");
+
                 Active = false;
 
                 OnGameTimerEndEvent?.Invoke();
-
-                TimerText?.SetText("Time: 00:00");
             }
 
             // Continue ticking

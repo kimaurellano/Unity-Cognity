@@ -6,6 +6,8 @@ using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 // ReSharper disable All
 
 namespace Assets.Scripts.PopNumber {
@@ -73,8 +75,7 @@ namespace Assets.Scripts.PopNumber {
             Debug.Log("Random spawn answer started");
             while (true) {
                 if (Mathf.RoundToInt(_timerManager.Seconds) == 5 ||
-                    Mathf.RoundToInt(_timerManager.Seconds) == 10 ||
-                    Mathf.RoundToInt(_timerManager.Seconds) == 15) {
+                    Mathf.RoundToInt(_timerManager.Seconds) == 7) {
                     GameObject spawnedPrefab = Instantiate(
                         _numberPrefab,
                         // Top screen + offset to offscreen the prefabs instantiation
@@ -228,6 +229,8 @@ namespace Assets.Scripts.PopNumber {
             TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
 
             base.EndGame();
+
+            SceneManager.LoadScene(GetNextScene());
         }
 
         [System.Serializable]

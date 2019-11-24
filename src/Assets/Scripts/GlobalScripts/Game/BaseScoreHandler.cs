@@ -50,7 +50,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
             float result = Normalize(Score, _minValue, _maxValue, 0f, 1f);
             result *= 100;
             stat.Score = float.Parse(((stat.Score + result) / 2).ToString("0.0"));
-            Debug.Log($"<color=green>Normalized SCORE:{result}</color>");
+            Debug.Log($"<color=green>Normalized SCORE:{stat.Score}</color>");
             UpdateUserStat(user.Username, stat, category);
         }
 

@@ -70,7 +70,11 @@ namespace Assets.Scripts.MathQuiz.Mono {
             UpdateScore(isCorrect ? Questions[currentQuestion].AddScore : 0);
 
             if (IsFinished) {
+                EndGame();
+
                 SetHighscore();
+
+                SceneManager.LoadScene(GetNextScene());
             }
 
             var type

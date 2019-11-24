@@ -29,7 +29,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             float defaultWidth = 1;
             float defaultHeight = 1;
 
-            Vector3[] vertices = new Vector3[4];
+            Vector3[] vertices = new Vector3[5];
 
             float problemSolvingProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.ProblemSolving).Score / 100f;
             TextMeshProUGUI problemSolvingPercentText = (TextMeshProUGUI) _uiManager.GetUI(UIManager.UIType.Text, "problem solving");

@@ -6,10 +6,13 @@ using UnityEngine.UI;
 namespace Assets.Scripts.GlobalScripts.Managers {
     public class AudioManager : MonoBehaviour {
 
+        public delegate void OnAllAudioOverride();
+
         public delegate void OnAudioPlay();
 
         public static OnAudioPlay onAudioEndPlayEvent;
 
+        public static OnAllAudioOverride OnAllAudioOverrideEvent; 
         private static AudioManager _audioManager;
 
         private AudioCollection _audioCollection;
@@ -45,6 +48,21 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void OnSceneChanged(Scene current, Scene next) {
+            // Prevent audio manipulation during Sound games.
+            // Informs PausePanel and CoreGameBehaviour that the
+            // audio cannot be unmuted/change volume unless it's a scene other
+            // than sound games
+            if (SceneManager.GetActiveScene().name.Equals("GameSoundWave")) {
+                SetVolume("bg_game", 0.1f);
+                SetVolume("bg_menu", 0.1f);
+
+                OnAllAudioOverrideEvent?.Invoke();
+
+                return;
+            }
+
+            OnAllAudioOverrideEvent = null;
+
             Debug.Log("Scene changed");
             AttachButtonSfx();
 

@@ -21,6 +21,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         private static GameCollection _gameCollection;
         private bool _disposed;
+        private bool _overrided;
 
         public bool IsPaused { get; set; }
 
@@ -38,6 +39,12 @@ namespace Assets.Scripts.GlobalScripts.Game {
             PlayerPrefs.SetInt("IsBgMuted", 0);
 
             _gameCollection = FindObjectOfType<GameCollection>();
+
+            AudioManager.OnAllAudioOverrideEvent += OverrideAudio;
+        }
+
+        private void OverrideAudio() {
+            _overrided = !_overrided;
         }
 
         public void Retry() {
@@ -60,6 +67,10 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public virtual void MuteBackgroundMusic() {
+            if (_overrided) {
+                return;
+            }
+
             AudioManager audioManager = FindObjectOfType<AudioManager>();
             if(audioManager == null) {
                 return;
@@ -76,6 +87,10 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public virtual void MuteSfx() {
+            if (_overrided) {
+                return;
+            }
+
             AudioCollection audioCollection = FindObjectOfType<AudioCollection>();
             if(audioCollection == null) {
                 return;

@@ -54,6 +54,7 @@ namespace Assets.Scripts.DataComponent.Database {
             _connection.Query<UserStat>($"INSERT INTO UserStat VALUES(NULL, '{user.Username}', 0.0, {(int)UserStat.GameCategory.Language})");
             _connection.Query<UserStat>($"INSERT INTO UserStat VALUES(NULL, '{user.Username}', 0.0, {(int)UserStat.GameCategory.Memory})");
             _connection.Query<UserStat>($"INSERT INTO UserStat VALUES(NULL, '{user.Username}', 0.0, {(int)UserStat.GameCategory.ProblemSolving})");
+            _connection.Query<UserStat>($"INSERT INTO UserStat VALUES(NULL, '{user.Username}', 0.0, {(int)UserStat.GameCategory.Speed})");
             Debug.Log("<color=green>User score stat created</color>");
         }
 

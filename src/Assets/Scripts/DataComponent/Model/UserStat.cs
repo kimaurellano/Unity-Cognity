@@ -7,7 +7,8 @@ namespace Assets.Scripts.DataComponent.Model {
             Flexibility,
             Memory,
             Language,
-            ProblemSolving
+            ProblemSolving,
+            Speed
         }
 
         [PrimaryKey, AutoIncrement] public int Id { get; set; }
