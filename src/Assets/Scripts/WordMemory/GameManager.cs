@@ -15,6 +15,8 @@ namespace Assets.Scripts.WordMemory {
         private UIManager _uiManager;
         private string _temp;
         private string _str;
+        private int _mistake;
+        private int _displayedWords;
 
         private void Start() {
             _timerManager = GetComponent<TimerManager>();
@@ -32,6 +34,11 @@ namespace Assets.Scripts.WordMemory {
         }
 
         private void DisplayWord() {
+            _displayedWords++;
+            if (_displayedWords > 15) {
+                EndGame();
+            }
+            
             _str = _listOfWords[Random.Range(0, _listOfWords.Length - 1)];
             _word.SetText(_str);
 
@@ -59,9 +66,14 @@ namespace Assets.Scripts.WordMemory {
                 textUI.color = Color.green;
                 textUI.text = "correct!";
             } else {
-                TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
-                textUI.color = Color.red;
-                textUI.text = "wrong";
+                _mistake++;
+                if (_mistake > 3) {
+                    TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
+                    textUI.color = Color.red;
+                    textUI.text = "wrong";
+
+                    EndGame();
+                }
             }
 
             Animation anim = (Animation)_uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "score change");
