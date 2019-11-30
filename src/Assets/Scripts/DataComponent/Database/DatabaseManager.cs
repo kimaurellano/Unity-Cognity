@@ -116,7 +116,7 @@ namespace Assets.Scripts.DataComponent.Database {
         }
 
         public IEnumerable<UserScoreHistory> GetScoreHistory(string username) {
-            return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' ORDER BY DATE ASC");
+            return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' ORDER BY Time ASC");
         }
 
         private static void SaveSessionScore(string username, float score) {
