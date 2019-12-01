@@ -301,22 +301,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             btnBack.gameObject.SetActive(_pageStack.Count > 1);
         }
 
-        public void MuteBackground() {
-            Transform button = Array.Find(FindObjectOfType<UIManager>().ButtonCollection, i => i.Name == "volume").Button;
-
-            // Since GameQuizGrammar has different AudioManager namespace
-            if (SceneManager.GetActiveScene().name == "GameQuizGrammar" || SceneManager.GetActiveScene().name == "GameQuizMath") {
-                AudioSource audioSource = Array
-                    .Find(FindObjectOfType<Quiz.Mono.AudioManager>().Sounds, i => i.Name == "GameMusic")
-                    .Source;
-
-                audioSource.mute = !audioSource.mute;
-
-                button.GetChild(0).gameObject.SetActive(!button.GetChild(0).gameObject.activeSelf);
-                button.GetChild(1).gameObject.SetActive(!button.GetChild(1).gameObject.activeSelf);
-            }
-        }
-
         public void DestroyObject(string name) {
             Destroy(GameObject.Find(name));
         }
