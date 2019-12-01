@@ -134,13 +134,13 @@ namespace Assets.Scripts.QuizSolveMath {
         }
 
         public override void EndGame() {
-            base.EndGame();
-
             _gameDone = !_gameDone;
 
             BaseScoreHandler baseScoreHandler = new BaseScoreHandler(0, 100);
             baseScoreHandler.AddScore(_score);
             baseScoreHandler.SaveScore(UserStat.GameCategory.ProblemSolving);
+
+            base.EndGame();
         }
     }
 }

@@ -48,8 +48,6 @@ namespace Assets.Scripts.PicturePuzzle {
         }
 
         public override void EndGame() {
-            base.EndGame();
-
             TimerManager.OnGameTimerEndEvent -= EndGame;
 
             _timerManager.ChangeTimerState();
@@ -58,6 +56,8 @@ namespace Assets.Scripts.PicturePuzzle {
             _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
+
+            base.EndGame();
         }
 
         public void CheckAnswer() {

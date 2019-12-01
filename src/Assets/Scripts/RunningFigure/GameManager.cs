@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
-using Assets.Scripts.Quizzes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,20 +21,23 @@ namespace Assets.Scripts.RunningFigure {
         private BaseScoreHandler _baseScoreHandler;
         private TimerManager _timerManager;
         private Vector2 _screenBounds;
+        private const int _maxScore = 15;
         private int _curLevel = (int)LevelScript.Level.Easy;
-        private float _moveSpeed;
-        private float _spawnRate;
+        private float _moveSpeed, _spawnRate;
         private float _score;
         private int lives = 3;
+        private bool _gameStarted;
 
         public Image RunningImage { get => _runningImageHolder; private set => _runningImageHolder = value; }
 
         public float Number { get; set; }
 
         private void Start() {
+            _timerManager = gameObject.AddComponent<TimerManager>();
+
             _figurePrefabs = new List<GameObject>();
 
-            _baseScoreHandler = new BaseScoreHandler(0, 10);
+            _baseScoreHandler = new BaseScoreHandler(0, _maxScore);
 
             _screenBounds =
                 Camera.main.ScreenToWorldPoint(new Vector3(
@@ -44,20 +45,40 @@ namespace Assets.Scripts.RunningFigure {
                     Screen.height,
                     Camera.main.transform.position.z));
 
-            // Starting speed
-            _moveSpeed = 2.5f;
-            _spawnRate = 1.5f;
-
             SceneManager.activeSceneChanged += RemoveEvents;
 
             TimerManager.OnPreGameTimerEndEvent += StartSpawn;
 
             TouchManager.OnImageCatchEvent += ChangeFigure;
             TouchManager.OnImageCatchEvent += IncreaseScore;
+
+            _moveSpeed = 2.5f;
+            _spawnRate = 1.5f;
+        }
+
+        private void Update() {
+            // Increase difficulty every 20 seconds
+            if (!_timerManager.Active && _gameStarted) {
+                _timerManager.StartTimerAt(0, 20f);
+
+                _curLevel++;
+
+                if (_curLevel > 2) {
+                    EndGame();
+
+                    return;
+                } 
+
+                ChangeFigure();
+            }
         }
 
         private void StartSpawn() {
             TimerManager.OnPreGameTimerEndEvent -= StartSpawn;
+
+            _timerManager.StartTimerAt(0, 20f);
+
+            _gameStarted = true;
 
             ChangeFigure();
 
@@ -76,7 +97,7 @@ namespace Assets.Scripts.RunningFigure {
                     Quaternion.identity);
 
                 FigureScript figureScript = spawnedPrefab.GetComponent<FigureScript>();
-                figureScript.Number = Random.Range((int)Number - 1, (int)Number + 1);
+                figureScript.Number = Random.Range((int)Number - 2, (int)Number + 2);
                 if ((LevelScript.Level) Enum.ToObject(typeof(LevelScript.Level), _curLevel) != LevelScript.Level.Easy) {
                     figureScript.Number += 0.5f;
                 }
@@ -90,7 +111,8 @@ namespace Assets.Scripts.RunningFigure {
         private void IncreaseScore() {
             _score++;
             _baseScoreHandler.AddScore(_score);
-            if (_score > 10) {
+
+            if (_score > _maxScore) {
                 EndGame();
             }
         }
@@ -99,6 +121,8 @@ namespace Assets.Scripts.RunningFigure {
             LevelScript.Level level = (LevelScript.Level) Enum.ToObject(typeof(LevelScript.Level), _curLevel);
             LevelScript levelScript = Array.Find(_level, i => i.GameLevel == level);
 
+            _figurePrefabs.Clear();
+
             foreach (var levelScriptPrefab in levelScript._prefabs) {
                 _figurePrefabs.Add(levelScriptPrefab);
             }
@@ -106,11 +130,13 @@ namespace Assets.Scripts.RunningFigure {
             float rndNumber = (int)Random.Range(levelScript.RangeFrom, levelScript.RangeTo);
             if (level != LevelScript.Level.Easy) {
                 rndNumber += 0.5f;
-            } 
+                _numberText.SetText(rndNumber.ToString("##.0"));
+            } else {
+                _numberText.SetText(rndNumber.ToString());
+            }
 
+            // Tell to spawn figure with number near this value
             Number = rndNumber;
-
-            _numberText.SetText(rndNumber.ToString("##.0"));
 
             // Random display of what figure to catch
             _runningImageHolder.sprite =
@@ -120,7 +146,7 @@ namespace Assets.Scripts.RunningFigure {
 
         public void DecreaseLife() {
             lives--;
-            if (lives < 1) {
+            if (lives <= 0) {
                 EndGame();
             }
         }
@@ -133,6 +159,8 @@ namespace Assets.Scripts.RunningFigure {
 
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
+
+            base.EndGame();
         }
     }
 }

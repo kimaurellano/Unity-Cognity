@@ -3,7 +3,6 @@ using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.WordMemory {

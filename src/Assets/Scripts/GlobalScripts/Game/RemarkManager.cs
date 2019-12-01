@@ -45,7 +45,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
             dotInstance.GetComponent<Image>().sprite = _circleSprite;
             RectTransform rectTransform = dotInstance.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = anchoredPosition;
-            rectTransform.sizeDelta = new Vector2(11, 11);
+            rectTransform.sizeDelta = new Vector2(20, 20);
             rectTransform.anchorMin = new Vector2(0, 0);
             rectTransform.anchorMax = new Vector2(0, 0);
 
@@ -83,7 +83,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         private void CreateDotConnection(Vector2 dotPosA, Vector2 dotPosB) {
             GameObject dotConnection = new GameObject("dotConnection", typeof(Image));
             dotConnection.transform.SetParent(_graphContainer, false);
-            dotConnection.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+            dotConnection.GetComponent<Image>().color = Color.blue;
             RectTransform rectTransform = dotConnection.GetComponent<RectTransform>();
             Vector2 dir = (dotPosB - dotPosA).normalized;
             float dist = Vector2.Distance(dotPosA, dotPosB);

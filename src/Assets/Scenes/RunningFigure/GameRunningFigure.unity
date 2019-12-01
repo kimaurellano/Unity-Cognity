@@ -310,6 +310,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ready_Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 6262489343476868607, guid: c8936045a8484574f9531d4ab1babb40,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6262489343476868606, guid: c8936045a8484574f9531d4ab1babb40,
         type: 3}
       propertyPath: m_LocalPosition.x

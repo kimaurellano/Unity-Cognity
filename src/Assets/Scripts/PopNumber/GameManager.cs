@@ -42,6 +42,8 @@ namespace Assets.Scripts.PopNumber {
                 Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height,
                     Camera.main.transform.position.z));
 
+            SceneManager.activeSceneChanged += RemoveEvents;
+
             // Check the popped number
             NumberScriptPop.OnNumberPopEvent += CheckNumber;
             // When the number hits the bottom
@@ -62,6 +64,13 @@ namespace Assets.Scripts.PopNumber {
             StartCoroutine(SpawnAnswer());
 
             _baseScoreHandler = new BaseScoreHandler(0, 100);
+        }
+
+        private void RemoveEvents(Scene current, Scene next) {
+            SceneManager.activeSceneChanged -= RemoveEvents;
+            NumberScriptPop.OnNumberPopEvent -= CheckNumber;
+            NumberScriptPop.OnBottomHitEvent -= CheckAndDestroy;
+            TimerManager.OnGameTimerEndEvent -= IncreaseDifficulty;
         }
 
         private void StopSpawning() {
@@ -221,12 +230,6 @@ namespace Assets.Scripts.PopNumber {
 
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
-
-            // Clear
-            NumberScriptPop.OnNumberPopEvent -= CheckNumber;
-            NumberScriptPop.OnBottomHitEvent -= CheckAndDestroy;
-            TimerManager.OnGameTimerEndEvent -= IncreaseDifficulty;
-            TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
 
             base.EndGame();
         }
