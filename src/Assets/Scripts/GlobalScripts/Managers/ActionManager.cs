@@ -165,11 +165,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
         }
 
-        public void SaveUserPref(TMP_InputField input) {
-            // Cache user name
-            PlayerPrefs.SetString("user_info", input.text);
-        }
-
         public void GoTo(string sceneName) {
             if (sceneName.StartsWith("Game")) {
                 StartCoroutine(_utility.LoadJson(isDone => {
