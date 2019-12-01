@@ -55,11 +55,11 @@ namespace Assets.Scripts.GlobalScripts.Game {
         private void ShowGraph() {
             foreach (var remark in (Transform[])Resources.FindObjectsOfTypeAll(typeof(Transform))) {
                 if (remark.name.Equals("Remarks")) {
-                    // We can now fetch the WindowGraph by enabling it first
+                    // We can now fetch the RemarkManager by enabling it first
                     _remark = remark;
                     _remark.gameObject.SetActive(true);
                     
-                    FindObjectOfType<WindowGraph>().ShowGraph();
+                    FindObjectOfType<RemarkManager>().ShowGraph();
 
                     break;
                 }

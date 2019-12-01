@@ -2,15 +2,16 @@
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Catching {
     public class GameManager : CoreGameBehaviour {
+        [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private GameObject _fallingObject;
 
         private BaseScoreHandler _baseScoreHandler;
-        private TimerManager _timerManager;
         private Vector2 _screenBounds;
         private float _moveSpeed;
         private float _spawnRate;
@@ -35,6 +36,8 @@ namespace Assets.Scripts.Catching {
             // Starting speed
             _moveSpeed = 0.5f;
             _spawnRate = 3f;
+
+            _scoreText.SetText($"Points:{(int)_score}");
         }
 
         private void RemoveEvent(Scene current, Scene next) {
@@ -81,6 +84,19 @@ namespace Assets.Scripts.Catching {
             _score++;
             if(_score > 10) {
                 EndGame();
+            }
+
+            _scoreText.SetText($"{(int)_score}/10");
+
+            IncreaseDifficulty();
+        }
+
+        private void IncreaseDifficulty() {
+            Debug.Log("Increasing speed");
+
+            _moveSpeed += 0.5f;
+            foreach (var fallingObject in FindObjectsOfType<FallingObjectScript>()) {
+                fallingObject.MoveSpeed = _moveSpeed;
             }
         }
     }

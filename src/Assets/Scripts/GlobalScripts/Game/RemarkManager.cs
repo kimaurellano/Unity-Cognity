@@ -1,27 +1,42 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataComponent.Database;
-using Assets.Scripts.DataComponent.Model;
 using UnityEngine;
 using UnityEngine.UI;
 using CodeMonkey.Utils;
+using TMPro;
 
 namespace Assets.Scripts.GlobalScripts.Game {
-    public class WindowGraph : MonoBehaviour {
+    public class RemarkManager : MonoBehaviour {
 
+        [SerializeField] private TextMeshProUGUI _waitText;
         [SerializeField] private Button _btnContinue;
         [SerializeField] private Sprite _circleSprite;
-        private RectTransform _graphContainer;
 
+        private RectTransform _graphContainer;
         private List<float> _values;
+        private int _seconds = 5;
 
         private void Awake() {
             _values = new List<float>();
 
+            // Programmatically add LoadNextScene as OnClick of button continue
             _btnContinue.onClick.AddListener(FindObjectOfType<CoreGameBehaviour>().LoadNextScene);
 
             _graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
+
+            StartCoroutine(WindowClose());
+        }
+
+        private IEnumerator WindowClose() {
+            while (_seconds > 0) {
+                _seconds--;
+                _waitText.SetText(_seconds.ToString());
+                yield return new WaitForSeconds(1f);
+            }
+
+            FindObjectOfType<CoreGameBehaviour>().LoadNextScene();
         }
 
         private GameObject CreateCircle(Vector2 anchoredPosition) {
