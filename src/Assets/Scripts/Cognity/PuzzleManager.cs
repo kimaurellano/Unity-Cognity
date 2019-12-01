@@ -120,8 +120,6 @@ namespace Assets.Scripts.Cognity {
                 _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
                 EndGame();
-
-                SceneManager.LoadScene(GetNextScene());
             }
 
             if (_proceedToNextLevel && !GameDone) {

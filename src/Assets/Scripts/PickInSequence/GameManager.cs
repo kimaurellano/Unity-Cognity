@@ -101,9 +101,7 @@ namespace Assets.Scripts.PickInSequence {
                 NumberScriptPick.OnNumberPopPickEvent -= CheckAnswer;
                 TimerManager.OnGameTimerEndEvent -= ProceedToNextSequence;
 
-                EndGame();
-
-                SceneManager.LoadScene(GetNextScene());
+                base.EndGame();
             }
 
             InstantiateNumber(RandomSequence(5));

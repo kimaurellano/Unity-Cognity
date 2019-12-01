@@ -3,7 +3,6 @@ using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Catching {
     public class GameManager : CoreGameBehaviour {
@@ -55,9 +54,9 @@ namespace Assets.Scripts.Catching {
         }
 
         public override void EndGame() {
-            _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
+            base.EndGame();
 
-            SceneManager.LoadScene(GetNextScene());
+            _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
         }
 
         public void IncreasePoint() {

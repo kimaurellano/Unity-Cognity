@@ -229,8 +229,6 @@ namespace Assets.Scripts.PopNumber {
             TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
 
             base.EndGame();
-
-            SceneManager.LoadScene(GetNextScene());
         }
 
         [System.Serializable]

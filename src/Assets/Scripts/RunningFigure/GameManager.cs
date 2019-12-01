@@ -106,8 +106,6 @@ namespace Assets.Scripts.RunningFigure {
             TouchManager.OnImageCatchEvent -= IncreaseScore;
 
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
-
-            SceneManager.LoadScene(GetNextScene());
         }
     }
 }

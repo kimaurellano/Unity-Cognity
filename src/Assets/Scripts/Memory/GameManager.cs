@@ -71,8 +71,6 @@ namespace Assets.Scripts.Memory {
         }
 
         public override void EndGame() {
-            base.EndGame();
-
             GameResult(false);
         }
 
@@ -90,7 +88,7 @@ namespace Assets.Scripts.Memory {
             baseScoreHandler.AddScore(0, _seconds);
             baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
-            SceneManager.LoadScene(GetNextScene());
+            base.EndGame();
         }
 
         public IEnumerator WaitForFlip() {

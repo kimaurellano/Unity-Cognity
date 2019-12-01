@@ -2,12 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -172,8 +170,6 @@ namespace Assets.Scripts.SoundWave {
                     _baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
                     EndGame();
-
-                    SceneManager.LoadScene(GetNextScene());
                 }
 
                 // Show result
@@ -200,34 +196,16 @@ namespace Assets.Scripts.SoundWave {
         private IEnumerator SequenceNotif(bool result) {
             FindObjectOfType<AnimationEvent>().SetError(_hasError);
 
-            Animator anim = (Animator) _uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "sequence result");
+            Animation anim = (Animation) _uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "sequence result");
             // Set check or x image
             _resultImage.enabled = true;
             _resultImage.sprite = result ? _wrong : _correct;
-            // Start scaling animation
-            anim.enabled = true;
+            anim.Play();
 
-            AnimatorController animatorController = anim.runtimeAnimatorController as AnimatorController;
-            AnimatorStateMachine sm = animatorController?.layers[0].stateMachine;
-            if (sm == null) {
-                yield break;
-            }
-
-            float length = 0f;
-            foreach (var s in sm.states) {
-                AnimatorState state = s.state;
-                if (state.name == "Result") {
-                    AnimationClip clip = state.motion as AnimationClip;
-                    if (clip != null) {
-                        length = clip.length;
-                    }
-                }
-            }
-
-            yield return new WaitForSeconds(length);
+            yield return new WaitForSeconds(anim.clip.length);
 
             // Stop animation and clear image
-            anim.enabled = false;
+            anim.Stop();
             _resultImage.enabled = false;
             _resultImage.enabled = false;
             _hasError = !_hasError;

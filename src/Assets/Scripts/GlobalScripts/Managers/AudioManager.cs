@@ -70,15 +70,13 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         private void AttachButtonSfx() {
-            // Get all active objects
+            // Get all inactive objects
             foreach (var button in (Button[]) Resources.FindObjectsOfTypeAll(typeof(Button))) {
-                //Debug.Log("Attaching:" + button.name);
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
 
-            // Get all inactive objects
+            // Get all active objects
             foreach (var button in (Button[]) FindObjectsOfType(typeof(Button))) {
-                //Debug.Log("Attaching:" + button.name);
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
         }

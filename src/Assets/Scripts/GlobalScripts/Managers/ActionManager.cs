@@ -78,7 +78,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 databaseManager.Close();
             }
 
-            // Revert time scale to 1 after quiting from a game which ended with 0f time scale
+            // Revert time scale to 1 after quiting from
+            // a game which ended with 0f time scale
             Time.timeScale = 1f;
         }
 
@@ -106,7 +107,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             Debug.Log("<color=green>Exists!</color>");
 
-            // Update user state
             user.IsLogged = true;
             databaseManager.UpdateUser(user.Username, user);
             databaseManager.Close();

@@ -75,8 +75,6 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
                 EndGame();
 
                 SetHighscore();
-
-                SceneManager.LoadScene(GetNextScene());
             }
 
             var type
@@ -286,8 +284,6 @@ namespace Assets.Scripts.GrammarQuiz.Mono {
             EndGame();
 
             SetHighscore();
-
-            SceneManager.LoadScene(GetNextScene());
         }
 
         private IEnumerator WaitTillNextRound() {

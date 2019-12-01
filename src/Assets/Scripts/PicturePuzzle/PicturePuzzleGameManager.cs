@@ -58,8 +58,6 @@ namespace Assets.Scripts.PicturePuzzle {
             _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
-
-            SceneManager.LoadScene(GetNextScene());
         }
 
         public void CheckAnswer() {

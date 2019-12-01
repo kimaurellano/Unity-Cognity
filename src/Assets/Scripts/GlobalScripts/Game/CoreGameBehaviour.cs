@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +21,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public static event OnMuteGame OnMuteGameEvent;
 
         private static GameCollection _gameCollection;
+        private Transform _remark;
         private bool _disposed;
         private bool _overrided;
 
@@ -30,6 +32,9 @@ namespace Assets.Scripts.GlobalScripts.Game {
         public bool IsBgMuted { get; set; }
 
         private void Awake() {
+            // Remove halted state after every game end
+            Time.timeScale = 1f;
+
             IsSfxMuted = false;
 
             PlayerPrefs.SetInt("IsMuted", 0);
@@ -47,6 +52,20 @@ namespace Assets.Scripts.GlobalScripts.Game {
             _overrided = !_overrided;
         }
 
+        private void ShowGraph() {
+            foreach (var remark in (Transform[])Resources.FindObjectsOfTypeAll(typeof(Transform))) {
+                if (remark.name.Equals("Remarks")) {
+                    // We can now fetch the WindowGraph by enabling it first
+                    _remark = remark;
+                    _remark.gameObject.SetActive(true);
+                    
+                    FindObjectOfType<WindowGraph>().ShowGraph();
+
+                    break;
+                }
+            }
+        }
+
         public void Retry() {
             ClearEvents();
 
@@ -54,16 +73,28 @@ namespace Assets.Scripts.GlobalScripts.Game {
             SceneManager.LoadScene(active.name);
         }
 
+        /// <summary>
+        /// Shows graph, clears events, sets time scale to 0
+        /// </summary>
         public virtual void EndGame() {
             FindObjectOfType<AudioManager>().SetVolume("bg_game", 0f);
 
             OnEndGameEvent?.Invoke();
 
             ClearEvents();
+
+            // Halt all activities
+            Time.timeScale = 0f;
+
+            ShowGraph();
         }
 
         public string GetNextScene() {
             return FindObjectOfType<GameCollection>().GetNextScene();
+        }
+
+        public void LoadNextScene() {
+            SceneManager.LoadScene(GetNextScene());
         }
 
         public virtual void MuteBackgroundMusic() {

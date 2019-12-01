@@ -52,8 +52,6 @@ namespace Assets.Scripts.WordMemory {
             // TODO: implement scoring
 
             base.EndGame();
-
-            SceneManager.LoadScene(GetNextScene());
         }
 
         public void Button(string userAnswer) {

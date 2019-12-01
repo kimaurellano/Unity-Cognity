@@ -73,8 +73,6 @@ namespace Assets.Scripts.MathQuiz.Mono {
                 EndGame();
 
                 SetHighscore();
-
-                SceneManager.LoadScene(GetNextScene());
             }
 
             var type
@@ -305,8 +303,6 @@ namespace Assets.Scripts.MathQuiz.Mono {
             EndGame();
 
             SetHighscore();
-
-            SceneManager.LoadScene(GetNextScene());
         }
 
         private IEnumerator WaitTillNextRound() {
