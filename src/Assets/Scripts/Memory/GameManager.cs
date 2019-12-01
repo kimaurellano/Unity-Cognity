@@ -4,8 +4,6 @@ using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
-using static Assets.Scripts.GlobalScripts.Game.BaseScoreHandler;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Memory {
@@ -48,12 +46,20 @@ namespace Assets.Scripts.Memory {
 
             _lockedCardList = new List<Transform>();
 
+            SceneManager.activeSceneChanged += RemoveEvents;
+
             TimerManager.OnPreGameTimerEndEvent += StartGameTimer;
 
             TimerManager.OnGameTimerEndEvent += EndGame;
             TimerManager.OnGameTimerEndEvent += _timerManager.ChangeTimerState;
 
             TouchManager.OnCardLockEvent += IncrementLocks;
+        }
+
+        private void RemoveEvents(Scene current, Scene next) {
+            SceneManager.activeSceneChanged -= RemoveEvents;
+            TouchManager.OnCardLockEvent -= IncrementLocks;
+            TimerManager.OnGameTimerEndEvent -= EndGame;
         }
 
         private void StartGameTimer() {
@@ -75,11 +81,6 @@ namespace Assets.Scripts.Memory {
         }
 
         private void GameResult(bool success) {
-            // Clear
-            TouchManager.OnCardLockEvent -= IncrementLocks;
-            TimerManager.OnGameTimerEndEvent -= _timerManager.ChangeTimerState;
-            TimerManager.OnGameTimerEndEvent -= EndGame;
-
             // Reset
             _lockCount = 0;
 

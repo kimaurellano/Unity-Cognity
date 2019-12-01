@@ -3,6 +3,7 @@ using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Catching {
     public class GameManager : CoreGameBehaviour {
@@ -14,8 +15,13 @@ namespace Assets.Scripts.Catching {
         private float _moveSpeed;
         private float _spawnRate;
         private float _score;
+        private int _life = 3;
 
         private void Start() {
+            SceneManager.activeSceneChanged += RemoveEvent;
+
+            FallingObjectScript.OnMissedEvent += DecreaseLife;
+
             TimerManager.OnPreGameTimerEndEvent += StartSpawn;
 
             _baseScoreHandler = new BaseScoreHandler(0, 10);
@@ -29,6 +35,11 @@ namespace Assets.Scripts.Catching {
             // Starting speed
             _moveSpeed = 0.5f;
             _spawnRate = 3f;
+        }
+
+        private void RemoveEvent(Scene current, Scene next) {
+            SceneManager.activeSceneChanged -= RemoveEvent;
+            FallingObjectScript.OnMissedEvent -= DecreaseLife;
         }
 
         private void StartSpawn() {
@@ -54,9 +65,16 @@ namespace Assets.Scripts.Catching {
         }
 
         public override void EndGame() {
-            base.EndGame();
-
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
+
+            base.EndGame();
+        }
+
+        private void DecreaseLife() {
+            _life--;
+            if (_life <= 0) {
+                EndGame();
+            }
         }
 
         public void IncreasePoint() {

@@ -110,16 +110,13 @@ namespace Assets.Scripts.Cognity {
             if (_currentLevel > 4 && !GameDone) {
                 GameDone = true;
 
-                // Stop timer
-                _timerManager.ChangeTimerState();
-
                 // Add time as score
                 _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
 
                 // Save final score
                 _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
-                EndGame();
+                base.EndGame();
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -165,9 +162,7 @@ namespace Assets.Scripts.Cognity {
                 // Save final score
                 _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
-                EndGame();
-
-                SceneManager.LoadScene(GetNextScene());
+                base.EndGame();
             }
         }
 

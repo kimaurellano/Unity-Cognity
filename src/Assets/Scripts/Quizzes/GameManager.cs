@@ -6,6 +6,7 @@ using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Quizzes {
     public class GameManager : CoreGameBehaviour {
@@ -36,12 +37,22 @@ namespace Assets.Scripts.Quizzes {
             TimerManager.OnPreGameTimerEndEvent += StartGame;
             TimerManager.OnGameTimerEndEvent += EndGame;
 
+            OnEndGameEvent += EndGame;
+
             _currentQuestions = new List<QuestionBankQuiz>();
 
             AnswerScript.OnSelectEvent += CheckAnswer;
 
+            SceneManager.activeSceneChanged += RemoveEvents;
+
             // max score = points * how many questions;
             _baseScoreHandler = new BaseScoreHandler(0, _point * _questions.Length);
+        }
+
+        private void RemoveEvents(Scene current, Scene next) {
+            SceneManager.activeSceneChanged -= RemoveEvents;
+            AnswerScript.OnSelectEvent -= CheckAnswer;
+            TimerManager.OnGameTimerEndEvent -= EndGame;
         }
 
         private void StartGame() {
@@ -122,8 +133,6 @@ namespace Assets.Scripts.Quizzes {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
 
             base.EndGame();
-
-            TimerManager.OnGameTimerEndEvent -= EndGame;
         }
     }
 }

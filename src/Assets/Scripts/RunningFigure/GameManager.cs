@@ -39,6 +39,8 @@ namespace Assets.Scripts.RunningFigure {
             _moveSpeed = 2.5f;
             _spawnRate = 1.5f;
 
+            SceneManager.activeSceneChanged += RemoveEvents;
+
             TimerManager.OnPreGameTimerEndEvent += StartSpawn;
 
             TouchManager.OnImageCatchEvent += ChangeFigure;
@@ -100,11 +102,13 @@ namespace Assets.Scripts.RunningFigure {
             }
         }
 
-        public override void EndGame() {
-            // Clear
+        private void RemoveEvents(Scene current, Scene next) {
+            SceneManager.activeSceneChanged -= RemoveEvents;
             TouchManager.OnImageCatchEvent -= ChangeFigure;
             TouchManager.OnImageCatchEvent -= IncreaseScore;
+        }
 
+        public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
         }
     }

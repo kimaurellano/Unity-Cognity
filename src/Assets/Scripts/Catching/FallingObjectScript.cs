@@ -3,6 +3,10 @@
 namespace Assets.Scripts.Catching {
     public class FallingObjectScript : MonoBehaviour {
 
+        public delegate void OnMissed();
+
+        public static event OnMissed OnMissedEvent;
+
         private bool _missed = true;
 
         public float MoveSpeed { get; set; }
@@ -21,8 +25,8 @@ namespace Assets.Scripts.Catching {
 
         private void OnBecameInvisible() {
             if (_missed) {
-                Debug.Log("Missed. Game over.");
-                FindObjectOfType<GameManager>().EndGame();
+                Debug.Log("Missed.");
+                OnMissedEvent?.Invoke();
             }
 
             Destroy(gameObject);
