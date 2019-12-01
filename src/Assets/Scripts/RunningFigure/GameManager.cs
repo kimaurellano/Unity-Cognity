@@ -1,22 +1,29 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
+using Assets.Scripts.Quizzes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.RunningFigure {
     public class GameManager : CoreGameBehaviour {
 
         [SerializeField] private TextMeshProUGUI _numberText;
         [SerializeField] private Image _runningImageHolder;
-        [SerializeField] private GameObject[] _figurePrefabs;
+        [SerializeField] private LevelScript[] _level;
 
+        private List<GameObject> _figurePrefabs;
         private BaseScoreHandler _baseScoreHandler;
         private TimerManager _timerManager;
         private Vector2 _screenBounds;
+        private int _curLevel = (int)LevelScript.Level.Easy;
         private float _moveSpeed;
         private float _spawnRate;
         private float _score;
@@ -27,6 +34,8 @@ namespace Assets.Scripts.RunningFigure {
         public float Number { get; set; }
 
         private void Start() {
+            _figurePrefabs = new List<GameObject>();
+
             _baseScoreHandler = new BaseScoreHandler(0, 10);
 
             _screenBounds =
@@ -57,7 +66,7 @@ namespace Assets.Scripts.RunningFigure {
 
         private IEnumerator SpawnAnswer() {
             while (true) {
-                int randomPrefabToSpawn = Random.Range(0, _figurePrefabs.Length - 1);
+                int randomPrefabToSpawn = Random.Range(0, _figurePrefabs.Count - 1);
                 // Random instantiation of prefab
                 GameObject spawnedPrefab = Instantiate(
                     _figurePrefabs[randomPrefabToSpawn],
@@ -68,6 +77,9 @@ namespace Assets.Scripts.RunningFigure {
 
                 FigureScript figureScript = spawnedPrefab.GetComponent<FigureScript>();
                 figureScript.Number = Random.Range((int)Number - 1, (int)Number + 1);
+                if ((LevelScript.Level) Enum.ToObject(typeof(LevelScript.Level), _curLevel) != LevelScript.Level.Easy) {
+                    figureScript.Number += 0.5f;
+                }
                 figureScript.MoveSpeed = _moveSpeed;
 
                 // Prevent spawning multiple time at n second
@@ -84,15 +96,26 @@ namespace Assets.Scripts.RunningFigure {
         }
 
         private void ChangeFigure() {
-            // Random display of what figure to catch
-            _runningImageHolder.sprite = 
-                _figurePrefabs[Random.Range(0, _figurePrefabs.Length - 1)]
-                    .GetComponent<SpriteRenderer>().sprite;
+            LevelScript.Level level = (LevelScript.Level) Enum.ToObject(typeof(LevelScript.Level), _curLevel);
+            LevelScript levelScript = Array.Find(_level, i => i.GameLevel == level);
 
-            float rndNumber = Random.Range(0, 10);
+            foreach (var levelScriptPrefab in levelScript._prefabs) {
+                _figurePrefabs.Add(levelScriptPrefab);
+            }
+
+            float rndNumber = (int)Random.Range(levelScript.RangeFrom, levelScript.RangeTo);
+            if (level != LevelScript.Level.Easy) {
+                rndNumber += 0.5f;
+            } 
+
             Number = rndNumber;
 
-            _numberText.SetText(rndNumber.ToString());
+            _numberText.SetText(rndNumber.ToString("##.0"));
+
+            // Random display of what figure to catch
+            _runningImageHolder.sprite =
+                _figurePrefabs[Random.Range(0, _figurePrefabs.Count - 1)]
+                    .GetComponent<SpriteRenderer>().sprite;
         }
 
         public void DecreaseLife() {
