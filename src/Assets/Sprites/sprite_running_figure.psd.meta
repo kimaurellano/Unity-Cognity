@@ -4,31 +4,31 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 7749520471425894259
-    second: sprite_running_figure_0
+    second: sprite_running_figure_square
   - first:
       213: -1165337842665970144
-    second: sprite_running_figure_1
+    second: sprite_running_figure_circle
   - first:
       213: -7245508166715913391
-    second: sprite_running_figure_2
+    second: sprite_running_figure_triangle
   - first:
       213: 1203899140116807603
-    second: sprite_running_figure_3
+    second: sprite_running_figure_trapezoid
   - first:
       213: 8204633117617826491
-    second: sprite_running_figure_4
+    second: sprite_running_figure_diamond
   - first:
       213: -2375156136655969355
-    second: sprite_running_figure_5
+    second: sprite_running_figure_parallelogram
   - first:
       213: 5958240217154078581
-    second: sprite_running_figure_6
+    second: sprite_running_figure_pentagon
   - first:
       213: 5299250827690924945
-    second: sprite_running_figure_7
+    second: sprite_running_figure_hexagon
   - first:
       213: 5704740713426965819
-    second: sprite_running_figure_8
+    second: sprite_running_figure_heptagon
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -125,7 +125,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sprite_running_figure_0
+      name: sprite_running_figure_square
       rect:
         serializedVersion: 2
         x: 42
@@ -133,7 +133,7 @@ TextureImporter:
         width: 152
         height: 152
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -146,7 +146,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_1
+      name: sprite_running_figure_circle
       rect:
         serializedVersion: 2
         x: 236
@@ -154,7 +154,7 @@ TextureImporter:
         width: 168
         height: 164
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -167,7 +167,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_2
+      name: sprite_running_figure_triangle
       rect:
         serializedVersion: 2
         x: 446
@@ -175,7 +175,7 @@ TextureImporter:
         width: 171
         height: 147
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -188,7 +188,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_3
+      name: sprite_running_figure_trapezoid
       rect:
         serializedVersion: 2
         x: 20
@@ -196,7 +196,7 @@ TextureImporter:
         width: 194
         height: 131
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -209,7 +209,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_4
+      name: sprite_running_figure_diamond
       rect:
         serializedVersion: 2
         x: 226
@@ -217,7 +217,7 @@ TextureImporter:
         width: 187
         height: 187
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -230,7 +230,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_5
+      name: sprite_running_figure_parallelogram
       rect:
         serializedVersion: 2
         x: 425
@@ -238,7 +238,7 @@ TextureImporter:
         width: 198
         height: 137
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -251,7 +251,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_6
+      name: sprite_running_figure_pentagon
       rect:
         serializedVersion: 2
         x: 29
@@ -259,7 +259,7 @@ TextureImporter:
         width: 177
         height: 170
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -272,7 +272,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_7
+      name: sprite_running_figure_hexagon
       rect:
         serializedVersion: 2
         x: 240
@@ -280,7 +280,7 @@ TextureImporter:
         width: 159
         height: 184
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -293,7 +293,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sprite_running_figure_8
+      name: sprite_running_figure_heptagon
       rect:
         serializedVersion: 2
         x: 437
@@ -301,7 +301,7 @@ TextureImporter:
         width: 174
         height: 169
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

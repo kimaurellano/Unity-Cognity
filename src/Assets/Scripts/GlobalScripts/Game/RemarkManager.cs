@@ -33,7 +33,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
             while (_seconds > 0) {
                 _seconds--;
                 _waitText.SetText(_seconds.ToString());
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSecondsRealtime(1f);
             }
 
             FindObjectOfType<CoreGameBehaviour>().LoadNextScene();

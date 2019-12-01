@@ -1216,16 +1216,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _numberText: {fileID: 2004614231}
   _runningImageHolder: {fileID: 57038440}
-  _figurePrefabs:
-  - {fileID: 8177789803890739352, guid: d64fafa732cb69543baf7d3d8dc5725d, type: 3}
-  - {fileID: 7357037677509954632, guid: 4bc090ac3e6f5e84e8637fea51c1ebf4, type: 3}
-  - {fileID: 5041285079189246652, guid: b3ff3c8bfe834b44a91a0ac3f0470b93, type: 3}
-  - {fileID: 6652698382516657080, guid: f4d5f8b6bdc6c994f8be707d1491f933, type: 3}
-  - {fileID: 4704972524776516966, guid: f653d486e77d6e543adaab69a02f0ce2, type: 3}
-  - {fileID: 5020195562335688021, guid: 8b36eff5ae7afce468cbbc6bd2989b51, type: 3}
-  - {fileID: 7043455818321405032, guid: 0d032d01587ba1f49a7a0d98842363fd, type: 3}
-  - {fileID: 1633005560360505215, guid: 7e417e60b4da71444af0a0cfc63fdf7d, type: 3}
-  - {fileID: 3267337007940833473, guid: e1ff5770199f0bc4d88823503b7199be, type: 3}
+  _level:
+  - GameLevel: 0
+    _prefabs:
+    - {fileID: 8177789803890739352, guid: d64fafa732cb69543baf7d3d8dc5725d, type: 3}
+    - {fileID: 3267337007940833473, guid: e1ff5770199f0bc4d88823503b7199be, type: 3}
+    - {fileID: 7043455818321405032, guid: 0d032d01587ba1f49a7a0d98842363fd, type: 3}
+    RangeFrom: 0
+    RangeTo: 9
+  - GameLevel: 1
+    _prefabs:
+    - {fileID: 7357037677509954632, guid: 4bc090ac3e6f5e84e8637fea51c1ebf4, type: 3}
+    - {fileID: 3267337007940833473, guid: e1ff5770199f0bc4d88823503b7199be, type: 3}
+    - {fileID: 4704972524776516966, guid: f653d486e77d6e543adaab69a02f0ce2, type: 3}
+    RangeFrom: 20
+    RangeTo: 50
+  - GameLevel: 2
+    _prefabs:
+    - {fileID: 1633005560360505215, guid: 7e417e60b4da71444af0a0cfc63fdf7d, type: 3}
+    - {fileID: 6652698382516657080, guid: f4d5f8b6bdc6c994f8be707d1491f933, type: 3}
+    - {fileID: 5041285079189246652, guid: b3ff3c8bfe834b44a91a0ac3f0470b93, type: 3}
+    RangeFrom: 60
+    RangeTo: 100
 --- !u!114 &1333606160
 MonoBehaviour:
   m_ObjectHideFlags: 0

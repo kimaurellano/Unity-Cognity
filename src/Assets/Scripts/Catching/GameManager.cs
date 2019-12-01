@@ -37,7 +37,7 @@ namespace Assets.Scripts.Catching {
             _moveSpeed = 0.5f;
             _spawnRate = 3f;
 
-            _scoreText.SetText($"Points:{(int)_score}");
+            _scoreText.SetText("0/10");
         }
 
         private void RemoveEvent(Scene current, Scene next) {
