@@ -11,6 +11,7 @@ using TMPro;
 namespace Assets.Scripts.GlobalScripts.Game {
     public class RemarkManager : MonoBehaviour {
 
+        [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private TextMeshProUGUI _waitText;
         [SerializeField] private Button _btnContinue;
         [SerializeField] private Sprite _circleSprite;
@@ -53,8 +54,10 @@ namespace Assets.Scripts.GlobalScripts.Game {
             return dotInstance;
         }
 
-        public void ShowGraph(UserStat.GameCategory category) {
+        public void ShowGraph(UserStat.GameCategory category, int score, int maxScore) {
             transform.gameObject.SetActive(true);
+
+            _scoreText.SetText($"Score: {score}/{maxScore}");
 
             DatabaseManager databaseManager = new DatabaseManager();
             string loggedUser = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged)?.Username;

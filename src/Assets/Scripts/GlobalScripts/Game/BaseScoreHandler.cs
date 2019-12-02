@@ -10,10 +10,11 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         private static event OnSetMinMax OnSetMinMaxEvent;
 
-        private int _maxValue;
         private int _minValue;
 
         public int Score { get; private set; }
+
+        public int ScoreLimit { get; }
 
         public enum GameType {
             Flexibility = 0,
@@ -27,7 +28,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         /// </summary>
         public BaseScoreHandler(int min, int max) {
             _minValue = min;
-            _maxValue = max;
+            ScoreLimit = max;
         }
 
         // Conversion of game 0-score x to percentage equivalent
@@ -47,7 +48,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
                 return;
             }
 
-            float result = Normalize(Score, _minValue, _maxValue, 0f, 1f);
+            float result = Normalize(Score, _minValue, ScoreLimit, 0f, 1f);
             result *= 100;
             stat.Score = float.Parse(((stat.Score + result) / 2).ToString("0.0"));
             Debug.Log($"<color=green>Normalized SCORE:{stat.Score}</color>");

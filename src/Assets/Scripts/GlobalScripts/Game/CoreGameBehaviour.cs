@@ -52,14 +52,15 @@ namespace Assets.Scripts.GlobalScripts.Game {
             _overrided = !_overrided;
         }
 
-        public void ShowGraph(UserStat.GameCategory category) {
+        public void ShowGraph(UserStat.GameCategory category, float score, float maxScore) {
             foreach (var remark in (Transform[])Resources.FindObjectsOfTypeAll(typeof(Transform))) {
                 if (remark.name.Equals("Remarks")) {
                     // We can now fetch the RemarkManager by enabling it first
                     _remark = remark;
                     _remark.gameObject.SetActive(true);
-                    
-                    FindObjectOfType<RemarkManager>().ShowGraph(category);
+
+                    RemarkManager remarkManager = FindObjectOfType<RemarkManager>();
+                    remarkManager.ShowGraph(category, (int)score, (int)maxScore);
 
                     break;
                 }
