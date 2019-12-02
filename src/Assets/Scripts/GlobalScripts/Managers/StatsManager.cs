@@ -26,9 +26,10 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             Mesh mesh = new Mesh();
 
-            float defaultWidth = 1;
-            float defaultHeight = 1;
+            const float defaultWidth = 1;
+            const float defaultHeight = 1;
 
+            // Pentagon has 5 vertices
             Vector3[] vertices = new Vector3[5];
 
             float problemSolvingProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.ProblemSolving).Score / 100f;
@@ -55,7 +56,15 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // Bottom right
             vertices[3] = new Vector3(defaultWidth + languageProgress * MAX_VALUE, -defaultHeight - languageProgress * MAX_VALUE);
 
-            int[] triangles = { 0, 1, 2, 0, 2, 3 };
+            float speedProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Speed).Score / 100f;
+            TextMeshProUGUI speedPercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "speed");
+            speedPercentText.SetText(Format(ClampPercent(speedProgress * 100f)));
+            // Bottom center
+            vertices[4] = new Vector3(0, -defaultHeight - speedProgress * MAX_VALUE);
+
+            // Pentagon is composed of 3 triangles with 3 vertices each
+            // 0 1 2, 0 2 3, 0 3 4
+            int[] triangles = { 0, 1, 2, 0, 2, 3, 0, 3, 4 };
 
             mesh.vertices = vertices;
             mesh.triangles = triangles;
