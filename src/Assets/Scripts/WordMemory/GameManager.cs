@@ -4,6 +4,7 @@ using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.WordMemory {
@@ -11,18 +12,30 @@ namespace Assets.Scripts.WordMemory {
         [SerializeField] private string[] _listOfWords;
         [SerializeField] private TextMeshProUGUI _word;
 
+        private BaseScoreHandler _baseScoreHandler;
         private TimerManager _timerManager;
         private UIManager _uiManager;
+        private TextMeshProUGUI _mistakeText;
         private string _temp;
         private string _str;
         private int _mistake;
         private int _displayedWords;
 
         private void Start() {
+            _baseScoreHandler = new BaseScoreHandler(0, 15);
+
             _timerManager = GetComponent<TimerManager>();
             _uiManager = FindObjectOfType<UIManager>();
 
+            SceneManager.activeSceneChanged += RemoveEvents;
             TimerManager.OnPreGameTimerEndEvent += StartGame;
+
+             _mistakeText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "mistake");
+             _mistakeText.SetText($"Mistakes: {_mistake}/3");
+        }
+
+        private void RemoveEvents(Scene current, Scene next) {
+            TimerManager.OnGameTimerEndEvent -= DisplayWord;
         }
 
         private void StartGame() {
@@ -46,12 +59,12 @@ namespace Assets.Scripts.WordMemory {
         }
 
         public override void EndGame() {
-            // Clear
-            TimerManager.OnGameTimerEndEvent -= DisplayWord;
+            _baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
-            // TODO: implement scoring
-
-            ShowGraph(UserStat.GameCategory.Memory);
+            ShowGraph(
+                UserStat.GameCategory.Memory,
+                _baseScoreHandler.Score,
+                _baseScoreHandler.ScoreLimit);
 
             base.EndGame();
         }
@@ -65,6 +78,8 @@ namespace Assets.Scripts.WordMemory {
                 TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
                 textUI.color = Color.green;
                 textUI.text = "correct!";
+
+                _baseScoreHandler.AddScore(1);
             } else {
                 _mistake++;
                 if (_mistake > 3) {
@@ -74,6 +89,8 @@ namespace Assets.Scripts.WordMemory {
 
                     EndGame();
                 }
+
+                _mistakeText.SetText($"Mistakes: {_mistake}/3");
             }
 
             Animation anim = (Animation)_uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "score change");

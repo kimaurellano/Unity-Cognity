@@ -36,8 +36,6 @@ namespace Assets.Scripts.Quizzes {
             TimerManager.OnPreGameTimerEndEvent += StartGame;
             TimerManager.OnGameTimerEndEvent += EndGame;
 
-            OnEndGameEvent += EndGame;
-
             _currentQuestions = new List<QuestionBankQuiz>();
 
             AnswerScript.OnSelectEvent += CheckAnswer;
@@ -106,24 +104,14 @@ namespace Assets.Scripts.Quizzes {
             ClearAnswersContainer();
 
             _currentQuestionNumber++;
-            if (_currentQuestionNumber > _questions.Length - 1) {
-                Debug.Log("End game");
-
-                EndGame();
-
-                return;
-            }
 
             // Every 10 questions increase difficulty
             if (_currentQuestionNumber > _currentQuestions.Count - 1) {
                 _level++;
 
+                // Upon finishing the Hard part end the game
                 if (_level > 2) {
-                    Debug.Log("End game");
-
                     EndGame();
-
-                    return;
                 }
 
                 SetDifficulty((QuestionBankQuiz.Difficulty)Enum.ToObject(typeof(QuestionBankQuiz.Difficulty), _level));
@@ -141,9 +129,15 @@ namespace Assets.Scripts.Quizzes {
         }
 
         public override void EndGame() {
+            AnswerScript.OnSelectEvent -= CheckAnswer;
+            TimerManager.OnGameTimerEndEvent -= EndGame;
+
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
 
-            ShowGraph(UserStat.GameCategory.Language);
+            ShowGraph(
+                UserStat.GameCategory.Language,
+                _baseScoreHandler.Score,
+                _baseScoreHandler.ScoreLimit);
 
             base.EndGame();
         }

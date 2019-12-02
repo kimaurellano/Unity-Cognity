@@ -162,7 +162,10 @@ namespace Assets.Scripts.Cognity {
                 // Save final score
                 _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
-                ShowGraph(UserStat.GameCategory.Flexibility);
+                ShowGraph(
+                    UserStat.GameCategory.Flexibility,
+                    _baseScoreHandler.Score,
+                    _baseScoreHandler.ScoreLimit);
 
                 base.EndGame();
             }

@@ -5,7 +5,6 @@ using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.QuizSolveMath {
@@ -140,7 +139,10 @@ namespace Assets.Scripts.QuizSolveMath {
             baseScoreHandler.AddScore(_score);
             baseScoreHandler.SaveScore(UserStat.GameCategory.ProblemSolving);
 
-            ShowGraph(UserStat.GameCategory.ProblemSolving);
+            ShowGraph(
+                UserStat.GameCategory.ProblemSolving,
+                baseScoreHandler.Score,
+                baseScoreHandler.ScoreLimit);
 
             base.EndGame();
         }

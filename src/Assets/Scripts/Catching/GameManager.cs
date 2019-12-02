@@ -70,7 +70,10 @@ namespace Assets.Scripts.Catching {
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
 
-            ShowGraph(UserStat.GameCategory.Speed);
+            ShowGraph(
+                UserStat.GameCategory.Speed,
+                _baseScoreHandler.Score,
+                _baseScoreHandler.ScoreLimit);
 
             base.EndGame();
         }

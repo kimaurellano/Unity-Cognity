@@ -89,7 +89,10 @@ namespace Assets.Scripts.Memory {
             baseScoreHandler.AddScore(0, _seconds);
             baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
-            ShowGraph(UserStat.GameCategory.Memory);
+            ShowGraph(
+                UserStat.GameCategory.Memory,
+                baseScoreHandler.Score,
+                baseScoreHandler.ScoreLimit);
 
             base.EndGame();
         }
