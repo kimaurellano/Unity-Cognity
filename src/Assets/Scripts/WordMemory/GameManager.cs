@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
@@ -49,6 +50,8 @@ namespace Assets.Scripts.WordMemory {
             TimerManager.OnGameTimerEndEvent -= DisplayWord;
 
             // TODO: implement scoring
+
+            ShowGraph(UserStat.GameCategory.Memory);
 
             base.EndGame();
         }

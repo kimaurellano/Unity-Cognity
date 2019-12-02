@@ -52,14 +52,14 @@ namespace Assets.Scripts.GlobalScripts.Game {
             _overrided = !_overrided;
         }
 
-        private void ShowGraph() {
+        public void ShowGraph(UserStat.GameCategory category) {
             foreach (var remark in (Transform[])Resources.FindObjectsOfTypeAll(typeof(Transform))) {
                 if (remark.name.Equals("Remarks")) {
                     // We can now fetch the RemarkManager by enabling it first
                     _remark = remark;
                     _remark.gameObject.SetActive(true);
                     
-                    FindObjectOfType<RemarkManager>().ShowGraph();
+                    FindObjectOfType<RemarkManager>().ShowGraph(category);
 
                     break;
                 }
@@ -85,8 +85,6 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
             // Halt all activities
             Time.timeScale = 0f;
-
-            ShowGraph();
         }
 
         public string GetNextScene() {

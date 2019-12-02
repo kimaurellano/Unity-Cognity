@@ -1254,6 +1254,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Remarks
       objectReference: {fileID: 0}
+    - target: {fileID: 749943169113721462, guid: 4fd446f1c71af9b4aa29defd23ca79cc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 749943169113721449, guid: 4fd446f1c71af9b4aa29defd23ca79cc,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -140,6 +140,8 @@ namespace Assets.Scripts.QuizSolveMath {
             baseScoreHandler.AddScore(_score);
             baseScoreHandler.SaveScore(UserStat.GameCategory.ProblemSolving);
 
+            ShowGraph(UserStat.GameCategory.ProblemSolving);
+
             base.EndGame();
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataComponent.Database;
+using Assets.Scripts.DataComponent.Model;
 using UnityEngine;
 using UnityEngine.UI;
 using CodeMonkey.Utils;
@@ -52,12 +53,17 @@ namespace Assets.Scripts.GlobalScripts.Game {
             return dotInstance;
         }
 
-        public void ShowGraph() {
+        public void ShowGraph(UserStat.GameCategory category) {
             transform.gameObject.SetActive(true);
 
             DatabaseManager databaseManager = new DatabaseManager();
             string loggedUser = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged)?.Username;
-            _values = databaseManager.GetScoreHistory(loggedUser).Select(score => score.SessionScore).ToList();
+
+            _values.Clear();
+
+            foreach (var userScoreHistory in databaseManager.GetScoreHistory(loggedUser).Where(i => i.Category == (int)category).ToList()) {
+                _values.Add(userScoreHistory.SessionScore);
+            }
 
             float graphHeight = _graphContainer.sizeDelta.y;
             const float yMaximum = 100f;

@@ -160,6 +160,8 @@ namespace Assets.Scripts.RunningFigure {
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Speed);
 
+            ShowGraph(UserStat.GameCategory.Speed);
+
             base.EndGame();
         }
     }

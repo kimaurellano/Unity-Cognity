@@ -54,8 +54,9 @@ namespace Assets.Scripts.PicturePuzzle {
 
             // Add up the time left for each answered puzzle 
             _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
-
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
+
+            ShowGraph(UserStat.GameCategory.Language);
 
             base.EndGame();
         }

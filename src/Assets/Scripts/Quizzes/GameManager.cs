@@ -26,7 +26,6 @@ namespace Assets.Scripts.Quizzes {
         private BaseScoreHandler _baseScoreHandler;
 
         private int _point = 10;
-        private int _questionLimitCount = 10;
         private int _currentQuestionNumber;
         private int _level = (int)QuestionBankQuiz.Difficulty.Easy;
 
@@ -66,6 +65,9 @@ namespace Assets.Scripts.Quizzes {
         }
 
         private void SetDifficulty(QuestionBankQuiz.Difficulty difficulty) {
+            _currentQuestions.Clear();
+
+            // Populate question list based on a category
             foreach (var question in _questions.Where(i => i.QuestionDifficulty == difficulty)) {
                 _currentQuestions.Add(question);
             }
@@ -113,11 +115,20 @@ namespace Assets.Scripts.Quizzes {
             }
 
             // Every 10 questions increase difficulty
-            if (_currentQuestionNumber > _questionLimitCount) {
+            if (_currentQuestionNumber > _currentQuestions.Count - 1) {
                 _level++;
+
+                if (_level > 2) {
+                    Debug.Log("End game");
+
+                    EndGame();
+
+                    return;
+                }
+
                 SetDifficulty((QuestionBankQuiz.Difficulty)Enum.ToObject(typeof(QuestionBankQuiz.Difficulty), _level));
 
-                _questionLimitCount += 10;
+                _currentQuestionNumber = 0;
             }
 
             DisplayAnswerOption();
@@ -131,6 +142,8 @@ namespace Assets.Scripts.Quizzes {
 
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
+
+            ShowGraph(UserStat.GameCategory.Language);
 
             base.EndGame();
         }

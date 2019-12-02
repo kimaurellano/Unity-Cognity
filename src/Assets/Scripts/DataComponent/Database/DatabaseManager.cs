@@ -86,7 +86,7 @@ namespace Assets.Scripts.DataComponent.Database {
 
             // Record the score per game taken. Accumulated to compute for overall 
             // session score which will serve as score history
-            SaveSessionScore(username, existingUser.Score);
+            SaveSessionScore(username, existingUser.Score, category);
         }
 
         public void DeleteUser(string username) {
@@ -119,11 +119,11 @@ namespace Assets.Scripts.DataComponent.Database {
             return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' ORDER BY Time ASC");
         }
 
-        private static void SaveSessionScore(string username, float score) {
+        private static void SaveSessionScore(string username, float score, UserStat.GameCategory category) {
             _connection
                 .Query<UserScoreHistory>(
                     "INSERT INTO UserScoreHistory " +
-                    $"VALUES(NULL, '{username}', {score}, '{DateTime.Now.ToString(CultureInfo.InvariantCulture)}')");
+                    $"VALUES(NULL, '{username}', {score}, '{DateTime.Now.ToString(CultureInfo.InvariantCulture)}', {(int)category})");
 
             Debug.Log("<color=green>Score logged</color>");
         }

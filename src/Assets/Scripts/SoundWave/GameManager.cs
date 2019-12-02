@@ -168,6 +168,8 @@ namespace Assets.Scripts.SoundWave {
                 if (_repetition > 10) {
                     _baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
+                    ShowGraph(UserStat.GameCategory.Memory);
+
                     base.EndGame();
                 }
 

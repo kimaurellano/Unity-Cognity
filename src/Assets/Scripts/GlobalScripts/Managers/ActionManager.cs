@@ -128,6 +128,10 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             }));
         }
 
+        public void StartSession() {
+            SceneManager.LoadScene(FindObjectOfType<GameCollection>().GetNextScene());
+        }
+
         public void CreateUser(TMP_InputField newUser) {
             TextMeshProUGUI notifText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "create notif");
 

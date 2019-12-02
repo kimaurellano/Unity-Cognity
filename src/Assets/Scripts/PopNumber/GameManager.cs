@@ -231,6 +231,8 @@ namespace Assets.Scripts.PopNumber {
         public override void EndGame() {
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
+            ShowGraph(UserStat.GameCategory.Flexibility);
+
             base.EndGame();
         }
 

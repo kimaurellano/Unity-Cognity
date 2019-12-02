@@ -10,5 +10,7 @@ namespace Assets.Scripts.DataComponent.Model {
         public float SessionScore { get; set; }
 
         public string Time { get; set; }
+
+        public int Category { get; set; }
     }
 }
