@@ -90,12 +90,12 @@ namespace Assets.Scripts.Quizzes {
             Debug.Log(isCorrect ? "Correct" : "Incorrect");
 
             if (isCorrect) {
-                _audioManager.PlayClip("sfx_correct");
+                GetAttachedAudioComponents().FirstOrDefault(i => i.clip.name == "CorrectSFX")?.Play();
 
                 _baseScoreHandler.AddScore(_point);
                 _scoreText.SetText($"Score:{_baseScoreHandler.Score}");
             } else {
-                _audioManager.PlayClip("sfx_incorrect");
+                GetAttachedAudioComponents().FirstOrDefault(i => i.clip.name == "IncorrectSFX")?.Play();
             }
 
             ClearAnswersContainer();
@@ -123,6 +123,10 @@ namespace Assets.Scripts.Quizzes {
             for (int i = 0; i < _answersContainer.childCount; i++) {
                 Destroy(_answersContainer.GetChild(i).gameObject);
             }
+        }
+
+        private AudioSource[] GetAttachedAudioComponents() {
+            return GetComponents<AudioSource>();
         }
 
         public override void EndGame() {
