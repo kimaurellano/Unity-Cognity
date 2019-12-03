@@ -50,9 +50,13 @@ namespace Assets.Scripts.PopNumber {
             // When the number hits the bottom
             NumberScriptPop.OnBottomHitEvent += CheckAndDestroy;
 
-            TimerManager.OnGameTimerEndEvent += _timerManager.ChangeTimerState;
+            TimerManager.OnPreGameTimerEndEvent += StartGame;
             TimerManager.OnGameTimerEndEvent += IncreaseDifficulty;
 
+            _baseScoreHandler = new BaseScoreHandler(0, 100);
+        }
+
+        private void StartGame() {
             // Ready questions
             CategoryAddToList((QuestionBank.Category)_catIdx);
             // Dsiplay first question
@@ -63,8 +67,6 @@ namespace Assets.Scripts.PopNumber {
             _spawnCoroutine = StartCoroutine(RandomSpawn());
 
             StartCoroutine(SpawnAnswer());
-
-            _baseScoreHandler = new BaseScoreHandler(0, 100);
         }
 
         private void RemoveEvents(Scene current, Scene next) {
