@@ -90,6 +90,8 @@ namespace Assets.Scripts.Catching {
             _score++;
             if(_score > 10) {
                 EndGame();
+
+                return;
             }
 
             _scoreText.SetText($"{(int)_score}/10");

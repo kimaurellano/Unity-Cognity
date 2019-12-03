@@ -175,6 +175,8 @@ namespace Assets.Scripts.SoundWave {
                         _baseScoreHandler.ScoreLimit);
 
                     base.EndGame();
+
+                    return;
                 }
 
                 // Show result

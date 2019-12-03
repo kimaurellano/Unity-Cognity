@@ -178,6 +178,8 @@ namespace Assets.Scripts.PopNumber {
                 _wrongCount++;
                 if(_wrongCount == 3) {
                     EndGame();
+
+                    return;
                 }
 
                 _score -= 10;
@@ -205,6 +207,8 @@ namespace Assets.Scripts.PopNumber {
 
             if (_questionIdx > _questionList.Count - 1) {
                 EndGame();
+
+                return;
             } else {
                 _problemText.SetText(_questionList[_questionIdx].Problem);
             }

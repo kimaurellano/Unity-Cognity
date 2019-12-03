@@ -109,6 +109,8 @@ namespace Assets.Scripts.Quizzes {
                 // Upon finishing the Hard part end the game
                 if (_level > 2) {
                     EndGame();
+
+                    return;
                 }
 
                 SetDifficulty((QuestionBankQuiz.Difficulty)Enum.ToObject(typeof(QuestionBankQuiz.Difficulty), _level));

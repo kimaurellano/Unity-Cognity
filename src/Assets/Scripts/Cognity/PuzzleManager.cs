@@ -6,7 +6,6 @@ using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Cognity {
@@ -110,13 +109,9 @@ namespace Assets.Scripts.Cognity {
             if (_currentLevel > 4 && !GameDone) {
                 GameDone = true;
 
-                // Add time as score
-                _baseScoreHandler.AddScore(_timerManager.Minutes, _timerManager.Seconds);
+                EndGame();
 
-                // Save final score
-                _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
-
-                base.EndGame();
+                return;
             }
 
             if (_proceedToNextLevel && !GameDone) {
@@ -159,16 +154,19 @@ namespace Assets.Scripts.Cognity {
                 TextMeshProUGUI gameResult = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result");
                 gameResult.SetText("FAILED!");
 
-                // Save final score
-                _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
-
-                ShowGraph(
-                    UserStat.GameCategory.Flexibility,
-                    _baseScoreHandler.Score,
-                    _baseScoreHandler.ScoreLimit);
-
-                base.EndGame();
+                EndGame();
             }
+        }
+
+        public override void EndGame() {
+            _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
+
+            ShowGraph(
+                UserStat.GameCategory.Flexibility,
+                _baseScoreHandler.Score,
+                _baseScoreHandler.ScoreLimit);
+
+            base.EndGame();
         }
 
         private void StartGame() {

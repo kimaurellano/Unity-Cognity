@@ -51,6 +51,8 @@ namespace Assets.Scripts.WordMemory {
             _displayedWords++;
             if (_displayedWords > 15) {
                 EndGame();
+
+                return;
             }
             
             _str = _listOfWords[Random.Range(0, _listOfWords.Length - 1)];
@@ -89,6 +91,8 @@ namespace Assets.Scripts.WordMemory {
                     textUI.text = "wrong";
 
                     EndGame();
+
+                    return;
                 }
 
                 _mistakeText.SetText($"Mistakes: {_mistake}/3");
