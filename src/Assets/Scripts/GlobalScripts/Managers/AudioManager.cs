@@ -12,7 +12,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public static OnAudioPlay onAudioEndPlayEvent;
 
-        public static OnAllAudioOverride OnAllAudioOverrideEvent; 
+        public static OnAllAudioOverride OnAllAudioOverrideEvent;
+ 
         private static AudioManager _audioManager;
 
         private AudioCollection _audioCollection;
@@ -52,7 +53,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // Informs PausePanel and CoreGameBehaviour that the
             // audio cannot be unmuted/change volume unless it's a scene other
             // than sound games
-            if (SceneManager.GetActiveScene().name.Equals("GameSoundWave")) {
+            if (SceneManager.GetActiveScene().name.Equals("GameSoundWave") ||
+                SceneManager.GetActiveScene().name.Equals("GameWordSoundListening")) {
                 SetVolume("bg_game", 0.1f);
                 SetVolume("bg_menu", 0.1f);
 
