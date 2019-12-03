@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using Assets.Scripts.DataComponent.Model;
+using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 using CodeMonkey.Utils;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.GlobalScripts.Game {
     public class RemarkManager : MonoBehaviour {
@@ -14,6 +16,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private TextMeshProUGUI _waitText;
         [SerializeField] private Button _btnContinue;
+        [SerializeField] private Button _btnCancel;
         [SerializeField] private Sprite _circleSprite;
 
         private RectTransform _graphContainer;
@@ -21,14 +24,26 @@ namespace Assets.Scripts.GlobalScripts.Game {
         private int _seconds = 5;
 
         private void Awake() {
+            SceneManager.activeSceneChanged += RemoveEvents;
+
             _values = new List<float>();
 
-            // Programmatically add LoadNextScene as OnClick of button continue
+            // Programmatically add button click events
             _btnContinue.onClick.AddListener(FindObjectOfType<CoreGameBehaviour>().LoadNextScene);
+            _btnCancel.onClick.AddListener(QuitGame);
 
             _graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
 
             StartCoroutine(WindowClose());
+        }
+
+        private void QuitGame() {
+            FindObjectOfType<ActionManager>().GoTo("BaseMenu");
+        }
+
+        private void RemoveEvents(Scene current, Scene next) {
+            _btnContinue.onClick = null;
+            _btnCancel.onClick = null;
         }
 
         private IEnumerator WindowClose() {

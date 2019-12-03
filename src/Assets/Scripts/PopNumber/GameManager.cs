@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 // ReSharper disable All
 
 namespace Assets.Scripts.PopNumber {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
 
         [Header("List of questions")]

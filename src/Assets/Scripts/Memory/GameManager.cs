@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Memory {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
 
         private List<Transform> _lockedCardList;

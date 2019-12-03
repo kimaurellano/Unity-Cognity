@@ -784,6 +784,7 @@ MonoBehaviour:
   _scoreText: {fileID: 1883359242}
   _waitText: {fileID: 749943168820842237}
   _btnContinue: {fileID: 749943169828929832}
+  _btnCancel: {fileID: 749943170093335572}
   _circleSprite: {fileID: 21300000, guid: fe463a05d52132f4f8a7874bdddc9cd5, type: 3}
 --- !u!1 &749943169009679370
 GameObject:

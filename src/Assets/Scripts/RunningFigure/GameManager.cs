@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.RunningFigure {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
 
         [SerializeField] private TextMeshProUGUI _numberText;

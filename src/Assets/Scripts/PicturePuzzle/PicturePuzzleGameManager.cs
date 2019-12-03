@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using static Assets.Scripts.GlobalScripts.Managers.UIManager;
 
 namespace Assets.Scripts.PicturePuzzle {
+    [RequireComponent(typeof(ActionManager))]
     public class PicturePuzzleGameManager : CoreGameBehaviour {
 
         [SerializeField] private PicturePuzzleCollection[] _picturePuzzleCollections;

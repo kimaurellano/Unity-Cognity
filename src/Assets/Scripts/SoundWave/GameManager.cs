@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.SoundWave {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
         [Serializable]
         private class Sound {

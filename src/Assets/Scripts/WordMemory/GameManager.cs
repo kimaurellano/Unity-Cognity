@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.WordMemory {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
         [SerializeField] private string[] _listOfWords;
         [SerializeField] private TextMeshProUGUI _word;

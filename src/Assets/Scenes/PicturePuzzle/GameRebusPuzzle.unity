@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 292410477}
   - component: {fileID: 292410476}
   - component: {fileID: 292410478}
+  - component: {fileID: 292410479}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -198,6 +199,18 @@ MonoBehaviour:
   Seconds: 45
   Minutes: 0
   IsPreGameTimer: 0
+--- !u!114 &292410479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292410475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f96322c99b7a94fb11463810156d7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &340007787
 GameObject:
   m_ObjectHideFlags: 0

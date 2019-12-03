@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Quizzes {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
         [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private TextMeshProUGUI _question;
@@ -68,10 +69,6 @@ namespace Assets.Scripts.Quizzes {
             // Populate question list based on a category
             foreach (var question in _questions.Where(i => i.QuestionDifficulty == difficulty)) {
                 _currentQuestions.Add(question);
-            }
-
-            if (_currentQuestions.Count <= 0) {
-                throw new NullReferenceException("There are no questions.");
             }
         }
 

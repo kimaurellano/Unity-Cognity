@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Catching {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
         [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private GameObject _fallingObject;
