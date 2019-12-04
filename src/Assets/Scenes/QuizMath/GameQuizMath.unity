@@ -1817,7 +1817,7 @@ MonoBehaviour:
   _answersContainer: {fileID: 1532261699}
   _questions:
   - Question: 7 + 9 =
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 16
       IsCorrect: 1
@@ -1826,7 +1826,7 @@ MonoBehaviour:
     - AnswerText: 18
       IsCorrect: 0
   - Question: 8 + 3 =
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 10
       IsCorrect: 0
@@ -1835,7 +1835,7 @@ MonoBehaviour:
     - AnswerText: 12
       IsCorrect: 0
   - Question: 9 x 3 =
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 25
       IsCorrect: 0
@@ -1844,7 +1844,7 @@ MonoBehaviour:
     - AnswerText: 27
       IsCorrect: 1
   - Question: '7 x 7 = '
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 49
       IsCorrect: 1
@@ -1853,7 +1853,7 @@ MonoBehaviour:
     - AnswerText: 47
       IsCorrect: 0
   - Question: 8 / 2 =
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 2
       IsCorrect: 0
@@ -1862,7 +1862,7 @@ MonoBehaviour:
     - AnswerText: 6
       IsCorrect: 0
   - Question: '9 / 3 = '
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 1
       IsCorrect: 0
@@ -1871,7 +1871,7 @@ MonoBehaviour:
     - AnswerText: 3
       IsCorrect: 1
   - Question: 9 + 9 =
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 14
       IsCorrect: 0
@@ -1880,7 +1880,7 @@ MonoBehaviour:
     - AnswerText: 18
       IsCorrect: 1
   - Question: 9 - 2 =
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 7
       IsCorrect: 1
@@ -1889,7 +1889,7 @@ MonoBehaviour:
     - AnswerText: 5
       IsCorrect: 0
   - Question: 6 -5 =
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 1
       IsCorrect: 1
@@ -1898,7 +1898,7 @@ MonoBehaviour:
     - AnswerText: 3
       IsCorrect: 0
   - Question: '9 x 9 = '
-    QuestionDifficulty: 0
+    Difficulty: 0
     Answers:
     - AnswerText: 72
       IsCorrect: 0
@@ -1907,7 +1907,7 @@ MonoBehaviour:
     - AnswerText: 90
       IsCorrect: 0
   - Question: 6 - (5 -3) + 10 =
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 14
       IsCorrect: 1
@@ -1916,7 +1916,7 @@ MonoBehaviour:
     - AnswerText: 16
       IsCorrect: 0
   - Question: (18 / 6 x 5) - 14 / 7 =
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 13
       IsCorrect: 1
@@ -1925,7 +1925,7 @@ MonoBehaviour:
     - AnswerText: 15
       IsCorrect: 0
   - Question: "18 / 6 \xD7 (4 - 3) + 6 = "
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 8
       IsCorrect: 0
@@ -1934,7 +1934,7 @@ MonoBehaviour:
     - AnswerText: 10
       IsCorrect: 0
   - Question: 6 / 3 + 24 - 25 / 5 =
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 19
       IsCorrect: 0
@@ -1943,7 +1943,7 @@ MonoBehaviour:
     - AnswerText: 21
       IsCorrect: 1
   - Question: "8 \xD7 3 + 40 / 5 - 8 ="
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 24
       IsCorrect: 1
@@ -1952,7 +1952,7 @@ MonoBehaviour:
     - AnswerText: 26
       IsCorrect: 0
   - Question: "4 + 2 \xD7 18 / 6 - 9  ="
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 1
       IsCorrect: 1
@@ -1961,7 +1961,7 @@ MonoBehaviour:
     - AnswerText: 3
       IsCorrect: 0
   - Question: "9 \xD7 2 + 90 / 9 - 4 ="
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 23
       IsCorrect: 0
@@ -1970,7 +1970,7 @@ MonoBehaviour:
     - AnswerText: 25
       IsCorrect: 0
   - Question: "2 \xD7 4 + 28 / 4 - 6 ="
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 7
       IsCorrect: 0
@@ -1979,7 +1979,7 @@ MonoBehaviour:
     - AnswerText: 9
       IsCorrect: 1
   - Question: "18 / 6 \xD7 (7 - 5) + 6 ="
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 11
       IsCorrect: 0
@@ -1988,7 +1988,7 @@ MonoBehaviour:
     - AnswerText: 13
       IsCorrect: 0
   - Question: "4 \xD7 5 + (11 + 8) - 18 / 3 ="
-    QuestionDifficulty: 2
+    Difficulty: 1
     Answers:
     - AnswerText: 31
       IsCorrect: 0
@@ -1997,7 +1997,7 @@ MonoBehaviour:
     - AnswerText: 33
       IsCorrect: 1
   - Question: '(9 - 6) + 7 = '
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 8
       IsCorrect: 0
@@ -2006,7 +2006,7 @@ MonoBehaviour:
     - AnswerText: 10
       IsCorrect: 1
   - Question: 7 + (6 x 5 + 2)
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 39
       IsCorrect: 1
@@ -2015,7 +2015,7 @@ MonoBehaviour:
     - AnswerText: 41
       IsCorrect: 0
   - Question: "6 \xD7 (5 + 3) ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 47
       IsCorrect: 0
@@ -2024,7 +2024,7 @@ MonoBehaviour:
     - AnswerText: 49
       IsCorrect: 0
   - Question: "2 + (5 \xD7 3) ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 17
       IsCorrect: 1
@@ -2033,7 +2033,7 @@ MonoBehaviour:
     - AnswerText: 19
       IsCorrect: 0
   - Question: "4 + 6 \xD7 12 + 9 ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 55
       IsCorrect: 0
@@ -2042,7 +2042,7 @@ MonoBehaviour:
     - AnswerText: 79
       IsCorrect: 0
   - Question: "2 + 11 \u2212 4 \xD7 2 ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 22
       IsCorrect: 0
@@ -2051,7 +2051,7 @@ MonoBehaviour:
     - AnswerText: 5
       IsCorrect: 1
   - Question: "7 \xD7 12 \u2212 12 + 3 ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 75
       IsCorrect: 1
@@ -2060,7 +2060,7 @@ MonoBehaviour:
     - AnswerText: 79
       IsCorrect: 0
   - Question: "7 + 10 \u2212 2 + 7 ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 22
       IsCorrect: 1
@@ -2069,7 +2069,7 @@ MonoBehaviour:
     - AnswerText: 12
       IsCorrect: 0
   - Question: "6 \xD7 7 + 2 \xD7 5 ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 38
       IsCorrect: 0
@@ -2078,7 +2078,7 @@ MonoBehaviour:
     - AnswerText: 52
       IsCorrect: 1
   - Question: "6 + 3 \u2212 5 + 8 ="
-    QuestionDifficulty: 1
+    Difficulty: 2
     Answers:
     - AnswerText: 12
       IsCorrect: 1
@@ -2112,6 +2112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f96322c99b7a94fb11463810156d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttonMusic: {fileID: 0}
+  _buttonSfx: {fileID: 0}
 --- !u!82 &1792300689
 AudioSource:
   m_ObjectHideFlags: 0
