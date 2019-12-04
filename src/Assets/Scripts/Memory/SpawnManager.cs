@@ -9,8 +9,6 @@ namespace Assets.Scripts.Memory {
     public class SpawnManager : MonoBehaviour {
         [SerializeField] private GameObject[] _cardPrefabs;
 
-        private bool _gameStart;
-
         private bool _paused;
 
         private List<int> _spawnKeys;
@@ -21,7 +19,7 @@ namespace Assets.Scripts.Memory {
 
         [SerializeField] private TextMeshProUGUI _timerText;
 
-        public float Sec { get; private set; } = 5f;
+        public float Sec { get; } = 5f;
 
         private void Start() {
             _spawnKeys = new List<int>();
@@ -60,8 +58,6 @@ namespace Assets.Scripts.Memory {
 
         private void CardUnlock() {
             TimerManager.OnGameTimerEndEvent -= CardUnlock;
-
-            _gameStart = true;
 
             foreach (var item in GameObject.FindGameObjectsWithTag("Card")) {
                 item.GetComponent<Animator>().SetBool("flip", true);

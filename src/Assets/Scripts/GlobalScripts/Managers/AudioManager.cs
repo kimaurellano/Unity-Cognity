@@ -6,10 +6,14 @@ using UnityEngine.UI;
 namespace Assets.Scripts.GlobalScripts.Managers {
     public class AudioManager : MonoBehaviour {
 
+        public delegate void OnAllAudioOverride();
+
         public delegate void OnAudioPlay();
 
         public static OnAudioPlay onAudioEndPlayEvent;
 
+        public static OnAllAudioOverride OnAllAudioOverrideEvent;
+ 
         private static AudioManager _audioManager;
 
         private AudioCollection _audioCollection;
@@ -34,46 +38,54 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             InitSounds();
 
-            AttachButtonSFX();
+            AttachButtonSfx();
 
             // Reattach button sfx every scene change
-            SceneManager.activeSceneChanged += onSceneChanged;
+            SceneManager.activeSceneChanged += OnSceneChanged;
         }
 
         private void ButtonClick() {
             PlayClip("sfx_button");
         }
 
-        public void onSceneChanged(Scene current, Scene next) {
+        public void OnSceneChanged(Scene current, Scene next) {
+            // Prevent audio manipulation during Sound games.
+            // Informs PausePanel and CoreGameBehaviour that the
+            // audio cannot be unmuted/change volume unless it's a scene other
+            // than sound games
+            if (SceneManager.GetActiveScene().name.Equals("GameSoundWave") ||
+                SceneManager.GetActiveScene().name.Equals("GameWordSoundListening")) {
+                SetVolume("bg_game", 0.1f);
+                SetVolume("bg_menu", 0.1f);
+
+                OnAllAudioOverrideEvent?.Invoke();
+
+                return;
+            }
+
+            OnAllAudioOverrideEvent = null;
+
             Debug.Log("Scene changed");
-            AttachButtonSFX();
+            AttachButtonSfx();
 
             InitSounds();
-
-            if(current.name == "GameQuizMath" || current.name == "GameQuizGrammar") {
-                transform.gameObject.SetActive(false);
-            } else if (current.name == "BaseMenu") {
-                transform.gameObject.SetActive(true);
-            }
         }
 
-        private void AttachButtonSFX() {
-            // Get all active objects
-            foreach (var button in Resources.FindObjectsOfTypeAll(typeof(Button)) as Button[]) {
-                Debug.Log("Attaching:" + button.name);
+        private void AttachButtonSfx() {
+            // Get all inactive objects
+            foreach (var button in (Button[]) Resources.FindObjectsOfTypeAll(typeof(Button))) {
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
 
-            // Get all inactive objects
-            foreach (var button in FindObjectsOfType(typeof(Button)) as Button[]) {
-                Debug.Log("Attaching:" + button.name);
+            // Get all active objects
+            foreach (var button in (Button[]) FindObjectsOfType(typeof(Button))) {
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
         }
 
         private void InitSounds() {
             // Remove attached audio to the current scene
-            Component[] attachedComponents = GetAttachedAudioComponents();
+            AudioSource[] attachedComponents = GetAttachedAudioComponents();
             if (attachedComponents != null) {
                 foreach (var item in attachedComponents) {
                     Destroy(item);
@@ -83,13 +95,13 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             }
 
             // Re-assign proper audio to a scene
-            AttachSFXToScene(SceneManager.GetActiveScene().name);
+            AttachSfxToScene(SceneManager.GetActiveScene().name);
         }
 
-        private void AttachSFXToScene(string scene) {
+        private void AttachSfxToScene(string scene) {
             foreach (var item in _audioCollection.audioCollection) {
-                foreach (var name in item.Games) {
-                    if (scene.Contains(name) || scene.Equals(name) || name.Equals("All")) {
+                foreach (var i in item.Games) {
+                    if (scene.Contains(i) || scene.Equals(i) || i.Equals("All")) {
                         AudioSource src = gameObject.AddComponent<AudioSource>();
                         src.clip = item.AudioClip;
                         src.volume = item.Volume;
@@ -107,8 +119,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void PlayClip(string name) {
             string clipName = GetAudioClipName(name);
             foreach (var item in GetAttachedAudioComponents()) {
-                if (((AudioSource)item).clip.name.Equals(clipName)) {
-                    ((AudioSource)item).Play();
+                if (item.clip.name.Equals(clipName)) {
+                    item.Play();
                 }
             }
         }
@@ -116,8 +128,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void SetVolume(string name, float value) {
             string clipName = GetAudioClipName(name);
             foreach (var item in GetAttachedAudioComponents()) {
-                if (((AudioSource)item).clip.name.Equals(clipName)) {
-                    ((AudioSource)item).volume = value;
+                if (item.clip.name.Equals(clipName)) {
+                    item.volume = value;
                 }
             }
         }
@@ -131,8 +143,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             return clipName;
         }
 
-        public Component[] GetAttachedAudioComponents() {
-            return GetComponents<AudioSource>() as Component[];
+        public AudioSource[] GetAttachedAudioComponents() {
+            return GetComponents<AudioSource>();
         }
     }
 }

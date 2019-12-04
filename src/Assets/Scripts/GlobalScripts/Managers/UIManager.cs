@@ -16,6 +16,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             AnimatedMultipleState
         }
 
+        [Space]
         [SerializeField] private StatsCollection[] _statsCollections;
         [Space]
         [SerializeField] private PanelCollection[] _panelCollection;
@@ -35,20 +36,20 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public InputFieldCollection[] InputFieldCollections { get => _inputFieldCollection; set => _inputFieldCollection = value; }
         public AnimatedObjects[] AnimatedObjectsCollection { get => _animatedObjectsCollecton; set => _animatedObjectsCollecton = value; }
 
-        public object GetUI(UIType type, string UIName) {
+        public object GetUI(UIType type, string uiName) {
             switch (type) {
             case UIType.Text:
-                return Array.Find(TextCollection, collection => collection.Name.Equals(UIName)).textMesh;
+                return Array.Find(TextCollection, collection => collection.Name.Equals(uiName)).textMesh;
             case UIType.Button:
-                return Array.Find(ButtonCollection, collection => collection.Name.Equals(UIName)).Button;
+                return Array.Find(ButtonCollection, collection => collection.Name.Equals(uiName)).Button;
             case UIType.AnimatedSingleState:
-                return Array.Find(AnimatedObjectsCollection, collection => collection.Name.Equals(UIName)).AnimatedObject.GetComponent<Animation>();
+                return Array.Find(AnimatedObjectsCollection, collection => collection.Name.Equals(uiName)).AnimatedObject.GetComponent<Animation>();
             case UIType.AnimatedMultipleState:
-                return Array.Find(AnimatedObjectsCollection, collection => collection.Name.Equals(UIName)).AnimatedObject.GetComponent<Animator>();
+                return Array.Find(AnimatedObjectsCollection, collection => collection.Name.Equals(uiName)).AnimatedObject.GetComponent<Animator>();
             case UIType.Panel:
-                return Array.Find(PanelCollection, collection => collection.Name.Equals(UIName)).Panel;
+                return Array.Find(PanelCollection, collection => collection.Name.Equals(uiName)).Panel;
             case UIType.InputField:
-                return Array.Find(InputFieldCollections, collection => collection.Name.Equals(UIName)).InputField;
+                return Array.Find(InputFieldCollections, collection => collection.Name.Equals(uiName)).InputField;
             }
             return null;
         } 

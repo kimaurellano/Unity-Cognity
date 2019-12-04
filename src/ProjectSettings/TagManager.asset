@@ -13,8 +13,9 @@ TagManager:
   - ButtonInput
   - PieceStatus
   - GM
-  - InGame
-  - MainMenu
+  - MenuPage
+  - CategoryPage
+  - SelectionPage
   layers:
   - Default
   - TransparentFX

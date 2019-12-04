@@ -6,7 +6,7 @@ namespace Assets.Scripts.Memory {
 
         public delegate void OnCardLock();
 
-        public static event OnCardLock onCardLockEvent;
+        public static event OnCardLock OnCardLockEvent;
 
         [SerializeField] private GameManager _gameManager;
 
@@ -51,7 +51,7 @@ namespace Assets.Scripts.Memory {
                                 _gameManager.SecondPick != null &&
                                 _gameManager.FirstPick.name ==
                                 _gameManager.SecondPick.name) {
-                                onCardLockEvent?.Invoke();
+                                OnCardLockEvent?.Invoke();
                                 Debug.Log("Lock count increased");
 
                                 // Prevent from picking the already paired cards

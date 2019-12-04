@@ -1,101 +1,172 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Managers;
-using Assets.Scripts.GlobalScripts.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
-public class CoreGameBehaviour : MonoBehaviour, ICoreGameBehaviour {
+namespace Assets.Scripts.GlobalScripts.Game {
+    [RequireComponent(typeof(ActionManager))]
+    public class CoreGameBehaviour : MonoBehaviour {
 
-    public delegate void OnPauseGame();
-    public delegate void OnMuteGame(string sfx);
+        public delegate void OnEndGame();
+        public delegate void OnQuitGame();
+        public delegate void OnPauseGame();
+        public delegate void OnMuteGame(string sfx);
 
-    public static event OnPauseGame OnPauseGameEvent;
-    public static event OnMuteGame OnMuteGameEvent;
+        public static event OnEndGame OnEndGameEvent;
+        public static event OnQuitGame OnQuitGameEvent;
+        public static event OnPauseGame OnPauseGameEvent;
+        public static event OnMuteGame OnMuteGameEvent;
 
-    public bool IsPaused { get; set; }
+        private static GameCollection _gameCollection;
+        private Transform _remark;
+        private bool _disposed;
+        private bool _overrided;
 
-    public bool IsSFXMuted { get; set; }
+        public bool IsPaused { get; set; }
 
-    public bool IsBGMuted { get; set; }
+        public bool IsSfxMuted { get; set; }
 
-    private void Awake() {
-        IsSFXMuted = false;
+        public bool IsBgMuted { get; set; }
 
-        PlayerPrefs.SetInt("IsMuted", 0);
+        private void Awake() {
+            // Remove halted state after every game end
+            Time.timeScale = 1f;
 
-        IsBGMuted = false;
+            IsSfxMuted = false;
 
-        PlayerPrefs.SetInt("IsBgMuted", 0);
-    }
+            PlayerPrefs.SetInt("IsMuted", 0);
 
-    public virtual void EndGame() {
-        FindObjectOfType<AudioManager>().SetVolume("bg_game", 0f);
-    }
+            IsBgMuted = false;
 
-    public virtual void InitSounds() {
-        throw new NotImplementedException();
-    }
+            PlayerPrefs.SetInt("IsBgMuted", 0);
 
-    public virtual void MuteBackgroundMusic() {
-        AudioManager audioManager = FindObjectOfType<AudioManager>();
-        if(audioManager == null) {
-            return;
+            _gameCollection = FindObjectOfType<GameCollection>();
+
+            AudioManager.OnAllAudioOverrideEvent += OverrideAudio;
         }
 
-        IsBGMuted = !(PlayerPrefs.GetInt("IsBgMuted") == 1);
-
-        PlayerPrefs.SetInt("IsBgMuted", IsBGMuted ? 1 : 0);
-
-        audioManager.SetVolume("bg_game", IsBGMuted ? 0f : 1f);
-        audioManager.SetVolume("bg_menu", IsBGMuted ? 0f : 1f);
-
-        OnMuteGameEvent?.Invoke("bg");
-    }
-
-    public virtual void MuteSFX() {
-        AudioCollection audioCollection = FindObjectOfType<AudioCollection>();
-        if(audioCollection == null) {
-            return;
+        private void OverrideAudio() {
+            _overrided = !_overrided;
         }
 
-        IsSFXMuted = !(PlayerPrefs.GetInt("IsMuted") == 1);
+        public void ShowGraph(UserStat.GameCategory category, float score, float maxScore) {
+            foreach (var remark in (Transform[])Resources.FindObjectsOfTypeAll(typeof(Transform))) {
+                if (remark.name.Equals("Remarks")) {
+                    // We can now fetch the RemarkManager by enabling it first
+                    _remark = remark;
+                    _remark.gameObject.SetActive(true);
 
-        PlayerPrefs.SetInt("IsMuted", IsSFXMuted ? 1 : 0);
+                    RemarkManager remarkManager = FindObjectOfType<RemarkManager>();
+                    remarkManager.ShowGraph(category, (int)score, (int)maxScore);
 
-        GameObject audioManager = audioCollection.gameObject;
-
-        AudioSource[] components = audioManager.GetComponents<AudioSource>() as AudioSource[];
-        foreach (var item in audioCollection.audioCollection.Where(audio => audio.Name.StartsWith("sfx"))) {
-            foreach (var sfx in components.Where(i => i.clip.name.Equals(item.AudioClip.name))) {
-                sfx.mute = IsSFXMuted;
+                    break;
+                }
             }
         }
 
-        OnMuteGameEvent?.Invoke("sfx");
-    }
+        public void Retry() {
+            ClearEvents();
 
-    public virtual void Pause() {
-        if (PlayerPrefs.GetInt("IsBgMuted") != 1) {
-            FindObjectOfType<AudioManager>().SetVolume("bg_game", IsPaused ? 1f : 0.3f);
+            Scene active = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(active.name);
         }
 
-        IsPaused = !IsPaused;
+        /// <summary>
+        /// Shows graph, clears events, sets time scale to 0
+        /// </summary>
+        public virtual void EndGame() {
+            FindObjectOfType<AudioManager>().SetVolume("bg_game", 0f);
 
-        Time.timeScale = IsPaused ? 0f : 1f;
+            OnEndGameEvent?.Invoke();
 
-        OnPauseGameEvent?.Invoke();
-    }
+            ClearEvents();
 
-    public void SaveScore(float score, BaseScoreHandler.GameType gameType) {
-        BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-        baseScoreHandler.AddScore(score, gameType);
-    }
+            // Halt all activities
+            Time.timeScale = 0f;
+        }
 
-    public void QuitGame() {
-        OnPauseGameEvent = null;
-        OnMuteGameEvent = null;
+        public string GetNextScene() {
+            return FindObjectOfType<GameCollection>().GetNextScene();
+        }
 
-        SceneManager.LoadScene("BaseMenu");
+        public void LoadNextScene() {
+            SceneManager.LoadScene(GetNextScene());
+        }
+
+        public virtual void MuteBackgroundMusic() {
+            if (_overrided) {
+                return;
+            }
+
+            AudioManager audioManager = FindObjectOfType<AudioManager>();
+            if(audioManager == null) {
+                return;
+            }
+
+            IsBgMuted = PlayerPrefs.GetInt("IsBgMuted") != 1;
+
+            PlayerPrefs.SetInt("IsBgMuted", IsBgMuted ? 1 : 0);
+
+            audioManager.SetVolume("bg_game", IsBgMuted ? 0f : 0.3f);
+            audioManager.SetVolume("bg_menu", IsBgMuted ? 0f : 0.3f);
+
+            OnMuteGameEvent?.Invoke("bg");
+        }
+
+        public virtual void MuteSfx() {
+            if (_overrided) {
+                return;
+            }
+
+            AudioCollection audioCollection = FindObjectOfType<AudioCollection>();
+            if(audioCollection == null) {
+                return;
+            }
+
+            IsSfxMuted = PlayerPrefs.GetInt("IsMuted") != 1;
+
+            PlayerPrefs.SetInt("IsMuted", IsSfxMuted ? 1 : 0);
+
+            GameObject audioManager = audioCollection.gameObject;
+
+            AudioSource[] components = audioManager.GetComponents<AudioSource>();
+            foreach (var item in audioCollection.audioCollection.Where(audio => audio.Name.StartsWith("sfx"))) {
+                foreach (var sfx in components.Where(i => i.clip.name.Equals(item.AudioClip.name))) {
+                    sfx.mute = IsSfxMuted;
+                }
+            }
+
+            OnMuteGameEvent?.Invoke("sfx");
+        }
+
+        public virtual void Pause() {
+            if (PlayerPrefs.GetInt("IsBgMuted") != 1) {
+                FindObjectOfType<AudioManager>().SetVolume("bg_game", IsPaused ? 1f : 0.3f);
+            }
+
+            IsPaused = !IsPaused;
+
+            Time.timeScale = IsPaused ? 0f : 1f;
+
+            OnPauseGameEvent?.Invoke();
+        }
+
+        public void QuitGame() {
+            OnQuitGameEvent?.Invoke();
+
+            ClearEvents();
+
+            SceneManager.LoadScene("BaseMenu");
+        }
+
+        public void ClearEvents() {
+            OnEndGameEvent = null;
+            OnQuitGameEvent = null;
+            OnPauseGameEvent = null;
+            OnMuteGameEvent = null;
+        }
     }
 }

@@ -6,60 +6,51 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+    path: Assets/Scenes/TestScene/TestScene.unity
+    guid: 483cd2f47ba579846978bcee0e4eb34a
   - enabled: 1
     path: Assets/Scenes/BaseMenu.unity
     guid: 5c6734850994adc48a5dca0a2bed50cf
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/Cognity/MenuCognity.unity
-    guid: 17fad4fe2c336f144a564dfe856902af
-  - enabled: 1
-    path: Assets/Scenes/Cognity/GameCognity.unity
+    path: Assets/Scenes/Cognity/GameHiquPuzzle.unity
     guid: af4dd799879b3364d990ec6abf95c0c0
   - enabled: 1
-    path: Assets/Scenes/Memory/MenuMemory.unity
-    guid: 7f475cf67db8be14fb57fca5c796f989
-  - enabled: 1
-    path: Assets/Scenes/Memory/GameMemory.unity
+    path: Assets/Scenes/Memory/GamePair.unity
     guid: 79ae7f6c0a4330c4ab68f1827214783b
-  - enabled: 0
-    path: Assets/Scenes/Memory/GameOverMemory.unity
-    guid: 5e714406196dec040b4ebcf31fd18178
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/QuizMath/MenuGameQuizMath.unity
-    guid: 3cc21c76ff6aa88489950597ea50648d
-  - enabled: 1
-    path: Assets/Scenes/QuizMath/GameQuizMath.unity
-    guid: 4f01821f4cbb15541a8dc3cf8f4e4b1c
-  - enabled: 1
-    path: Assets/Scenes/QuizSolveMath/MenuQuizSolveMath.unity
-    guid: ce7d4b72d3d9d9b4bbf23656c28d71bf
-  - enabled: 1
-    path: Assets/Scenes/QuizSolveMath/GameQuizSolveMath.unity
-    guid: b3e1f8533cbcfba4d827b9f62fad3a2b
-  - enabled: 1
-    path: Assets/Scenes/Grammar/MenuQuizGrammar.unity
-    guid: 1335bdbb8ee04634592286b6216544e4
+    path: Assets/Scenes/PopNumber/GamePopNumber.unity
+    guid: b1358909dbed92b4cb5f469633a8ad59
   - enabled: 1
     path: Assets/Scenes/Grammar/GameQuizGrammar.unity
-    guid: 836439e8ad4e6234c8712f0472d038e3
+    guid: 64b69ac5475bcfb4fa699b1474fb8777
+  - enabled: 1
+    path: Assets/Scenes/QuizMath/GameQuizMath.unity
+    guid: 8ff3c1334f26def4daac7221c3b6b1a5
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/PicturePuzzle/GamePicturePuzzle.unity
+    path: Assets/Scenes/Listening/GameWordSoundListening.unity
+    guid: 09abe7b8e96946b4c86f6da4eb9e3c88
+  - enabled: 1
+    path: Assets/Scenes/SolvingMath/GameQuizSolveMath.unity
+    guid: b3e1f8533cbcfba4d827b9f62fad3a2b
+  - enabled: 1
+    path: Assets/Scenes/PicturePuzzle/GameRebusPuzzle.unity
     guid: 83b9408029794b24b84531ea0287f873
   - enabled: 1
-    path: Assets/Scenes/PicturePuzzle/MenuPicturePuzzle.unity
-    guid: 21162f0474be00744ad8a972d06cbfa6
+    path: Assets/Scenes/RunningFigure/GameRunningFigure.unity
+    guid: aaea38382cff7a8458a1ca54ce442b82
+  - enabled: 1
+    path: Assets/Scenes/SoundWave/GameSoundWave.unity
+    guid: 6aa47fb382da9fc489f6a9464645da47
+  - enabled: 1
+    path: Assets/Scenes/WordMemory/GameWordMemory.unity
+    guid: 9ef95740e95c4ce4c83f9a191c6d74a8
+  - enabled: 1
+    path: Assets/Scenes/Catching/GameCatching.unity
+    guid: a9d600eea3b92954c97acf9276b062b6
   m_configObjects: {}

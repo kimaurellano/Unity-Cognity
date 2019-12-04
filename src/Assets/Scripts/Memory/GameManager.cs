@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.GlobalScripts.Player;
+using Assets.Scripts.DataComponent.Model;
+using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
-using static Assets.Scripts.GlobalScripts.Player.BaseScoreHandler;
-using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Memory {
+    [RequireComponent(typeof(ActionManager))]
     public class GameManager : CoreGameBehaviour {
 
         private List<Transform> _lockedCardList;
@@ -46,11 +47,20 @@ namespace Assets.Scripts.Memory {
 
             _lockedCardList = new List<Transform>();
 
+            SceneManager.activeSceneChanged += RemoveEvents;
+
             TimerManager.OnPreGameTimerEndEvent += StartGameTimer;
 
             TimerManager.OnGameTimerEndEvent += EndGame;
+            TimerManager.OnGameTimerEndEvent += _timerManager.ChangeTimerState;
 
-            TouchManager.onCardLockEvent += IncrementLocks;
+            TouchManager.OnCardLockEvent += IncrementLocks;
+        }
+
+        private void RemoveEvents(Scene current, Scene next) {
+            SceneManager.activeSceneChanged -= RemoveEvents;
+            TouchManager.OnCardLockEvent -= IncrementLocks;
+            TimerManager.OnGameTimerEndEvent -= EndGame;
         }
 
         private void StartGameTimer() {
@@ -62,33 +72,30 @@ namespace Assets.Scripts.Memory {
         private void IncrementLocks() {
             _lockCount++;
 
-            if(_lockCount > 7) {
-                GameResult(success: true);
+            if(_lockCount == 7) {
+                GameResult(true);
             }
         }
 
         public override void EndGame() {
-            base.EndGame();
-
-            GameResult(success: false);
+            GameResult(false);
         }
 
         private void GameResult(bool success) {
-            TimerManager.OnGameTimerEndEvent -= EndGame;
-
             // Reset
             _lockCount = 0;
 
             // Add score 
-            BaseScoreHandler baseScoreHandler = new BaseScoreHandler();
-            baseScoreHandler.AddScore(_seconds, GameType.Memory);
+            BaseScoreHandler baseScoreHandler = new BaseScoreHandler(0, 45);
+            baseScoreHandler.AddScore(0, _seconds);
+            baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
 
-            // Load finished scene
-            Transform gameResultPanel = (Transform)_uiManager.GetUI(UIManager.UIType.Panel, "game result");
-            gameResultPanel.gameObject.SetActive(true);
+            ShowGraph(
+                UserStat.GameCategory.Memory,
+                baseScoreHandler.Score,
+                baseScoreHandler.ScoreLimit);
 
-            TextMeshProUGUI gameResultText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game result text");
-            gameResultText.SetText(success ? "SUCCESS!" : "FAILED");
+            base.EndGame();
         }
 
         public IEnumerator WaitForFlip() {
