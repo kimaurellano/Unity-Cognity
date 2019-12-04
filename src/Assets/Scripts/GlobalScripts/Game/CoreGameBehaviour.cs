@@ -93,7 +93,14 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public void LoadNextScene() {
-            SceneManager.LoadScene(GetNextScene());
+            GameCollection gameCollection = FindObjectOfType<GameCollection>();
+            string nextScene = gameCollection.GetNextScene();
+            // The session contains only 5 games
+            if (gameCollection.PlayedGames > 4) {
+                FindObjectOfType<ActionManager>().GoTo("BaseMenu");
+            }
+
+            SceneManager.LoadScene(nextScene);
         }
 
         public virtual void MuteBackgroundMusic() {

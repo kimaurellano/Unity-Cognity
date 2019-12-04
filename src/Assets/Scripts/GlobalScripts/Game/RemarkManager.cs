@@ -69,6 +69,10 @@ namespace Assets.Scripts.GlobalScripts.Game {
             return dotInstance;
         }
 
+        public void ShowGraphOverallAvg() {
+            
+        }
+
         public void ShowGraph(UserStat.GameCategory category, int score, int maxScore) {
             transform.gameObject.SetActive(true);
 
@@ -83,6 +87,10 @@ namespace Assets.Scripts.GlobalScripts.Game {
                 _values.Add(userScoreHistory.SessionScore);
             }
 
+            PopulateGraph(_values);
+        }
+
+        private void PopulateGraph(List<float> values) {
             float graphHeight = _graphContainer.sizeDelta.y;
             const float yMaximum = 100f;
             const float xSize = 100f;
@@ -94,7 +102,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
                 float xPosition = xSize + i * xSize;
                 float yPosition = (_values[i] / yMaximum) * graphHeight;
                 GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
-                if(lastCircleGameObject != null) {
+                if (lastCircleGameObject != null) {
                     CreateDotConnection(
                         lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition,
                         circleGameObject.GetComponent<RectTransform>().anchoredPosition);
