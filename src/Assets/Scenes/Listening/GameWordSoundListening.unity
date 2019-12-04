@@ -1335,6 +1335,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f96322c99b7a94fb11463810156d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _buttonMusic: {fileID: 0}
+  _buttonSfx: {fileID: 0}
 --- !u!82 &1270291022
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1764,7 +1766,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1270291020}
         m_MethodName: Pause
         m_Mode: 1
         m_Arguments:
