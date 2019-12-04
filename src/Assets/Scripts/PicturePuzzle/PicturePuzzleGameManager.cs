@@ -66,14 +66,14 @@ namespace Assets.Scripts.PicturePuzzle {
         }
 
         public void CheckAnswer() {
-            string answer = Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Answer;
+            string answer = Array.Find(_picturePuzzleCollections, i => i.puzzleId == _currentNumber).Answer.ToLower();
 
             _answerField = (TMP_InputField)_uiManager.GetUI(UIType.InputField, "answer");
 
             _scoreAddAnimator =
                 (Animator)_uiManager.GetUI(UIType.AnimatedMultipleState, "score add anim");
 
-            if (_answerField.text.Contains(answer)) {
+            if (_answerField.text.ToLower().Contains(answer)) {
                 FindObjectOfType<AudioManager>().PlayClip("sfx_correct");
 
                 _scoreAddAnimator.GetComponent<TextMeshProUGUI>().SetText("CORRECT!");
