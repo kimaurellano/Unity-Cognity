@@ -8,6 +8,7 @@ using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.GlobalScripts.Managers {
     /// <summary>
@@ -129,6 +130,27 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                     _pageStack.Remove((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
                 }
             }));
+        }
+
+        public void AttachAction(Transform button) {
+            Button buttonComponent = button.GetComponent<Button>();
+
+            // Avoid stacking unused subscribe methods
+            buttonComponent.onClick.RemoveAllListeners();
+
+            string sceneToLoad = button.name.Split('_')[1];
+            string gameName = button.name.Split('_')[2];
+
+            ((TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game to load"))
+                .SetText(gameName);
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button start game"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    FindObjectOfType<ActionManager>().GoTo(sceneToLoad);
+                });
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
+                .gameObject.SetActive(true);
         }
 
         public void StartSession() {
