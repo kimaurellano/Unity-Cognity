@@ -88,7 +88,7 @@ namespace Assets.Scripts.Catching {
 
         public void IncreasePoint() {
             _score++;
-            if(_score > 10) {
+            if(_score > 14) {
                 EndGame();
 
                 return;

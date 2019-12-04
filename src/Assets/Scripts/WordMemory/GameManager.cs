@@ -49,7 +49,7 @@ namespace Assets.Scripts.WordMemory {
 
         private void DisplayWord() {
             _displayedWords++;
-            if (_displayedWords > 15) {
+            if (_displayedWords > 14) {
                 EndGame();
 
                 return;
