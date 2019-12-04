@@ -20,17 +20,20 @@ namespace Assets.Scripts.Quizzes {
         [Space]
         [SerializeField] private QuestionBankQuiz[] _questions;
 
+        private Randomizer<QuestionBankQuiz> _randomizer;
         private AudioManager _audioManager;
         private TimerManager _timerManager;
         private List<QuestionBankQuiz> _currentQuestions;
-        private QuestionBankQuiz.Difficulty _currentDifficulty;
+        private Difficulty.DifficultyLevel _currentDifficulty;
         private BaseScoreHandler _baseScoreHandler;
 
         private int _point = 10;
         private int _currentQuestionNumber;
-        private int _level = (int)QuestionBankQuiz.Difficulty.Easy;
+        private int _level = (int)Difficulty.DifficultyLevel.Easy;
 
         private void Start() {
+            _randomizer = new Randomizer<QuestionBankQuiz>();
+
             _audioManager = FindObjectOfType<AudioManager>();
             _timerManager = GetComponent<TimerManager>();
 
@@ -58,31 +61,35 @@ namespace Assets.Scripts.Quizzes {
 
             _timerManager.StartTimerAt(1, 0f);
 
-            _currentDifficulty = QuestionBankQuiz.Difficulty.Easy;
+            _currentDifficulty = Difficulty.DifficultyLevel.Easy;
+
             SetDifficulty(_currentDifficulty);
+
             DisplayAnswerOption();
         }
 
-        private void SetDifficulty(QuestionBankQuiz.Difficulty difficulty) {
-            _currentQuestions.Clear();
+        private void SetDifficulty(Difficulty.DifficultyLevel difficulty) {
+            _randomizer.ClearList();
 
             // Populate question list based on a category
-            foreach (var question in _questions.Where(i => i.QuestionDifficulty == difficulty)) {
-                _currentQuestions.Add(question);
+            foreach (var question in _questions.Where(i => i.Difficulty == difficulty)) {
+                _randomizer.AddToList(question);
             }
         }
 
         private void DisplayAnswerOption() {
-            _question.SetText(_currentQuestions[_currentQuestionNumber].Question);
+            QuestionBankQuiz questionBankQuiz = _randomizer.GetRandomItem();
+
+            _question.SetText(questionBankQuiz.Question);
 
             // Get possible answers in the current question
-            for (int possibleAnswer = 0; possibleAnswer < _currentQuestions[_currentQuestionNumber].Answers.Length; possibleAnswer++) {
+            for (int possibleAnswer = 0; possibleAnswer < questionBankQuiz.Answers.Length; possibleAnswer++) {
                 GameObject questionPrefab = Instantiate(_answerPrefab, _answersContainer);
                 AnswerScript answerScript = questionPrefab.GetComponent<AnswerScript>();
 
                 // Set contents of possible answer
-                answerScript.AnswerText = _currentQuestions[_currentQuestionNumber].Answers[possibleAnswer].AnswerText;
-                answerScript.IsCorrect = _currentQuestions[_currentQuestionNumber].Answers[possibleAnswer].IsCorrect;
+                answerScript.AnswerText = questionBankQuiz.Answers[possibleAnswer].AnswerText;
+                answerScript.IsCorrect = questionBankQuiz.Answers[possibleAnswer].IsCorrect;
             }
         }
 
@@ -100,10 +107,8 @@ namespace Assets.Scripts.Quizzes {
 
             ClearAnswersContainer();
 
-            _currentQuestionNumber++;
-
             // Every 10 questions increase difficulty
-            if (_currentQuestionNumber > _currentQuestions.Count - 1) {
+            if (_randomizer.IsEmpty) {
                 _level++;
 
                 // Upon finishing the Hard part end the game
@@ -113,9 +118,7 @@ namespace Assets.Scripts.Quizzes {
                     return;
                 }
 
-                SetDifficulty((QuestionBankQuiz.Difficulty)Enum.ToObject(typeof(QuestionBankQuiz.Difficulty), _level));
-
-                _currentQuestionNumber = 0;
+                SetDifficulty(Difficulty.ParseLevel(_level));
             }
 
             DisplayAnswerOption();
@@ -132,9 +135,6 @@ namespace Assets.Scripts.Quizzes {
         }
 
         public override void EndGame() {
-            AnswerScript.OnSelectEvent -= CheckAnswer;
-            TimerManager.OnGameTimerEndEvent -= EndGame;
-
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Language);
 
             ShowGraph(
