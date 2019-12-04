@@ -14,6 +14,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         [SerializeField] private Collection[] _gameCollection;
 
+        public int PlayedGames { get; private set; }
         public int Loaded { get; set; }
         public Collection[] GameCollections { get => _gameCollection; set => _gameCollection = value; }
 
@@ -28,6 +29,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public string GetNextScene() {
+            PlayedGames++;
+
             Loaded++;
             // We only have 4 game categories
             if (Loaded > 3) {

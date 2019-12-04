@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using Assets.Scripts.DataComponent.Model;
 using TMPro;
@@ -32,31 +33,31 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // Pentagon has 5 vertices
             Vector3[] vertices = new Vector3[5];
 
-            float problemSolvingProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.ProblemSolving).Score / 100f;
+            float problemSolvingProgress = Avg(databaseManager.GetScoreHistory(loggedUser, UserStat.GameCategory.ProblemSolving));
             TextMeshProUGUI problemSolvingPercentText = (TextMeshProUGUI) _uiManager.GetUI(UIManager.UIType.Text, "problem solving");
             problemSolvingPercentText.SetText(Format(ClampPercent(problemSolvingProgress * 100f)));
             // Bottom left
             vertices[0] = new Vector3(-defaultWidth - problemSolvingProgress * MAX_VALUE, -defaultHeight - problemSolvingProgress * MAX_VALUE);
 
-            float memoryProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Memory).Score / 100f;
+            float memoryProgress = Avg(databaseManager.GetScoreHistory(loggedUser, UserStat.GameCategory.Memory));
             TextMeshProUGUI memoryPercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "memory");
             memoryPercentText.SetText(Format(ClampPercent(memoryProgress * 100f)));
             // Top left
             vertices[1] = new Vector3(-defaultWidth - memoryProgress * MAX_VALUE, defaultHeight + memoryProgress * MAX_VALUE);
 
-            float flexibilityProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Flexibility).Score / 100f;
+            float flexibilityProgress = Avg(databaseManager.GetScoreHistory(loggedUser, UserStat.GameCategory.Flexibility));
             TextMeshProUGUI flexibilityPercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "flexibility");
             flexibilityPercentText.SetText(Format(ClampPercent(flexibilityProgress * 100f)));
             // Top right
             vertices[2] = new Vector3(defaultWidth + flexibilityProgress * MAX_VALUE, defaultHeight + flexibilityProgress * MAX_VALUE);
 
-            float languageProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Language).Score / 100f;
+            float languageProgress = Avg(databaseManager.GetScoreHistory(loggedUser, UserStat.GameCategory.Language));
             TextMeshProUGUI languagePercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "language");
             languagePercentText.SetText(Format(ClampPercent(languageProgress * 100f)));
             // Bottom right
             vertices[3] = new Vector3(defaultWidth + languageProgress * MAX_VALUE, -defaultHeight - languageProgress * MAX_VALUE);
 
-            float speedProgress = databaseManager.GetUserStat(loggedUser, UserStat.GameCategory.Speed).Score / 100f;
+            float speedProgress = Avg(databaseManager.GetScoreHistory(loggedUser, UserStat.GameCategory.Speed));
             TextMeshProUGUI speedPercentText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "speed");
             speedPercentText.SetText(Format(ClampPercent(speedProgress * 100f)));
             // Bottom center
@@ -87,6 +88,22 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         private static string Format(float value) {
             return value <= 0 ? "0%" : value.ToString("##.###") + "%";
+        }
+
+        private static float Avg(IEnumerable<UserScoreHistory> values) {
+            if(values.Count() <= 0) {
+                return 0f;
+            }
+
+            float avg = 0f;
+
+            foreach (var item in values) {
+                avg += item.SessionScore;
+            }
+
+            avg = avg / values.Count();
+
+            return avg / 100f;
         }
     }
 }

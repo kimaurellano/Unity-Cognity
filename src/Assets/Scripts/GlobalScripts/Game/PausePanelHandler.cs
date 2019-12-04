@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.GlobalScripts.Game {
@@ -28,13 +29,15 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
             OnMuteGameEvent += UpdateUI;
             OnPauseGameEvent += ShowDialog;
-            OnQuitGameEvent += RemoveAttached;
-            OnEndGameEvent += RemoveAttached;
+
+            SceneManager.activeSceneChanged += RemoveEvents;
 
             AudioManager.OnAllAudioOverrideEvent += AudioOverride;
         }
 
-        private void RemoveAttached() {
+        private void RemoveEvents(Scene current, Scene next) {
+            SceneManager.activeSceneChanged -= RemoveEvents;
+
             foreach (var item in _coreGameBehaviour.Where(i => !i.name.Equals(transform.name))) {
                 transform.Find("ButtonResume").GetComponent<Button>().onClick.RemoveListener(item.Pause);
                 transform.Find("ButtonTryAgain").GetComponent<Button>().onClick.RemoveListener(item.Retry);
