@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public static OnAudioPlay onAudioEndPlayEvent;
 
         public static OnAllAudioOverride OnAllAudioOverrideEvent;
- 
+
         private static AudioManager _audioManager;
 
         private AudioCollection _audioCollection;
@@ -73,12 +74,12 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         private void AttachButtonSfx() {
             // Get all inactive objects
-            foreach (var button in (Button[]) Resources.FindObjectsOfTypeAll(typeof(Button))) {
+            foreach (var button in (Button[])Resources.FindObjectsOfTypeAll(typeof(Button))) {
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
 
             // Get all active objects
-            foreach (var button in (Button[]) FindObjectsOfType(typeof(Button))) {
+            foreach (var button in (Button[])FindObjectsOfType(typeof(Button))) {
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
         }
@@ -141,6 +142,17 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             }
 
             return clipName;
+        }
+
+        public AudioSource GetAttachedAudioComponent(string name) {
+            AudioSource src = null;
+            foreach (var item in GetAttachedAudioComponents()) {
+                if (item.clip.name.Equals(name)) {
+                    src = item;
+                }
+            }
+
+            return src;
         }
 
         public AudioSource[] GetAttachedAudioComponents() {

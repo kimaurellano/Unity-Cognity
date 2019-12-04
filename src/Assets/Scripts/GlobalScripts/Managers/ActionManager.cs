@@ -15,6 +15,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
     /// </summary>
     public class ActionManager : MonoBehaviour {
 
+        [SerializeField] private Transform _buttonMusic;
+        [SerializeField] private Transform _buttonSfx;
+
         private static Utility _utility;
         private static Transform _targetPanel;
         private static Transform _currentPanel;
@@ -130,6 +133,30 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void StartSession() {
             SceneManager.LoadScene(FindObjectOfType<GameCollection>().GetNextScene());
+        }
+
+        public void MuteSfx() {
+            AudioSource src = FindObjectOfType<AudioManager>().GetAttachedAudioComponent("Click");
+            src.mute = !src.mute;
+            if (src.mute) {
+                _buttonSfx.GetChild(0).gameObject.SetActive(true);
+                _buttonSfx.GetChild(1).gameObject.SetActive(false);
+            } else {
+                _buttonSfx.GetChild(0).gameObject.SetActive(false);
+                _buttonSfx.GetChild(1).gameObject.SetActive(true);
+            }
+        }
+
+        public void MuteBg() {
+            AudioSource src = FindObjectOfType<AudioManager>().GetAttachedAudioComponent("JazzyFrench");
+            src.mute = !src.mute;
+            if (src.mute) {
+                _buttonMusic.GetChild(0).gameObject.SetActive(true);
+                _buttonMusic.GetChild(1).gameObject.SetActive(false);
+            } else {
+                _buttonMusic.GetChild(0).gameObject.SetActive(false);
+                _buttonMusic.GetChild(1).gameObject.SetActive(true);
+            }
         }
 
         public void CreateUser(TMP_InputField newUser) {
