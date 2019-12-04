@@ -2989,7 +2989,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start Session
+  m_text: Start Training
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 51536f3631bc3b34ab0d384cdd6e9fc0, type: 2}
   m_sharedMaterial: {fileID: 21206241558064740, guid: 51536f3631bc3b34ab0d384cdd6e9fc0,
