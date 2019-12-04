@@ -87,7 +87,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         private static string Format(float value) {
-            return value <= 0 ? "0%" : value.ToString("##.###") + "%";
+            return value <= 0 ? "0%" : value.ToString("##.##") + "%";
         }
 
         private static float Avg(IEnumerable<UserScoreHistory> values) {
