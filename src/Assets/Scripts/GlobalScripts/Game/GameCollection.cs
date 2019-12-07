@@ -40,7 +40,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
             int gameCount = _gameCollection[Loaded].Games.Length;
             
             // Get the game scene name
-            string scene = _gameCollection[Loaded].Games[Random.Range(0, gameCount - 1)];
+            string scene = _gameCollection[Loaded].Games[Random.Range(0, gameCount)];
             Debug.Log($"<color=green>Next scene:{scene}</color>");
 
             return scene;
