@@ -55,7 +55,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // audio cannot be unmuted/change volume unless it's a scene other
             // than sound games
             if (SceneManager.GetActiveScene().name.Equals("GameSoundWave") ||
-                SceneManager.GetActiveScene().name.Equals("GameWordSoundListening")) {
+                SceneManager.GetActiveScene().name.Equals("GameListening")) {
                 SetVolume("bg_game", 0.1f);
                 SetVolume("bg_menu", 0.1f);
 
