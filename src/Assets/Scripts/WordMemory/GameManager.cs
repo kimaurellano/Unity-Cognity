@@ -30,6 +30,7 @@ namespace Assets.Scripts.WordMemory {
 
             SceneManager.activeSceneChanged += RemoveEvents;
             TimerManager.OnPreGameTimerEndEvent += StartGame;
+            TimerManager.OnGameTimerEndEvent += EndGame;
 
              _mistakeText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "mistake");
              _mistakeText.SetText($"Mistakes: {_mistake}/3");

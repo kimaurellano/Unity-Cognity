@@ -54,6 +54,12 @@ namespace Assets.Scripts.SoundWave {
             ((Animator) _uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "sequence result"))
                 .enabled = false;
 
+            TimerManager.OnPreGameTimerEndEvent += StartGame;
+        }
+
+        private void StartGame() {
+            TimerManager.OnPreGameTimerEndEvent -= StartGame;
+
             // Add AudioSource components
             foreach (var sound in _sound) {
                 AudioSource src = gameObject.AddComponent<AudioSource>();
@@ -99,7 +105,7 @@ namespace Assets.Scripts.SoundWave {
             Debug.Log("<color=orange>Adding sound... Please wait</color>");
             for (int i = 0; i < _sound.Length; i++) {
                 // Randomize sounds
-                _soundIdx.Add(Random.Range(0, _sound.Length - 1));
+                _soundIdx.Add(Random.Range(0, _sound.Length));
                 // Get the clip idx base on the random result
                 string clipToPlay = _sound[_soundIdx[i]].Name;
 
@@ -157,12 +163,15 @@ namespace Assets.Scripts.SoundWave {
         }
 
         private void Progress() {
-            // Add points
-            _baseScoreHandler.AddScore(1);
-
             _selectedIdx++;
 
             if (_selectedIdx > _seqOfClips.Count - 1) {
+                // Just add point every complete sequence
+                if (!_hasError) {
+                    // Add points
+                    _baseScoreHandler.AddScore(1);
+                }
+
                 _selectedIdx = 0;
                 _repetition++;
 
@@ -219,7 +228,6 @@ namespace Assets.Scripts.SoundWave {
         }
 
         private IEnumerator SamplePlay(float seconds) {
-            // TODO: implement paired button indication
             yield return new WaitForSeconds(seconds);
         }
 

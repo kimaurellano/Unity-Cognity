@@ -57,6 +57,7 @@ namespace Assets.Scripts.PopNumber {
         }
 
         private void StartGame() {
+            TimerManager.OnGameTimerEndEvent -= StartGame;
             // Ready questions
             CategoryAddToList((QuestionBank.Category)_catIdx);
             // Dsiplay first question
