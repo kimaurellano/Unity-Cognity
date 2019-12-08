@@ -17,6 +17,7 @@ namespace Assets.Scripts.Catching {
         private float _moveSpeed;
         private float _spawnRate;
         private float _score;
+        private int _maxScore = 15;
         private int _life = 3;
 
         private void Start() {
@@ -26,7 +27,7 @@ namespace Assets.Scripts.Catching {
 
             TimerManager.OnPreGameTimerEndEvent += StartSpawn;
 
-            _baseScoreHandler = new BaseScoreHandler(0, 10);
+            _baseScoreHandler = new BaseScoreHandler(0, _maxScore);
 
             _screenBounds =
                 Camera.main.ScreenToWorldPoint(new Vector3(
@@ -35,10 +36,10 @@ namespace Assets.Scripts.Catching {
                     Camera.main.transform.position.z));
 
             // Starting speed
-            _moveSpeed = 0.5f;
+            _moveSpeed = 1.5f;
             _spawnRate = 3f;
 
-            _scoreText.SetText("0/10");
+            _scoreText.SetText($"0/{_maxScore}");
         }
 
         private void RemoveEvent(Scene current, Scene next) {
@@ -94,7 +95,9 @@ namespace Assets.Scripts.Catching {
                 return;
             }
 
-            _scoreText.SetText($"{(int)_score}/10");
+            _scoreText.SetText($"{(int)_score}/{_maxScore}");
+
+            _baseScoreHandler.AddScore(1);
 
             IncreaseDifficulty();
         }
