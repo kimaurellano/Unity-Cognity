@@ -30,8 +30,16 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         private bool _onQuit;
 
         private void Start() {
-            DatabaseManager db = new DatabaseManager();
-            db.DeletePersistentData();
+            // Deletes bundled wrong .db file during upon start
+            // and then replaced by the expected proper
+            // database file packaged within the APK
+            // This is a known bug with still no fix
+            if(PlayerPrefs.GetInt("DbImport") == 0) {
+                DatabaseManager db = new DatabaseManager();
+                db.DeletePersistentData();
+
+                PlayerPrefs.SetInt("DbImport", 1);
+            }
 
             _utility = new Utility();
 
@@ -45,52 +53,38 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 DatabaseManager databaseManager = new DatabaseManager();
                 var lastLogged = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
 
-                if(lastLogged == null) {
-                    Debug.Log($"<color=red>UserPrefs is null</color>");
+                databaseManager.Close();
+
+                if (lastLogged == null) {
+                    Debug.Log("<color=red>UserPrefs is null</color>");
                     return;
                 }
 
                 Debug.Log($"<color=yellow>User logged: {lastLogged.Username}</color>");
 
-                string pageToLoad = string.Empty;
+                string pageToLoad = lastLogged.PageLoaded;
 
-                StartCoroutine(_utility.LoadJson(data => { pageToLoad = data.page; }));
                 // If a user is left logged in but quitted the app
                 if (lastLogged.Username != null) {
                     FindObjectOfType<StatsManager>().UpdateRadarChart();
 
-                    if (pageToLoad == "login") {
-                        Debug.Log("<color=green>Json file page:login</color>");
-                        if (lastLogged.Username != null) {
-                            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
-                                .gameObject
-                                .SetActive(false);
-                            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"))
-                                .gameObject
-                                .SetActive(true);
+                    Debug.Log($"<color=green>page to load:{pageToLoad}</color>");
+                    foreach (var panel in _uiManager.PanelCollection) {
+                        if (panel.Name.Equals(pageToLoad)) {
+                            panel.Panel.gameObject.SetActive(true);
+
+                            continue;
                         }
-                    } else {
-                        Debug.Log($"<color=green>page to load:{pageToLoad}</color>");
-                        // When exits from a game
-                        ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
-                            .gameObject
-                            .SetActive(false);
-                        ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, pageToLoad))
-                            .gameObject
-                            .SetActive(true);
+
+                        panel.Panel.gameObject.SetActive(false);
                     }
 
-                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
                     _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, pageToLoad));
 
                     // Manually set visibility since SwitchPanel is not invoked which handles back button visibility
                     Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
                     btnBack.gameObject.SetActive(true);
-                } else {
-                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
                 }
-
-                databaseManager.Close();
             }
 
             // Revert time scale to 1 after quiting from
@@ -110,7 +104,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void CheckInput(TMP_InputField input) {
             DatabaseManager databaseManager = new DatabaseManager();
             var user = databaseManager.GetUser(input.text);
-            if(user == null) {
+            databaseManager.Close();
+
+            if (user == null) {
                 Debug.Log("<color=red>Not found!</color>");
 
                 TextMeshProUGUI notifText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "login notif");
@@ -122,25 +118,15 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             Debug.Log("<color=green>Exists!</color>");
 
-            user.IsLogged = true;
-            databaseManager.UpdateUser(user.Username, user);
-            databaseManager.Close();
+            UserPrefs.UpdateUserPrefs(user.Username, "start menu", true);
 
             FindObjectOfType<StatsManager>().UpdateRadarChart();
 
-            StartCoroutine(_utility.LoadJson(isDone => {
-                if (isDone) {
-                    Utility.Data newData = _utility.GetData();
-                    newData.last_user = user.Username;
-                    _utility.ModifyJson(newData);
-                    
-                    TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
-                    TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
+            TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
+            TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
 
-                    // Prevent stacking of the login page after successful login
-                    _pageStack.Remove((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
-                }
-            }));
+            // Prevent stacking of the login page after successful login
+            _pageStack.Remove((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
         }
 
         public void AttachAction(Transform button) {
@@ -209,17 +195,16 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 notifText.SetText("User already exists!");
                 notifText.color = new Color32(255, 0, 0, 189);
 
-                databaseManager.Close();
             } else {
-                databaseManager.CreateNewUser(new User { Username = newUser.text, IsLogged = false, FirstRun = false });
+                databaseManager.CreateNewUser(new UserPrefs { Username = newUser.text, IsLogged = false, FirstRun = false });
                 notifText.transform.gameObject.SetActive(true);
                 notifText.SetText("Created successfully... Please wait");
                 notifText.color = new Color32(96, 164, 69, 189);
 
-                databaseManager.Close();
-
                 StartCoroutine(AfterAccCreate());
             }
+
+            databaseManager.Close();
         }
 
         private IEnumerator AfterAccCreate() {
@@ -231,14 +216,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void GoTo(string sceneName) {
             if (sceneName.StartsWith("Game")) {
-                StartCoroutine(_utility.LoadJson(isDone => {
-                    if (isDone) {
-                        Utility.Data newData = _utility.GetData();
-                        newData.page = "category selection";
-                        _utility.ModifyJson(newData);
-                        Debug.Log($"<color=green>Json file updated! page:{_utility.GetData().page}</color>");
-                    }
-                }));
+                UserPrefs.UpdateUserPrefs("category selection");
             }
 
             for (int i = 0; i < _gameCollection.GameCollections.Length; i++) {
@@ -278,20 +256,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void QuitApp() {
-            DatabaseManager databaseManager = new DatabaseManager();
-            UserPrefs update = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
-            if (update != null) {
-                update.IsLogged = false;
-                databaseManager.UpdateUser(update.Username, update);
-            }
-
-            databaseManager.Close();
-
-            Utility.Data newData = _utility.GetData();
-            newData.page = "login";
-            _utility.ModifyJson(newData);
-
-            Debug.Log($"<color=green>Update to page:{_utility.GetData().page}</green>");
+            UserPrefs.UpdateUserPrefs("login", false);
 
             Application.Quit();
         }
@@ -365,14 +330,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         private void OnApplicationQuit() {
-            StartCoroutine(_utility.LoadJson(isDone => {
-                if (isDone) {
-                    Utility.Data newData = _utility.GetData();
-                    newData.page = "start menu";
-                    _utility.ModifyJson(newData);
-                    Debug.Log($"<color=green>Json file updated! page:{_utility.GetData().page}</color>");
-                }
-            }));
+            UserPrefs.UpdateUserPrefs("start menu");
         }
 
         public void ClearNotif() {
