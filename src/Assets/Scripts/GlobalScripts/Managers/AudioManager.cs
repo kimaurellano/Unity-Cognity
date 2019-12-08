@@ -56,8 +56,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // than sound games
             if (SceneManager.GetActiveScene().name.Equals("GameSoundWave") ||
                 SceneManager.GetActiveScene().name.Equals("GameListening")) {
-                SetVolume("bg_game", 0.1f);
-                SetVolume("bg_menu", 0.1f);
+                SetVolume("bg_game", 0.05f);
+                SetVolume("bg_menu", 0.05f);
 
                 OnAllAudioOverrideEvent?.Invoke();
 
