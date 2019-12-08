@@ -14,16 +14,19 @@ namespace Assets.Scripts.GlobalScripts.Game {
     public class RemarkManager : MonoBehaviour {
 
         [SerializeField] private TextMeshProUGUI _scoreText;
-        [SerializeField] private TextMeshProUGUI _waitText;
         [SerializeField] private Button _btnContinue;
         [SerializeField] private Button _btnCancel;
         [SerializeField] private Sprite _circleSprite;
 
         private RectTransform _graphContainer;
         private List<float> _values;
-        private int _seconds = 5;
 
         private void Awake() {
+            if (!UserPrefs.SessionActive()) {
+                _btnCancel.GetComponent<TextMeshProUGUI>().SetText("Done");
+                _btnContinue.gameObject.SetActive(false);
+            }
+
             SceneManager.activeSceneChanged += RemoveEvents;
 
             _values = new List<float>();
@@ -33,8 +36,6 @@ namespace Assets.Scripts.GlobalScripts.Game {
             _btnCancel.onClick.AddListener(QuitGame);
 
             _graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
-
-            StartCoroutine(WindowClose());
         }
 
         private void QuitGame() {
@@ -44,16 +45,6 @@ namespace Assets.Scripts.GlobalScripts.Game {
         private void RemoveEvents(Scene current, Scene next) {
             _btnContinue.onClick = null;
             _btnCancel.onClick = null;
-        }
-
-        private IEnumerator WindowClose() {
-            while (_seconds > 0) {
-                _seconds--;
-                _waitText.SetText(_seconds.ToString());
-                yield return new WaitForSecondsRealtime(1f);
-            }
-
-            FindObjectOfType<CoreGameBehaviour>().LoadNextScene();
         }
 
         private GameObject CreateCircle(Vector2 anchoredPosition) {

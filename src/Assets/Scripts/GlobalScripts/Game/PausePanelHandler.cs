@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,6 +20,10 @@ namespace Assets.Scripts.GlobalScripts.Game {
             _coreGameBehaviour = Resources.FindObjectsOfTypeAll<CoreGameBehaviour>();
             if (_coreGameBehaviour == null) {
                 return;
+            }
+
+            if (UserPrefs.SessionActive()) {
+                transform.Find("ButtonTryAgain").GetComponent<Button>().interactable = false;
             }
 
             // Auto attaches resume capability for all game types

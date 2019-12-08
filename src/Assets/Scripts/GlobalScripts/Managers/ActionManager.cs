@@ -79,6 +79,10 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                         panel.Panel.gameObject.SetActive(false);
                     }
 
+                    if (pageToLoad.Equals("category selection")) {
+                        _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
+                    }
+
                     _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, pageToLoad));
 
                     // Manually set visibility since SwitchPanel is not invoked which handles back button visibility
@@ -144,6 +148,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button start game"))
                 .GetComponent<Button>().onClick.AddListener(() => {
                     FindObjectOfType<ActionManager>().GoTo(sceneToLoad);
+
+                    UserPrefs.UpdateUserPrefs(false);
                 });
 
             ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
@@ -152,6 +158,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void StartSession() {
             SceneManager.LoadScene(FindObjectOfType<GameCollection>().GetNextScene());
+
+            UserPrefs.UpdateUserPrefs(true);
         }
 
         public void MuteSfx() {
