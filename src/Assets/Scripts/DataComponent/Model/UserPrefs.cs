@@ -1,4 +1,6 @@
-﻿using SQLite4Unity3d;
+﻿using System.Linq;
+using Assets.Scripts.DataComponent.Database;
+using SQLite4Unity3d;
 
 namespace Assets.Scripts.DataComponent.Model {
     public class UserPrefs {
@@ -12,5 +14,43 @@ namespace Assets.Scripts.DataComponent.Model {
         public bool IsLogged { get; set; }
 
         public string PageLoaded { get; set; }
+
+        public static void UpdateUserPrefs(string pageToLoad) {
+            DatabaseManager databaseManager = new DatabaseManager();
+            UserPrefs userPrefs = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
+            if (userPrefs != null) {
+                userPrefs.PageLoaded = pageToLoad;
+            }
+
+            databaseManager.UpdateUser(userPrefs?.Username, userPrefs);
+            databaseManager.Close();
+        }
+
+        public static void UpdateUserPrefs(string pageToLoad, bool isLogged) {
+            DatabaseManager databaseManager = new DatabaseManager();
+            UserPrefs userPrefs = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
+            if (userPrefs != null) {
+                userPrefs.PageLoaded = pageToLoad;
+                userPrefs.IsLogged = isLogged;
+            }
+
+            databaseManager.UpdateUser(userPrefs?.Username, userPrefs);
+            databaseManager.Close();
+        }
+
+        /// <summary>
+        /// Upon game log-in
+        /// </summary>
+        public static void UpdateUserPrefs(string username, string pageToLoad, bool isLogged) {
+            DatabaseManager databaseManager = new DatabaseManager();
+            UserPrefs userPrefs = databaseManager.GetUser(username);
+            if (userPrefs != null) {
+                userPrefs.PageLoaded = pageToLoad;
+                userPrefs.IsLogged = isLogged;
+            }
+
+            databaseManager.UpdateUser(userPrefs?.Username, userPrefs);
+            databaseManager.Close();
+        }
     }
 }
