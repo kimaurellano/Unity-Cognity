@@ -15,6 +15,8 @@ namespace Assets.Scripts.DataComponent.Model {
 
         public string PageLoaded { get; set; }
 
+        public bool InSession { get; set; }
+
         public static void UpdateUserPrefs(string pageToLoad) {
             DatabaseManager databaseManager = new DatabaseManager();
             UserPrefs userPrefs = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
@@ -51,6 +53,23 @@ namespace Assets.Scripts.DataComponent.Model {
 
             databaseManager.UpdateUser(userPrefs?.Username, userPrefs);
             databaseManager.Close();
+        }
+
+        public static void UpdateUserPrefs(bool inSession) {
+            DatabaseManager databaseManager = new DatabaseManager();
+            UserPrefs userPrefs = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
+            if (userPrefs != null) {
+                userPrefs.InSession = inSession;
+            }
+
+            databaseManager.UpdateUser(userPrefs?.Username, userPrefs);
+            databaseManager.Close();
+        }
+
+        public static bool SessionActive() {
+            DatabaseManager databaseManager = new DatabaseManager();
+            UserPrefs first = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
+            return first != null && first.InSession;
         }
     }
 }

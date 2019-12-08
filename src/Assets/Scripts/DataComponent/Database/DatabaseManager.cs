@@ -46,7 +46,7 @@ namespace Assets.Scripts.DataComponent.Database {
             File.Delete(filepath);
         }
 
-        public void CreateNewUser(User user) {
+        public void CreateNewUser(UserPrefs user) {
             if (GetUser(user.Username)?.Username != null) {
                 Debug.Log("<color=yellow>User exists already</color>");
                 return;
