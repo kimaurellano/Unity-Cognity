@@ -41,6 +41,11 @@ namespace Assets.Scripts.DataComponent.Database {
             _connection = new SQLiteConnection(filepath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
         }
 
+        public void DeletePersistentData() {
+            var filepath = $"{Application.persistentDataPath}/{DATABASE}";
+            File.Delete(filepath);
+        }
+
         public void CreateNewUser(User user) {
             if (GetUser(user.Username)?.Username != null) {
                 Debug.Log("<color=yellow>User exists already</color>");
@@ -58,8 +63,8 @@ namespace Assets.Scripts.DataComponent.Database {
             Debug.Log("<color=green>User score stat created</color>");
         }
 
-        public void UpdateUser(string username, User updatedUser) {
-            User existingUser = _connection.Query<User>($"SELECT * FROM User WHERE Username='{username}'").FirstOrDefault();
+        public void UpdateUser(string username, UserPrefs updatedUser) {
+            UserPrefs existingUser = _connection.Query<UserPrefs>($"SELECT * FROM UserPrefs WHERE Username='{username}'").FirstOrDefault();
             if (existingUser == null) {
                 Debug.Log("<color=red>User non-existent</color>");
                 return;
@@ -89,22 +94,30 @@ namespace Assets.Scripts.DataComponent.Database {
             SaveSessionScore(username, existingUser.Score, category);
         }
 
+        public void DeleteAllData() {
+            _connection.DeleteAll<UserStat>();
+            _connection.DeleteAll<UserScoreHistory>();
+            _connection.DeleteAll<UserPrefs>();
+
+            _connection.Close();
+        }
+
         public void DeleteUser(string username) {
             if (GetUser(username).Username == null) {
-                Debug.Log("<color=red>User non-existent</color>");
+                Debug.Log("<color=red>UserPrefs non-existent</color>");
                 return;
             }
-            _connection.Query<User>($"DELETE FROM User WHERE Username='{username}'");
+            _connection.Query<UserPrefs>($"DELETE FROM UserPrefs WHERE Username='{username}'");
 
-            Debug.Log("<color=green>User deleted</color>");
+            Debug.Log("<color=green>UserPrefs deleted</color>");
         }
 
-        public User GetUser(string username) {
-            return _connection.Query<User>($"SELECT * FROM User WHERE Username='{username}'").FirstOrDefault();
+        public UserPrefs GetUser(string username) {
+            return _connection.Query<UserPrefs>($"SELECT * FROM UserPrefs WHERE Username='{username}'").FirstOrDefault();
         }
-
-        public IEnumerable<User> GetUsers() {
-            return _connection.Query<User>("SELECT * FROM User");
+        
+        public IEnumerable<UserPrefs> GetUsers() {
+            return _connection.Query<UserPrefs>("SELECT * FROM UserPrefs");
         }
 
         public IEnumerable<UserStat> GetUserStats() {

@@ -30,6 +30,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         private bool _onQuit;
 
         private void Start() {
+            DatabaseManager db = new DatabaseManager();
+            db.DeletePersistentData();
+
             _utility = new Utility();
 
             _pageStack = new List<Transform>();
@@ -41,14 +44,22 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             if (SceneManager.GetActiveScene().name.Equals("BaseMenu")) {
                 DatabaseManager databaseManager = new DatabaseManager();
                 var lastLogged = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
-                string result = string.Empty;
 
-                StartCoroutine(_utility.LoadJson(data => { result = data.last_user; }));
+                if(lastLogged == null) {
+                    Debug.Log($"<color=red>UserPrefs is null</color>");
+                    return;
+                }
+
+                Debug.Log($"<color=yellow>User logged: {lastLogged.Username}</color>");
+
+                string pageToLoad = string.Empty;
+
+                StartCoroutine(_utility.LoadJson(data => { pageToLoad = data.page; }));
                 // If a user is left logged in but quitted the app
-                if (lastLogged?.Username != null) {
+                if (lastLogged.Username != null) {
                     FindObjectOfType<StatsManager>().UpdateRadarChart();
 
-                    if (result == "login") {
+                    if (pageToLoad == "login") {
                         Debug.Log("<color=green>Json file page:login</color>");
                         if (lastLogged.Username != null) {
                             ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
@@ -59,18 +70,18 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                                 .SetActive(true);
                         }
                     } else {
-                        Debug.Log("<color=green>Json file page:category selection</color>");
+                        Debug.Log($"<color=green>page to load:{pageToLoad}</color>");
                         // When exits from a game
                         ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
                             .gameObject
                             .SetActive(false);
-                        ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection"))
+                        ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, pageToLoad))
                             .gameObject
                             .SetActive(true);
                     }
 
                     _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
-                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection"));
+                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, pageToLoad));
 
                     // Manually set visibility since SwitchPanel is not invoked which handles back button visibility
                     Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
@@ -268,7 +279,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void QuitApp() {
             DatabaseManager databaseManager = new DatabaseManager();
-            User update = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
+            UserPrefs update = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
             if (update != null) {
                 update.IsLogged = false;
                 databaseManager.UpdateUser(update.Username, update);
@@ -354,7 +365,14 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         private void OnApplicationQuit() {
-            Debug.Log("application quit");
+            StartCoroutine(_utility.LoadJson(isDone => {
+                if (isDone) {
+                    Utility.Data newData = _utility.GetData();
+                    newData.page = "start menu";
+                    _utility.ModifyJson(newData);
+                    Debug.Log($"<color=green>Json file updated! page:{_utility.GetData().page}</color>");
+                }
+            }));
         }
 
         public void ClearNotif() {

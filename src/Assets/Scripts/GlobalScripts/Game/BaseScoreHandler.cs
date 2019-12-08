@@ -37,7 +37,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public void SaveScore(UserStat.GameCategory category) {
-            User user = GetUsers().FirstOrDefault(u => u.IsLogged);
+            UserPrefs user = GetUsers().FirstOrDefault(u => u.IsLogged);
 
             if (user == null) {
                 return;
