@@ -36,6 +36,10 @@ namespace Assets.Scripts.GlobalScripts.Game {
             return _list[_useKey];
         }
 
+        public T GetItem(int idx) {
+            return _list[idx];
+        }
+
         public T GetRandomItem() {
             Idx++;
 
