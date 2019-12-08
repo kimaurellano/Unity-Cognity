@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataComponent.Model;
@@ -7,6 +6,7 @@ using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Listening {
@@ -16,12 +16,15 @@ namespace Assets.Scripts.Listening {
         [SerializeField] private GameObject _nowPlayingText;
         [SerializeField] private TMP_InputField _answerField;
         [SerializeField] private TextMeshProUGUI _scoreText;
+        [SerializeField] private TextMeshProUGUI _hintCountText;
+        [SerializeField] private Button _hintButton;
 
         private AudioSource _src;
         private TimerManager _timerManager;
         private BaseScoreHandler _baseScoreHandler;
         private List<int> _keys;
 
+        private int _hint = 2;
         private int _useKey;
         private int _currentClip;
         private int _randomKey;
@@ -74,7 +77,6 @@ namespace Assets.Scripts.Listening {
         }
 
         public void PrepareWord() {
-            // Monitor current question we are at
             _currentClip++;
 
             if (_currentClip > _words.Length - 1) {
@@ -95,6 +97,26 @@ namespace Assets.Scripts.Listening {
             _keys.RemoveAt(_randomKey);
 
             StartCoroutine(PlayWord(_src.clip.name));
+
+            ResetHint();
+        }
+
+        public void ResetHint() {
+            // Reset hint per word
+            _hint = 2;
+
+            _hintButton.interactable = true;
+
+            _hintCountText.SetText($"x{_hint}");
+        }
+
+        public void DecreaseHint() {
+            _hint--;
+            _hintCountText.SetText($"x{_hint}");
+        }
+
+        public void PlayWord() {
+            StartCoroutine(PlayWord(_src.clip.name));
         }
 
         private IEnumerator PlayWord(string word) {
@@ -103,7 +125,11 @@ namespace Assets.Scripts.Listening {
             Animation nowPlayingAnimation = _nowPlayingText.GetComponent<Animation>();
             nowPlayingAnimation.Play();
 
+            _hintButton.interactable = false;
+
             yield return new WaitForSeconds(3f);
+
+            _hintButton.interactable = _hint > 0;
 
             foreach (var src in GetAttachedAudioComponents().Where(i => i.clip.name == word)) {
                 src.Play();
