@@ -1,10 +1,12 @@
 ﻿using System.Collections;
+using System.Linq;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Game;
 using Assets.Scripts.GlobalScripts.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.WordMemory {
@@ -13,16 +15,17 @@ namespace Assets.Scripts.WordMemory {
         [SerializeField] private string[] _listOfWords;
         [SerializeField] private TextMeshProUGUI _word;
 
+        private Randomizer<string> _randomizer;
         private BaseScoreHandler _baseScoreHandler;
         private TimerManager _timerManager;
         private UIManager _uiManager;
         private TextMeshProUGUI _mistakeText;
-        private string _temp;
-        private string _str;
         private int _mistake;
         private int _displayedWords;
 
         private void Start() {
+            _randomizer = new Randomizer<string>();
+
             _baseScoreHandler = new BaseScoreHandler(0, 15);
 
             _timerManager = GetComponent<TimerManager>();
@@ -32,7 +35,7 @@ namespace Assets.Scripts.WordMemory {
             TimerManager.OnPreGameTimerEndEvent += StartGame;
             TimerManager.OnGameTimerEndEvent += EndGame;
 
-             _mistakeText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "mistake");
+            _mistakeText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "mistake");
              _mistakeText.SetText($"Mistakes: {_mistake}/3");
         }
 
@@ -45,21 +48,24 @@ namespace Assets.Scripts.WordMemory {
 
             _timerManager.StartTimerAt(0, 10f);
 
+            for (int i = 0; i < 15; i++) {
+                _randomizer.AddToList(_listOfWords[Random.Range(0, _listOfWords.Length)]);
+            }
+
             DisplayWord();
+
+            StartCoroutine(ChangeWord());
         }
 
         private void DisplayWord() {
-            _displayedWords++;
+            ++_displayedWords;
             if (_displayedWords > 14) {
                 EndGame();
 
                 return;
             }
             
-            _str = _listOfWords[Random.Range(0, _listOfWords.Length - 1)];
-            _word.SetText(_str);
-
-            Debug.Log($"<color=orange>Current word:{_str}</color>");
+            _word.SetText(_randomizer.GetRandomItem());
         }
 
         public override void EndGame() {
@@ -74,23 +80,17 @@ namespace Assets.Scripts.WordMemory {
         }
 
         public void Button(string userAnswer) {
-            string answer = _str == _temp ? "true" : "false";
+            string lastItem = _randomizer.GetItem(_randomizer.Index - 1);
+            string currentItem = _randomizer.GetCurrentItem();
+            string answer = lastItem == currentItem ? "true" : "false";
 
             if (userAnswer.Equals(answer)) {
                 _timerManager.StartTimerAt(0, 10f);
-
-                TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
-                textUI.color = Color.green;
-                textUI.text = "correct!";
 
                 _baseScoreHandler.AddScore(1);
             } else {
                 _mistake++;
                 if (_mistake > 3) {
-                    TextMeshProUGUI textUI = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "score change");
-                    textUI.color = Color.red;
-                    textUI.text = "wrong";
-
                     EndGame();
 
                     return;
@@ -99,19 +99,28 @@ namespace Assets.Scripts.WordMemory {
                 _mistakeText.SetText($"Mistakes: {_mistake}/3");
             }
 
-            Animation anim = (Animation)_uiManager.GetUI(UIManager.UIType.AnimatedSingleState, "score change");
-            anim.Play();
-
-            // Remember the last displayed word
-            _temp = _str;
-            Debug.Log($"Last word is now:{_temp}");
-
             StartCoroutine(ChangeWord());
         }
 
         private IEnumerator ChangeWord() {
-            _word.SetText(string.Empty);
-            yield return new WaitForSeconds(0.5f);
+            if (_displayedWords == 0) {
+                ((Transform) _uiManager.GetUI(UIManager.UIType.Button, "button true"))
+                    .GetComponent<Button>().interactable = false;
+                ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button false"))
+                    .GetComponent<Button>().interactable = false;
+                yield return new WaitForSeconds(2.5f);
+                ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button true"))
+                    .GetComponent<Button>().interactable = true;
+                ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button false"))
+                    .GetComponent<Button>().interactable = true;
+            }
+
+            _word.GetComponent<Animator>().Play("ChangeWord");
+
+            yield return new WaitForSeconds(1.5f);
+
+            _word.GetComponent<Animator>().Play("Idle");
+
             DisplayWord();
         }
     }
