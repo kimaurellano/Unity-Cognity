@@ -57,7 +57,7 @@ namespace Assets.Scripts.PopNumber {
         }
 
         private void StartGame() {
-            TimerManager.OnGameTimerEndEvent -= StartGame;
+            TimerManager.OnPreGameTimerEndEvent -= StartGame;
             // Ready questions
             CategoryAddToList((QuestionBank.Category)_catIdx);
             // Dsiplay first question
@@ -75,6 +75,8 @@ namespace Assets.Scripts.PopNumber {
             NumberScriptPop.OnNumberPopEvent -= CheckNumber;
             NumberScriptPop.OnBottomHitEvent -= CheckAndDestroy;
             TimerManager.OnGameTimerEndEvent -= IncreaseDifficulty;
+
+            StopSpawning();
         }
 
         private void StopSpawning() {
