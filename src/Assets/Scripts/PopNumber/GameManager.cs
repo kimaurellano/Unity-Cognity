@@ -31,7 +31,7 @@ namespace Assets.Scripts.PopNumber {
         private int _correctCount;
         private int _wrongCount;
         private int _questionIdx;
-        private float _speed = 0.5f;
+        private float _speed = 1.5f;
         private float _score;
 
         private void Start() {
