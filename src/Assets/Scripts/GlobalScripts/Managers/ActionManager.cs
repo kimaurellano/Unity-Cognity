@@ -134,6 +134,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void AttachAction(Transform button) {
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back"))
+                .gameObject.SetActive(false);
+
             Button buttonComponent = button.GetComponent<Button>();
 
             // Avoid stacking unused subscribe methods
@@ -170,13 +173,13 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                     tutorialPanel.gameObject.SetActive(false);
                 });
 
-            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back"))
-                .gameObject.SetActive(false);
-
             ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button cancel pre game"))
                 .GetComponent<Button>().onClick.AddListener(() => {
                     ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
                         .gameObject.SetActive(false);
+
+                    ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back"))
+                        .gameObject.SetActive(true);
                 });
         }
 

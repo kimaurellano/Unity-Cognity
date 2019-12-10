@@ -1445,7 +1445,7 @@ MonoBehaviour:
   - Name: button cancel tutorial
     Button: {fileID: 2018502236}
   - Name: button cancel pre game
-    Button: {fileID: 2018502236}
+    Button: {fileID: 1336632413}
   _textCollection:
   - Name: flexibility
     textMesh: {fileID: 1900363323}
