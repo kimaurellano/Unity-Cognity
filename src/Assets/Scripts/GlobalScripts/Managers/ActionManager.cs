@@ -145,21 +145,56 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             ((TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game to load"))
                 .SetText(gameName);
 
+            // Show pre game panel
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
+                .gameObject.SetActive(true);
+
+            // Attach listeners to buttons within pre game panel
             ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button start game"))
                 .GetComponent<Button>().onClick.AddListener(() => {
                     FindObjectOfType<ActionManager>().GoTo(sceneToLoad);
 
                     UserPrefs.UpdateUserPrefs(false);
+
+                    // TODO check if first logged
                 });
 
-            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
-                .gameObject.SetActive(true);
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button tutorial"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    ShowTutorial(gameName);
+                });
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button cancel tutorial"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    Transform tutorialPanel = ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "tutorial"));
+                    tutorialPanel.gameObject.SetActive(false);
+                });
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back"))
+                .gameObject.SetActive(false);
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button cancel pre game"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
+                        .gameObject.SetActive(false);
+                });
         }
 
         public void StartSession() {
             SceneManager.LoadScene(FindObjectOfType<GameCollection>().GetNextScene());
 
             UserPrefs.UpdateUserPrefs(true);
+        }
+
+        private void ShowTutorial(string gameName) {
+            Transform tutorialPanel = ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "tutorial"));
+            tutorialPanel.gameObject.SetActive(true);
+            Image tutorialImageHolder = tutorialPanel.Find("Image").GetComponent<Image>();
+
+            //Load a Sprite (Assets/Resources/Tutorial)
+            Sprite tutorialImage = Resources.Load<Sprite>($"Tutorials/{gameName}");
+
+            tutorialImageHolder.sprite = tutorialImage;
         }
 
         public void MuteSfx() {
@@ -204,7 +239,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 notifText.color = new Color32(255, 0, 0, 189);
 
             } else {
-                databaseManager.CreateNewUser(new UserPrefs { Username = newUser.text, IsLogged = false, FirstRun = false });
+                databaseManager.CreateNewUser(new UserPrefs { Username = newUser.text, IsLogged = false });
                 notifText.transform.gameObject.SetActive(true);
                 notifText.SetText("Created successfully... Please wait");
                 notifText.color = new Color32(96, 164, 69, 189);
