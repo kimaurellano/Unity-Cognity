@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Assets.Scripts.DataComponent.Model;
 using Assets.Scripts.GlobalScripts.Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace Assets.Scripts.GlobalScripts.Game {
     [RequireComponent(typeof(ActionManager))]
@@ -53,18 +53,16 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public void ShowGraph(UserStat.GameCategory category, float score, float maxScore) {
-            foreach (var remark in (Transform[])Resources.FindObjectsOfTypeAll(typeof(Transform))) {
-                if (remark.name.Equals("Remarks")) {
-                    // We can now fetch the RemarkManager by enabling it first
-                    _remark = remark;
-                    _remark.gameObject.SetActive(true);
+            GameObject _scoreDataHolderGameObject = new GameObject("ScoreDataHolder_Temp");
+            _scoreDataHolderGameObject.AddComponent<ScoreDataHolder>();
 
-                    RemarkManager remarkManager = FindObjectOfType<RemarkManager>();
-                    remarkManager.ShowGraph(category, (int)score, (int)maxScore);
+            ScoreDataHolder _dataHolder = _scoreDataHolderGameObject.GetComponent<ScoreDataHolder>();
+            _dataHolder.GameObjectHolder = _scoreDataHolderGameObject;
+            _dataHolder.MaxScore = (int)maxScore;
+            _dataHolder.MinScore = (int)score;
+            _dataHolder.category = category;
 
-                    break;
-                }
-            }
+            SceneManager.LoadScene("Remark");
         }
 
         public void Retry() {
@@ -83,9 +81,6 @@ namespace Assets.Scripts.GlobalScripts.Game {
             OnEndGameEvent?.Invoke();
 
             ClearEvents();
-
-            // Halt all activities
-            Time.timeScale = 0f;
         }
 
         public string GetNextScene() {

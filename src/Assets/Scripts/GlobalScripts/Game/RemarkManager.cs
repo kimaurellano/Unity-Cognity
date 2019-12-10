@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using Assets.Scripts.DataComponent.Model;
@@ -18,6 +17,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         [SerializeField] private Button _btnCancel;
         [SerializeField] private Sprite _circleSprite;
 
+        private ScoreDataHolder _scoreData;
         private RectTransform _graphContainer;
         private List<float> _values;
 
@@ -31,11 +31,23 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
             _values = new List<float>();
 
+            GameObject _coreGameBehaviourGameObject = new GameObject("CoreGameBehvaiour");
+            CoreGameBehaviour _coreGameBehaviourScript = _coreGameBehaviourGameObject.AddComponent<CoreGameBehaviour>();
+
             // Programmatically add button click events
-            _btnContinue.onClick.AddListener(FindObjectOfType<CoreGameBehaviour>().LoadNextScene);
+            _btnContinue.onClick.AddListener(_coreGameBehaviourScript.LoadNextScene);
             _btnCancel.onClick.AddListener(QuitGame);
 
+            _scoreData = FindObjectOfType<ScoreDataHolder>();
+
+            // Know which scene script will ONLY live
+            _scoreData.ParentScene = SceneManager.GetActiveScene().name;
+
+            _scoreText.SetText($"{_scoreData.MinScore}/{_scoreData.MaxScore}");
+
             _graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
+
+            ShowGraph(_scoreData.category, _scoreData.MinScore, _scoreData.MaxScore);
         }
 
         private void QuitGame() {
@@ -53,18 +65,14 @@ namespace Assets.Scripts.GlobalScripts.Game {
             dotInstance.GetComponent<Image>().sprite = _circleSprite;
             RectTransform rectTransform = dotInstance.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = anchoredPosition;
-            rectTransform.sizeDelta = new Vector2(20, 20);
+            rectTransform.sizeDelta = new Vector2(50, 50);
             rectTransform.anchorMin = new Vector2(0, 0);
             rectTransform.anchorMax = new Vector2(0, 0);
 
             return dotInstance;
         }
 
-        public void ShowGraphOverallAvg() {
-            
-        }
-
-        public void ShowGraph(UserStat.GameCategory category, int score, int maxScore) {
+        private void ShowGraph(UserStat.GameCategory category, int score, int maxScore) {
             transform.gameObject.SetActive(true);
 
             _scoreText.SetText($"Score: {score}/{maxScore}");
@@ -83,8 +91,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         private void PopulateGraph(List<float> values) {
             float graphHeight = _graphContainer.sizeDelta.y;
-            const float yMaximum = 100f;
-            const float xSize = 100f;
+            const float yMaximum = 200f;
+            const float xSize = 125f;
 
             GameObject lastCircleGameObject = null;
 
