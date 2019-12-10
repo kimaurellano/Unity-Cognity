@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -56,8 +55,8 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // than sound games
             if (SceneManager.GetActiveScene().name.Equals("GameSoundWave") ||
                 SceneManager.GetActiveScene().name.Equals("GameListening")) {
-                SetVolume("bg_game", 0.05f);
-                SetVolume("bg_menu", 0.05f);
+                SetVolume("bg_game", 0f);
+                SetVolume("bg_menu", 0f);
 
                 OnAllAudioOverrideEvent?.Invoke();
 
