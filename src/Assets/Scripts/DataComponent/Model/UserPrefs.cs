@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using SQLite4Unity3d;
+using UnityEngine;
 
 namespace Assets.Scripts.DataComponent.Model {
     public class UserPrefs {
@@ -8,8 +9,6 @@ namespace Assets.Scripts.DataComponent.Model {
         public int Id { get; set; }
 
         public string Username { get; set; }
-
-        public bool FirstRun { get; set; }
 
         public bool IsLogged { get; set; }
 
