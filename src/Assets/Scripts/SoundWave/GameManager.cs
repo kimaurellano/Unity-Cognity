@@ -27,6 +27,7 @@ namespace Assets.Scripts.SoundWave {
         [SerializeField] private Sprite _correct;
         [SerializeField] private Sprite _wrong;
         [SerializeField] private Button _buttonHint;
+        [SerializeField] private TextMeshProUGUI _currentSequenceText;
 
         private BaseScoreHandler _baseScoreHandler;
         private UIManager _uiManager;
@@ -60,6 +61,8 @@ namespace Assets.Scripts.SoundWave {
                 .enabled = false;
 
             TimerManager.OnPreGameTimerEndEvent += StartGame;
+
+            _currentSequenceText.SetText($"#{_repetition + 1}");
         }
 
         private void StartGame() {
@@ -76,6 +79,8 @@ namespace Assets.Scripts.SoundWave {
             SetEnableInstrument(false);
 
             RandomPopulate();
+
+            StartCoroutine(PlaySequence());
         }
 
         private IEnumerator PleaseWait() {
@@ -184,6 +189,8 @@ namespace Assets.Scripts.SoundWave {
 
                 _selectedIdx = 0;
                 _repetition++;
+
+                _currentSequenceText.SetText($"#{_repetition + 1}");
 
                 if (_repetition > 10) {
                     _baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
