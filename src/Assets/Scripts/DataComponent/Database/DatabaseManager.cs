@@ -129,11 +129,11 @@ namespace Assets.Scripts.DataComponent.Database {
         }
 
         public IEnumerable<UserScoreHistory> GetScoreHistory(string username) {
-            return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' ORDER BY Time ASC");
+            return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' ORDER BY Time DESC");
         }
 
         public IEnumerable<UserScoreHistory> GetScoreHistory(string username, UserStat.GameCategory category) {
-            return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' AND Category={(int)category} ORDER BY Time ASC");
+            return _connection.Query<UserScoreHistory>($"SELECT * FROM UserScoreHistory WHERE Username='{username}' AND Category={(int)category} ORDER BY Time DESC");
         }
 
         private static void SaveSessionScore(string username, float score, UserStat.GameCategory category) {
