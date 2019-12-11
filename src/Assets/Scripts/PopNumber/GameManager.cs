@@ -191,8 +191,6 @@ namespace Assets.Scripts.PopNumber {
                 }
             }
 
-            _baseScoreHandler.AddScore(_score);
-
             ProceedToNextQuestion();
         }
 
@@ -239,6 +237,8 @@ namespace Assets.Scripts.PopNumber {
         }
 
         public override void EndGame() {
+            _baseScoreHandler.AddScore(_score);
+
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
             ShowGraph(
