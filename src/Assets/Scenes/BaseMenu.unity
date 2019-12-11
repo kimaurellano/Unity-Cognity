@@ -2408,8 +2408,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "COSTELO, JOHN\r\nFLORES, NHECOR\r\nFRANCISCO, CHRISTIAN\r\nLUNA, ADRIAN
-    \r\nNAVARRO, KENNETH \r\nNUESTRO, GABRIELLE ALEXANDER"
+  m_text: 'Unity - Used to develop the system.
+
+    Visual Studio - Used as the Script Editor.
+
+    Photoshop CC - Used to Create and Edit Icons.
+
+    Balabolka - Used as on the Listening game to create the Voice Over.
+
+    Microsoft David US - Used as the voice over on the Listening game.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12536,7 +12543,8 @@ MonoBehaviour:
     your mind. Many of these basic characteristics are what you find in many of the
     games you already play. These brain games are focusing on basic mental and cognitive
     skills like attention, perception, memory, speed, problem solving, spatial orientation,
-    mental flexibility and more."
+    mental flexibility and more.\n\nDevelopers:\nCOSTELO, JOHN\r\nFLORES, NHECOR\r\nFRANCISCO,
+    CHRISTIAN\r\nLUNA, ADRIAN \r\nNAVARRO, KENNETH \r\nNUESTRO, GABRIELLE ALEXANDER"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
