@@ -36,7 +36,6 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
             // Programmatically add button click events
             _btnContinue.onClick.AddListener(_coreGameBehaviourScript.LoadNextScene);
-            _btnCancel.onClick.AddListener(QuitGame);
 
             _scoreData = FindObjectOfType<ScoreDataHolder>();
 
@@ -50,13 +49,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
             ShowGraph(_scoreData.category, _scoreData.MinScore, _scoreData.MaxScore);
         }
 
-        private void QuitGame() {
-            FindObjectOfType<ActionManager>().GoTo("BaseMenu");
-        }
-
         private void RemoveEvents(Scene current, Scene next) {
             _btnContinue.onClick = null;
-            _btnCancel.onClick = null;
         }
 
         private GameObject CreateCircle(Vector2 anchoredPosition) {
