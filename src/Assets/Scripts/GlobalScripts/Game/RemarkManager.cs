@@ -91,7 +91,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         private void PopulateGraph(List<float> values) {
             float graphHeight = _graphContainer.sizeDelta.y;
-            const float yMaximum = 200f;
+            const float yMaximum = 100f;
             const float xSize = 125f;
 
             GameObject lastCircleGameObject = null;
