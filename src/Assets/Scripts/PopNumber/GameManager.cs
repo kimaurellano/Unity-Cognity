@@ -166,11 +166,14 @@ namespace Assets.Scripts.PopNumber {
 
         // Check the popped number
         private void CheckNumber(int number) {
+            Debug.Log($"<color=green>number:{number}</green>");
+            Debug.Log($"<color=green>question index answer:{int.Parse(_questionList[_questionIdx].Answer)}</green>");
+
             if (number == int.Parse(_questionList[_questionIdx].Answer)) {
                 _timerManager.ResetTimer();
 
                 _correctCount++;
-                if (_correctCount == 5) {
+                if (_correctCount > 4) {
                     _correctCount = 0;
                     IncreaseDifficulty();
                     Debug.Log("<color=red>Increasing difficulty</color>");
@@ -179,15 +182,12 @@ namespace Assets.Scripts.PopNumber {
                 _score += 10;
             } else {
                 _wrongCount++;
-                if(_wrongCount == 3) {
+                if(_wrongCount > 2) {
+                    StopSpawning();
+
                     EndGame();
 
                     return;
-                }
-
-                _score -= 10;
-                if (_score < 0) {
-                    _score = 0;
                 }
             }
 
