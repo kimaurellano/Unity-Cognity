@@ -91,7 +91,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
             GameCollection gameCollection = FindObjectOfType<GameCollection>();
             string nextScene = gameCollection.GetNextScene();
             // The session contains only 5 games
-            if (gameCollection.PlayedGames > 5) {
+            if (gameCollection.PlayedGames > 4) {
                 FindObjectOfType<ActionManager>().GoTo("BaseMenu");
 
                 return;
