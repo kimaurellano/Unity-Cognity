@@ -55,3 +55,4 @@ crashlytics-build.properties
 /src/.vscode/settings.json
 /.vscode/settings.json
 /src/GlobalSuppressions.cs
+src/Assets/StreamingAssets/UserData.db
