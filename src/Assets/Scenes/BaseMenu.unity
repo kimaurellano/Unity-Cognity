@@ -7487,6 +7487,7 @@ GameObject:
   - component: {fileID: 954624147}
   - component: {fileID: 954624149}
   - component: {fileID: 954624148}
+  - component: {fileID: 954624150}
   m_Layer: 5
   m_Name: RadarChart
   m_TagString: Untagged
@@ -7532,7 +7533,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4e2c1f45bed2f6346a50700bdceb7bdf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9641e9f653cd5c149a661de06a051436, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7550,6 +7551,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 954624146}
   m_CullTransparentMesh: 0
+--- !u!114 &954624150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954624146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c7a43d91ddcba24a8c16baf15f5d0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radarMaterial: {fileID: 2100000, guid: e01c9bf6f6a4a8f4298639e6fdd201dd, type: 2}
+  radarTexture2D: {fileID: 2800000, guid: ccf36b5cfc00e3749a05d6b7b8b425ce, type: 3}
+  radarMesh: {fileID: 1681651712}
 --- !u!1 &957290994
 GameObject:
   m_ObjectHideFlags: 0
