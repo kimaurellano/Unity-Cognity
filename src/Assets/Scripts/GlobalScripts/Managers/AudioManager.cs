@@ -13,7 +13,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public static OnAudioPlay onAudioEndPlayEvent;
 
         public static OnAllAudioOverride OnAllAudioOverrideEvent;
- 
+
         private static AudioManager _audioManager;
 
         private AudioCollection _audioCollection;
@@ -54,9 +54,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             // audio cannot be unmuted/change volume unless it's a scene other
             // than sound games
             if (SceneManager.GetActiveScene().name.Equals("GameSoundWave") ||
-                SceneManager.GetActiveScene().name.Equals("GameWordSoundListening")) {
-                SetVolume("bg_game", 0.1f);
-                SetVolume("bg_menu", 0.1f);
+                SceneManager.GetActiveScene().name.Equals("GameListening")) {
+                SetVolume("bg_game", 0f);
+                SetVolume("bg_menu", 0f);
 
                 OnAllAudioOverrideEvent?.Invoke();
 
@@ -73,12 +73,12 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         private void AttachButtonSfx() {
             // Get all inactive objects
-            foreach (var button in (Button[]) Resources.FindObjectsOfTypeAll(typeof(Button))) {
+            foreach (var button in (Button[])Resources.FindObjectsOfTypeAll(typeof(Button))) {
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
 
             // Get all active objects
-            foreach (var button in (Button[]) FindObjectsOfType(typeof(Button))) {
+            foreach (var button in (Button[])FindObjectsOfType(typeof(Button))) {
                 button.GetComponent<Button>().onClick.AddListener(ButtonClick);
             }
         }
@@ -141,6 +141,17 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             }
 
             return clipName;
+        }
+
+        public AudioSource GetAttachedAudioComponent(string name) {
+            AudioSource src = null;
+            foreach (var item in GetAttachedAudioComponents()) {
+                if (item.clip.name.Equals(name)) {
+                    src = item;
+                }
+            }
+
+            return src;
         }
 
         public AudioSource[] GetAttachedAudioComponents() {

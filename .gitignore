@@ -11,6 +11,9 @@ Logs/
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # [Aa]ssets/AssetStoreTools*
 
+# SQLite Database
+.db
+
 # Visual Studio cache directory
 .vs/
 
@@ -52,3 +55,4 @@ crashlytics-build.properties
 /src/.vscode/settings.json
 /.vscode/settings.json
 /src/GlobalSuppressions.cs
+src/Assets/StreamingAssets/UserData.db

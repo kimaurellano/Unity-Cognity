@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.DataComponent.Database;
 using Assets.Scripts.DataComponent.Model;
@@ -14,46 +13,44 @@ namespace Assets.Scripts.GlobalScripts.Game {
     public class RemarkManager : MonoBehaviour {
 
         [SerializeField] private TextMeshProUGUI _scoreText;
-        [SerializeField] private TextMeshProUGUI _waitText;
         [SerializeField] private Button _btnContinue;
         [SerializeField] private Button _btnCancel;
         [SerializeField] private Sprite _circleSprite;
 
+        private ScoreDataHolder _scoreData;
         private RectTransform _graphContainer;
         private List<float> _values;
-        private int _seconds = 5;
 
         private void Awake() {
+            if (!UserPrefs.SessionActive()) {
+                _btnCancel.GetComponent<TextMeshProUGUI>().SetText("Done");
+                _btnContinue.gameObject.SetActive(false);
+            }
+
             SceneManager.activeSceneChanged += RemoveEvents;
 
             _values = new List<float>();
 
+            GameObject _coreGameBehaviourGameObject = new GameObject("CoreGameBehvaiour");
+            CoreGameBehaviour _coreGameBehaviourScript = _coreGameBehaviourGameObject.AddComponent<CoreGameBehaviour>();
+
             // Programmatically add button click events
-            _btnContinue.onClick.AddListener(FindObjectOfType<CoreGameBehaviour>().LoadNextScene);
-            _btnCancel.onClick.AddListener(QuitGame);
+            _btnContinue.onClick.AddListener(_coreGameBehaviourScript.LoadNextScene);
+
+            _scoreData = FindObjectOfType<ScoreDataHolder>();
+
+            // Know which scene script will ONLY live
+            _scoreData.ParentScene = SceneManager.GetActiveScene().name;
+
+            _scoreText.SetText($"{_scoreData.MinScore}/{_scoreData.MaxScore}");
 
             _graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
 
-            StartCoroutine(WindowClose());
-        }
-
-        private void QuitGame() {
-            FindObjectOfType<ActionManager>().GoTo("BaseMenu");
+            ShowGraph(_scoreData.category, _scoreData.MinScore, _scoreData.MaxScore);
         }
 
         private void RemoveEvents(Scene current, Scene next) {
             _btnContinue.onClick = null;
-            _btnCancel.onClick = null;
-        }
-
-        private IEnumerator WindowClose() {
-            while (_seconds > 0) {
-                _seconds--;
-                _waitText.SetText(_seconds.ToString());
-                yield return new WaitForSecondsRealtime(1f);
-            }
-
-            FindObjectOfType<CoreGameBehaviour>().LoadNextScene();
         }
 
         private GameObject CreateCircle(Vector2 anchoredPosition) {
@@ -62,14 +59,14 @@ namespace Assets.Scripts.GlobalScripts.Game {
             dotInstance.GetComponent<Image>().sprite = _circleSprite;
             RectTransform rectTransform = dotInstance.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = anchoredPosition;
-            rectTransform.sizeDelta = new Vector2(20, 20);
+            rectTransform.sizeDelta = new Vector2(50, 50);
             rectTransform.anchorMin = new Vector2(0, 0);
             rectTransform.anchorMax = new Vector2(0, 0);
 
             return dotInstance;
         }
 
-        public void ShowGraph(UserStat.GameCategory category, int score, int maxScore) {
+        private void ShowGraph(UserStat.GameCategory category, int score, int maxScore) {
             transform.gameObject.SetActive(true);
 
             _scoreText.SetText($"Score: {score}/{maxScore}");
@@ -83,9 +80,13 @@ namespace Assets.Scripts.GlobalScripts.Game {
                 _values.Add(userScoreHistory.SessionScore);
             }
 
+            PopulateGraph(_values);
+        }
+
+        private void PopulateGraph(List<float> values) {
             float graphHeight = _graphContainer.sizeDelta.y;
             const float yMaximum = 100f;
-            const float xSize = 100f;
+            const float xSize = 125f;
 
             GameObject lastCircleGameObject = null;
 
@@ -94,7 +95,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
                 float xPosition = xSize + i * xSize;
                 float yPosition = (_values[i] / yMaximum) * graphHeight;
                 GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
-                if(lastCircleGameObject != null) {
+                if (lastCircleGameObject != null) {
                     CreateDotConnection(
                         lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition,
                         circleGameObject.GetComponent<RectTransform>().anchoredPosition);

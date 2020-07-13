@@ -14,6 +14,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
         [SerializeField] private Collection[] _gameCollection;
 
+        public int PlayedGames { get; private set; }
         public int Loaded { get; set; }
         public Collection[] GameCollections { get => _gameCollection; set => _gameCollection = value; }
 
@@ -28,6 +29,8 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public string GetNextScene() {
+            PlayedGames++;
+
             Loaded++;
             // We only have 4 game categories
             if (Loaded > 3) {
@@ -37,7 +40,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
             int gameCount = _gameCollection[Loaded].Games.Length;
             
             // Get the game scene name
-            string scene = _gameCollection[Loaded].Games[Random.Range(0, gameCount - 1)];
+            string scene = _gameCollection[Loaded].Games[Random.Range(0, gameCount)];
             Debug.Log($"<color=green>Next scene:{scene}</color>");
 
             return scene;

@@ -8,12 +8,16 @@ using Assets.Scripts.GlobalScripts.Game;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.GlobalScripts.Managers {
     /// <summary>
     ///     Handles specific button events. Initialized at the start of the Game
     /// </summary>
     public class ActionManager : MonoBehaviour {
+
+        [SerializeField] private Transform _buttonMusic;
+        [SerializeField] private Transform _buttonSfx;
 
         private static Utility _utility;
         private static Transform _targetPanel;
@@ -26,6 +30,17 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         private bool _onQuit;
 
         private void Start() {
+            // Deletes bundled wrong .db file during upon start
+            // and then replaced by the expected proper
+            // database file packaged within the APK
+            // This is a known bug with still no fix
+            if(PlayerPrefs.GetInt("DbImport") == 0) {
+                DatabaseManager db = new DatabaseManager();
+                db.DeletePersistentData();
+
+                PlayerPrefs.SetInt("DbImport", 1);
+            }
+
             _utility = new Utility();
 
             _pageStack = new List<Transform>();
@@ -37,45 +52,43 @@ namespace Assets.Scripts.GlobalScripts.Managers {
             if (SceneManager.GetActiveScene().name.Equals("BaseMenu")) {
                 DatabaseManager databaseManager = new DatabaseManager();
                 var lastLogged = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
-                string result = string.Empty;
 
-                StartCoroutine(_utility.LoadJson(data => { result = data.last_user; }));
+                databaseManager.Close();
+
+                if (lastLogged == null) {
+                    Debug.Log("<color=red>UserPrefs is null</color>");
+                    return;
+                }
+
+                Debug.Log($"<color=yellow>User logged: {lastLogged.Username}</color>");
+
+                string pageToLoad = lastLogged.PageLoaded;
+
                 // If a user is left logged in but quitted the app
-                if (lastLogged?.Username != null) {
+                if (lastLogged.Username != null) {
                     FindObjectOfType<StatsManager>().UpdateRadarChart();
 
-                    if (result == "login") {
-                        Debug.Log("<color=green>Json file page:login</color>");
-                        if (lastLogged.Username != null) {
-                            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
-                                .gameObject
-                                .SetActive(false);
-                            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"))
-                                .gameObject
-                                .SetActive(true);
+                    Debug.Log($"<color=green>page to load:{pageToLoad}</color>");
+                    foreach (var panel in _uiManager.PanelCollection) {
+                        if (panel.Name.Equals(pageToLoad)) {
+                            panel.Panel.gameObject.SetActive(true);
+
+                            continue;
                         }
-                    } else {
-                        Debug.Log("<color=green>Json file page:category selection</color>");
-                        // When exits from a game
-                        ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"))
-                            .gameObject
-                            .SetActive(false);
-                        ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection"))
-                            .gameObject
-                            .SetActive(true);
+
+                        panel.Panel.gameObject.SetActive(false);
                     }
 
-                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
-                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "category selection"));
+                    if (pageToLoad.Equals("category selection")) {
+                        _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
+                    }
+
+                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, pageToLoad));
 
                     // Manually set visibility since SwitchPanel is not invoked which handles back button visibility
                     Transform btnBack = (Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back");
                     btnBack.gameObject.SetActive(true);
-                } else {
-                    _pageStack.Add((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
                 }
-
-                databaseManager.Close();
             }
 
             // Revert time scale to 1 after quiting from
@@ -95,7 +108,9 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void CheckInput(TMP_InputField input) {
             DatabaseManager databaseManager = new DatabaseManager();
             var user = databaseManager.GetUser(input.text);
-            if(user == null) {
+            databaseManager.Close();
+
+            if (user == null) {
                 Debug.Log("<color=red>Not found!</color>");
 
                 TextMeshProUGUI notifText = (TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "login notif");
@@ -107,29 +122,106 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
             Debug.Log("<color=green>Exists!</color>");
 
-            user.IsLogged = true;
-            databaseManager.UpdateUser(user.Username, user);
-            databaseManager.Close();
+            UserPrefs.UpdateUserPrefs(user.Username, "start menu", true);
 
             FindObjectOfType<StatsManager>().UpdateRadarChart();
 
-            StartCoroutine(_utility.LoadJson(isDone => {
-                if (isDone) {
-                    Utility.Data newData = _utility.GetData();
-                    newData.last_user = user.Username;
-                    _utility.ModifyJson(newData);
-                    
-                    TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
-                    TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
+            TransitionFrom((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
+            TransitionTo((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "start menu"));
 
-                    // Prevent stacking of the login page after successful login
-                    _pageStack.Remove((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
-                }
-            }));
+            // Prevent stacking of the login page after successful login
+            _pageStack.Remove((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "login"));
+        }
+
+        public void AttachAction(Transform button) {
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back"))
+                .gameObject.SetActive(false);
+
+            Button buttonComponent = button.GetComponent<Button>();
+
+            // Avoid stacking unused subscribe methods
+            buttonComponent.onClick.RemoveAllListeners();
+
+            string sceneToLoad = button.name.Split('_')[1];
+            string gameName = button.name.Split('_')[2];
+
+            ((TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "game to load"))
+                .SetText(gameName);
+
+            // Show pre game panel
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
+                .gameObject.SetActive(true);
+
+            // Attach listeners to buttons within pre game panel
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button start game"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    FindObjectOfType<ActionManager>().GoTo(sceneToLoad);
+
+                    UserPrefs.UpdateUserPrefs(false);
+
+                    // TODO check if first logged
+                });
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button tutorial"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    ShowTutorial(gameName);
+                });
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button cancel tutorial"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    Transform tutorialPanel = ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "tutorial"));
+                    tutorialPanel.gameObject.SetActive(false);
+                });
+
+            ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button cancel pre game"))
+                .GetComponent<Button>().onClick.AddListener(() => {
+                    ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "pre game menu"))
+                        .gameObject.SetActive(false);
+
+                    ((Transform)_uiManager.GetUI(UIManager.UIType.Button, "button back"))
+                        .gameObject.SetActive(true);
+                });
         }
 
         public void StartSession() {
             SceneManager.LoadScene(FindObjectOfType<GameCollection>().GetNextScene());
+
+            UserPrefs.UpdateUserPrefs(true);
+        }
+
+        private void ShowTutorial(string gameName) {
+            Transform tutorialPanel = ((Transform)_uiManager.GetUI(UIManager.UIType.Panel, "tutorial"));
+            tutorialPanel.gameObject.SetActive(true);
+            Image tutorialImageHolder = tutorialPanel.Find("Image").GetComponent<Image>();
+
+            //Load a Sprite (Assets/Resources/Tutorial)
+            Sprite tutorialImage = Resources.Load<Sprite>($"Tutorials/{gameName}");
+
+            tutorialImageHolder.sprite = tutorialImage;
+        }
+
+        public void MuteSfx() {
+            AudioSource src = FindObjectOfType<AudioManager>().GetAttachedAudioComponent("Click");
+            src.mute = !src.mute;
+            if (src.mute) {
+                _buttonSfx.GetChild(0).gameObject.SetActive(true);
+                _buttonSfx.GetChild(1).gameObject.SetActive(false);
+            } else {
+                _buttonSfx.GetChild(0).gameObject.SetActive(false);
+                _buttonSfx.GetChild(1).gameObject.SetActive(true);
+            }
+        }
+
+        public void MuteBg() {
+            AudioSource src = FindObjectOfType<AudioManager>().GetAttachedAudioComponent("JazzyFrench");
+            src.mute = !src.mute;
+            if (src.mute) {
+                _buttonMusic.GetChild(0).gameObject.SetActive(true);
+                _buttonMusic.GetChild(1).gameObject.SetActive(false);
+            } else {
+                _buttonMusic.GetChild(0).gameObject.SetActive(false);
+                _buttonMusic.GetChild(1).gameObject.SetActive(true);
+            }
         }
 
         public void CreateUser(TMP_InputField newUser) {
@@ -149,17 +241,16 @@ namespace Assets.Scripts.GlobalScripts.Managers {
                 notifText.SetText("User already exists!");
                 notifText.color = new Color32(255, 0, 0, 189);
 
-                databaseManager.Close();
             } else {
-                databaseManager.CreateNewUser(new User { Username = newUser.text, IsLogged = false, FirstRun = false });
+                databaseManager.CreateNewUser(new UserPrefs { Username = newUser.text, IsLogged = false });
                 notifText.transform.gameObject.SetActive(true);
                 notifText.SetText("Created successfully... Please wait");
                 notifText.color = new Color32(96, 164, 69, 189);
 
-                databaseManager.Close();
-
                 StartCoroutine(AfterAccCreate());
             }
+
+            databaseManager.Close();
         }
 
         private IEnumerator AfterAccCreate() {
@@ -171,14 +262,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
 
         public void GoTo(string sceneName) {
             if (sceneName.StartsWith("Game")) {
-                StartCoroutine(_utility.LoadJson(isDone => {
-                    if (isDone) {
-                        Utility.Data newData = _utility.GetData();
-                        newData.page = "category selection";
-                        _utility.ModifyJson(newData);
-                        Debug.Log($"<color=green>Json file updated! page:{_utility.GetData().page}</color>");
-                    }
-                }));
+                UserPrefs.UpdateUserPrefs("category selection");
             }
 
             for (int i = 0; i < _gameCollection.GameCollections.Length; i++) {
@@ -218,20 +302,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         public void QuitApp() {
-            DatabaseManager databaseManager = new DatabaseManager();
-            User update = databaseManager.GetUsers().FirstOrDefault(i => i.IsLogged);
-            if (update != null) {
-                update.IsLogged = false;
-                databaseManager.UpdateUser(update.Username, update);
-            }
-
-            databaseManager.Close();
-
-            Utility.Data newData = _utility.GetData();
-            newData.page = "login";
-            _utility.ModifyJson(newData);
-
-            Debug.Log($"<color=green>Update to page:{_utility.GetData().page}</green>");
+            UserPrefs.UpdateUserPrefs("login", false);
 
             Application.Quit();
         }
@@ -305,7 +376,7 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         }
 
         private void OnApplicationQuit() {
-            Debug.Log("application quit");
+            UserPrefs.UpdateUserPrefs("start menu");
         }
 
         public void ClearNotif() {

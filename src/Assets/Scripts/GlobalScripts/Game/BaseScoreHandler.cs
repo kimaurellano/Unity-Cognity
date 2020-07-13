@@ -37,7 +37,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
         }
 
         public void SaveScore(UserStat.GameCategory category) {
-            User user = GetUsers().FirstOrDefault(u => u.IsLogged);
+            UserPrefs user = GetUsers().FirstOrDefault(u => u.IsLogged);
 
             if (user == null) {
                 return;
@@ -50,7 +50,7 @@ namespace Assets.Scripts.GlobalScripts.Game {
 
             float result = Normalize(Score, _minValue, ScoreLimit, 0f, 1f);
             result *= 100;
-            stat.Score = float.Parse(((stat.Score + result) / 2).ToString("0.0"));
+            stat.Score = float.Parse(result.ToString("0.0"));
             Debug.Log($"<color=green>Normalized SCORE:{stat.Score}</color>");
             UpdateUserStat(user.Username, stat, category);
         }

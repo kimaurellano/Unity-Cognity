@@ -1,17 +1,13 @@
 ﻿using System;
+using Assets.Scripts.GlobalScripts.Game;
 
 namespace Assets.Scripts.Quizzes {
     [Serializable]
     public class QuestionBankQuiz {
-        public  enum Difficulty {
-            Easy,
-            Medium,
-            Hard
-        }
 
         public string Question;
 
-        public Difficulty QuestionDifficulty;
+        public Difficulty.DifficultyLevel Difficulty;
 
         public Answer[] Answers;
 

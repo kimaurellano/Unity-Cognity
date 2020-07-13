@@ -20,6 +20,7 @@ namespace Assets.Scripts.PopNumber {
         [SerializeField] private GameObject _numberPrefab;
         [SerializeField] private float _spawnRate;
         [SerializeField] private TextMeshProUGUI _problemText;
+        [SerializeField] private AudioSource _correctSfx;
 
         private BaseScoreHandler _baseScoreHandler;
         private Vector2 _screenBounds;
@@ -31,7 +32,7 @@ namespace Assets.Scripts.PopNumber {
         private int _correctCount;
         private int _wrongCount;
         private int _questionIdx;
-        private float _speed = 0.5f;
+        private float _speed = 1.5f;
         private float _score;
 
         private void Start() {
@@ -57,6 +58,7 @@ namespace Assets.Scripts.PopNumber {
         }
 
         private void StartGame() {
+            TimerManager.OnPreGameTimerEndEvent -= StartGame;
             // Ready questions
             CategoryAddToList((QuestionBank.Category)_catIdx);
             // Dsiplay first question
@@ -74,6 +76,8 @@ namespace Assets.Scripts.PopNumber {
             NumberScriptPop.OnNumberPopEvent -= CheckNumber;
             NumberScriptPop.OnBottomHitEvent -= CheckAndDestroy;
             TimerManager.OnGameTimerEndEvent -= IncreaseDifficulty;
+
+            StopSpawning();
         }
 
         private void StopSpawning() {
@@ -163,32 +167,32 @@ namespace Assets.Scripts.PopNumber {
 
         // Check the popped number
         private void CheckNumber(int number) {
+            Debug.Log($"<color=green>number:{number}</green>");
+            Debug.Log($"<color=green>question index answer:{int.Parse(_questionList[_questionIdx].Answer)}</green>");
+
             if (number == int.Parse(_questionList[_questionIdx].Answer)) {
                 _timerManager.ResetTimer();
 
                 _correctCount++;
-                if (_correctCount == 5) {
+                if (_correctCount > 4) {
                     _correctCount = 0;
                     IncreaseDifficulty();
                     Debug.Log("<color=red>Increasing difficulty</color>");
                 }
 
                 _score += 10;
+
+                _correctSfx.Play();
             } else {
                 _wrongCount++;
-                if(_wrongCount == 3) {
+                if(_wrongCount > 2) {
+                    StopSpawning();
+
                     EndGame();
 
                     return;
                 }
-
-                _score -= 10;
-                if (_score < 0) {
-                    _score = 0;
-                }
             }
-
-            _baseScoreHandler.AddScore(_score);
 
             ProceedToNextQuestion();
         }
@@ -236,6 +240,8 @@ namespace Assets.Scripts.PopNumber {
         }
 
         public override void EndGame() {
+            _baseScoreHandler.AddScore(_score);
+
             _baseScoreHandler.SaveScore(UserStat.GameCategory.Flexibility);
 
             ShowGraph(

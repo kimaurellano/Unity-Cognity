@@ -26,13 +26,16 @@ namespace Assets.Scripts.SoundWave {
         [SerializeField] private Image _resultImage;
         [SerializeField] private Sprite _correct;
         [SerializeField] private Sprite _wrong;
+        [SerializeField] private Button _buttonHint;
+        [SerializeField] private TextMeshProUGUI _currentSequenceText;
 
         private BaseScoreHandler _baseScoreHandler;
         private UIManager _uiManager;
-        private List<string> _seqOfClips;
+        private List<Sound> _seqOfClips;
         private List<int> _soundIdx;
         private int _selectedIdx;
         private int _repetition;
+        private int _hintCount = 1;
         private bool _hasError;
 
         private void Start() {
@@ -40,6 +43,9 @@ namespace Assets.Scripts.SoundWave {
             if (gameObject.name != "GameManager") {
                 return;
             }
+
+            _soundIdx = new List<int>();
+            _seqOfClips = new List<Sound>();
 
             _uiManager = FindObjectOfType<UIManager>();
 
@@ -54,6 +60,14 @@ namespace Assets.Scripts.SoundWave {
             ((Animator) _uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "sequence result"))
                 .enabled = false;
 
+            TimerManager.OnPreGameTimerEndEvent += StartGame;
+
+            _currentSequenceText.SetText($"#{_repetition + 1}");
+        }
+
+        private void StartGame() {
+            TimerManager.OnPreGameTimerEndEvent -= StartGame;
+
             // Add AudioSource components
             foreach (var sound in _sound) {
                 AudioSource src = gameObject.AddComponent<AudioSource>();
@@ -64,7 +78,9 @@ namespace Assets.Scripts.SoundWave {
 
             SetEnableInstrument(false);
 
-            StartCoroutine(RandomizeSound());
+            RandomPopulate();
+
+            StartCoroutine(PlaySequence());
         }
 
         private IEnumerator PleaseWait() {
@@ -73,56 +89,40 @@ namespace Assets.Scripts.SoundWave {
             yield return new WaitForSeconds(2f);
         }
 
-        private IEnumerator RandomizeSound() {
+        private IEnumerator PlaySequence() {
+            _buttonHint.interactable = false;
+
             SetEnableInstrument(false);
 
             yield return StartCoroutine(PleaseWait());
 
-            ((Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "playing"))
-                .enabled = true;
-            ((TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "now playing"))
-                .SetText("Playing sequence");
+            foreach (var clip in _seqOfClips) {
+                ((Animator)_uiManager.GetUI(UIManager.UIType.AnimatedMultipleState, "playing"))
+                    .enabled = true;
+                ((TextMeshProUGUI)_uiManager.GetUI(UIManager.UIType.Text, "now playing"))
+                    .SetText("Playing sequence");
 
-            _seqOfClips = new List<string>();
-            _seqOfClips.Clear();
-
-            _soundIdx = new List<int>();
-            _soundIdx.Clear();
-
-            // Disable button while sample playing sounds
-            foreach (var item in _sound) {
-                Button btn = item.Button.GetComponent<Button>();
-                btn.transform.Find("Indicator").GetComponent<Animator>().enabled = false;
-                btn.transform.Find("Indicator").gameObject.SetActive(false);
-            }
-
-            Debug.Log("<color=orange>Adding sound... Please wait</color>");
-            for (int i = 0; i < _sound.Length; i++) {
-                // Randomize sounds
-                _soundIdx.Add(Random.Range(0, _sound.Length - 1));
-                // Get the clip idx base on the random result
-                string clipToPlay = _sound[_soundIdx[i]].Name;
-
-                Debug.Log(clipToPlay);
-
-                Sound sound = _sound[_soundIdx[i]];
-                // Show which button is sounding
-                Transform indicator = sound.Button.transform.Find("Indicator");
+                Transform indicator = clip.Button.transform.Find("Indicator");
                 indicator.GetComponent<Animator>().enabled = true;
                 indicator.transform.gameObject.SetActive(true);
 
-                PlayClip(sound.AudioClip.name.ToLower());
+                PlayClip(clip.AudioClip.name.ToLower());
 
-                yield return StartCoroutine(SamplePlay(sound.AudioClip.length));
+                yield return StartCoroutine(SamplePlay(clip.AudioClip.length));
 
                 // Stop indicating
                 indicator.GetComponent<Animator>().enabled = false;
                 indicator.transform.gameObject.SetActive(false);
 
-                _seqOfClips.Add(clipToPlay);
+                // Disable button while sample playing sounds
+                foreach (var item in _sound) {
+                    Button btn = item.Button.GetComponent<Button>();
+                    btn.transform.Find("Indicator").GetComponent<Animator>().enabled = false;
+                    btn.transform.Find("Indicator").gameObject.SetActive(false);
+                }
             }
 
-            Debug.Log("<color=green>Done adding sound</color>");
+            _buttonHint.interactable = _hintCount > 0;
 
             // Enable all the button
             SetEnableInstrument(true);
@@ -136,11 +136,32 @@ namespace Assets.Scripts.SoundWave {
             yield return null;
         }
 
+        private void RandomPopulate() {
+            _soundIdx.Clear();
+            _seqOfClips.Clear();
+
+            for (int i = 0; i < _sound.Length; i++) {
+                _soundIdx.Add(Random.Range(0, _sound.Length));
+
+                Sound sound = _sound[_soundIdx[i]];
+
+                _seqOfClips.Add(sound);
+            }
+        }
+
         private void SetEnableInstrument(bool value) {
             // Enable all the button
             foreach (var item in _sound) {
                 item.Button.GetComponent<Button>().enabled = value;
             }
+        }
+
+        public void PlaySeq() {
+            _hintCount--;
+
+            _buttonHint.interactable = _hintCount > 0;
+
+            StartCoroutine(PlaySequence());
         }
 
         public void PlayButton(Transform button) {
@@ -149,7 +170,7 @@ namespace Assets.Scripts.SoundWave {
 
             PlayClip(clipName);
 
-            if (clipName != _seqOfClips[_selectedIdx]) {
+            if (clipName != _seqOfClips[_selectedIdx].Name) {
                 _hasError = true;
             }
 
@@ -157,14 +178,19 @@ namespace Assets.Scripts.SoundWave {
         }
 
         private void Progress() {
-            // Add points
-            _baseScoreHandler.AddScore(1);
-
             _selectedIdx++;
 
             if (_selectedIdx > _seqOfClips.Count - 1) {
+                // Just add point every complete sequence
+                if (!_hasError) {
+                    // Add points
+                    _baseScoreHandler.AddScore(1);
+                }
+
                 _selectedIdx = 0;
                 _repetition++;
+
+                _currentSequenceText.SetText($"#{_repetition + 1}");
 
                 if (_repetition > 10) {
                     _baseScoreHandler.SaveScore(UserStat.GameCategory.Memory);
@@ -183,10 +209,12 @@ namespace Assets.Scripts.SoundWave {
                 StartCoroutine(SequenceNotif(_hasError));
 
                 // Ready new set of sequence
-                StartCoroutine(RandomizeSound());
+                RandomPopulate();
 
                 // Disable while waiting
                 SetEnableInstrument(false);
+
+                StartCoroutine(PlaySequence());
             }
         }
 
@@ -219,8 +247,7 @@ namespace Assets.Scripts.SoundWave {
         }
 
         private IEnumerator SamplePlay(float seconds) {
-            // TODO: implement paired button indication
-            yield return new WaitForSeconds(seconds);
+            yield return new WaitForSeconds(seconds + 3f);
         }
 
         private AudioSource[] GetSoundAudioSources() {

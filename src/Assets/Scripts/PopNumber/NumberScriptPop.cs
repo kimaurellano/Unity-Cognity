@@ -10,8 +10,7 @@ namespace Assets.Scripts.PopNumber {
         public static event OnBottomHit OnBottomHitEvent;
         public static event OnNumberPop OnNumberPopEvent;
 
-        [SerializeField] private TextMeshProUGUI _content;
-
+        private TMP_Text _content;
         private Collider2D _collider2D;
         private Touch _touch;
 
@@ -21,7 +20,12 @@ namespace Assets.Scripts.PopNumber {
         private void Start() {
             _collider2D = GetComponent<Collider2D>();
 
+            _content = transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+
+            // Display number
             _content.SetText(Content);
+
+            Debug.Log($"<color=green>Text: {Content}</color>");
         }
 
         private void Update() {
@@ -36,9 +40,7 @@ namespace Assets.Scripts.PopNumber {
                     Collider2D touchPoint = Physics2D.OverlapPoint(touchPos);
 
                     if (_collider2D.Equals(touchPoint)) {
-                        int number = int.Parse(_content.text);
-
-                        OnNumberPopEvent?.Invoke(number);
+                        OnNumberPopEvent?.Invoke(int.Parse(Content));
 
                         Destroy(touchPoint.gameObject);
                     }

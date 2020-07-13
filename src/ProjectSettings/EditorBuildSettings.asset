@@ -29,17 +29,20 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/QuizMath/GameQuizMath.unity
     guid: 8ff3c1334f26def4daac7221c3b6b1a5
+  - enabled: 1
+    path: Assets/Scenes/Remark.unity
+    guid: bda6fcbcdf8facf41b1b37373e898727
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/Listening/GameWordSoundListening.unity
+    path: Assets/Scenes/Listening/GameListening.unity
     guid: 09abe7b8e96946b4c86f6da4eb9e3c88
   - enabled: 1
-    path: Assets/Scenes/SolvingMath/GameQuizSolveMath.unity
+    path: Assets/Scenes/SolvingMath/GameSolvingMath.unity
     guid: b3e1f8533cbcfba4d827b9f62fad3a2b
   - enabled: 1
-    path: Assets/Scenes/PicturePuzzle/GameRebusPuzzle.unity
+    path: Assets/Scenes/RebusPuzzle/GameRebusPuzzle.unity
     guid: 83b9408029794b24b84531ea0287f873
   - enabled: 1
     path: Assets/Scenes/RunningFigure/GameRunningFigure.unity
