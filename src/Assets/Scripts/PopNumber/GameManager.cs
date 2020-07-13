@@ -20,6 +20,7 @@ namespace Assets.Scripts.PopNumber {
         [SerializeField] private GameObject _numberPrefab;
         [SerializeField] private float _spawnRate;
         [SerializeField] private TextMeshProUGUI _problemText;
+        [SerializeField] private AudioSource _correctSfx;
 
         private BaseScoreHandler _baseScoreHandler;
         private Vector2 _screenBounds;
@@ -180,6 +181,8 @@ namespace Assets.Scripts.PopNumber {
                 }
 
                 _score += 10;
+
+                _correctSfx.Play();
             } else {
                 _wrongCount++;
                 if(_wrongCount > 2) {
