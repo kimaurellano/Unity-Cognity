@@ -1463,7 +1463,9 @@ MonoBehaviour:
     textMesh: {fileID: 1618933929}
   - Name: game to load
     textMesh: {fileID: 1187190493}
-  _inputFieldCollection: []
+  _inputFieldCollection:
+  - Name: login input
+    InputField: {fileID: 2021285375}
   _animatedObjectsCollecton:
   - Name: transition
     AnimatedObject: {fileID: 343971131}
