@@ -19,7 +19,6 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         [SerializeField] private Transform _buttonMusic;
         [SerializeField] private Transform _buttonSfx;
 
-        private static Utility _utility;
         private static Transform _targetPanel;
         private static Transform _currentPanel;
         private static List<Transform> _pageStack;
@@ -30,18 +29,17 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         private bool _onQuit;
 
         private void Start() {
-            // Deletes bundled wrong .db file during upon start
+            // Deletes bundled wrong .db file upon start
             // and then replaced by the expected proper
-            // database file packaged within the APK
+            // database file packaged within the APK and also
+            // deletes the entire existing data.
             // This is a known bug with still no fix
-            if(PlayerPrefs.GetInt("DbImport") == 0) {
-                DatabaseManager db = new DatabaseManager();
-                db.DeletePersistentData();
-
-                PlayerPrefs.SetInt("DbImport", 1);
-            }
-
-            _utility = new Utility();
+            //if (PlayerPrefs.GetInt("DbImport") == 0) {
+            //    DatabaseManager db = new DatabaseManager();
+            //    db.DeletePersistentData();
+            //    db.DeleteAllData();
+            //    PlayerPrefs.SetInt("DbImport", 1);
+            //}
 
             _pageStack = new List<Transform>();
 
@@ -325,6 +323,10 @@ namespace Assets.Scripts.GlobalScripts.Managers {
         public void TransitionTo(Transform targetPanel) {
             // The panel to transition to
             _targetPanel = targetPanel;
+
+            if(_targetPanel.name == "CreateAccount") {
+                ((TMP_InputField)_uiManager.GetUI(UIManager.UIType.InputField, "login input")).text = string.Empty;
+            }
         }
 
         private IEnumerator BeginTransition(Transform transform) {
